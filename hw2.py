@@ -6,6 +6,8 @@
 
 import cs112_s21_week2_linter
 import math
+from extra_practice1 import getKthDigit
+from extra_practice1 import setKthDigit
 
 #################################################
 # Helper functions
@@ -32,32 +34,165 @@ def longestDigitRun(n):
     if n < 0: return "negative numb"
     if 0 <= n < 10: return n
     runNew = 1
-    run = 1
+    run = 1 # max
     valNew = 0
-    val = 0
+    val = 0 # max
     while (n//10 != 0):
         #print(n%10, "?", n//10%10)
         if n%10 == n//10%10:
             runNew += 1
             valNew = n % 10
             #val = valNew
-        elif runNew > run:
+        elif runNew > run: # save new max
             run = runNew
             val = n % 10
             runNew = 1
-        elif runNew == run:
+        elif runNew == run: # get lower tie
             val = min(n % 10, val)
             runNew = 1
         n //= 10
-    if runNew > 1 and val == 0:
+    if runNew > 1 and val == 0:  # 22222, 1000001
         return valNew
-    else: return val
+    else: 
+        return val
 
-def nthCircularPrime(n):
-    return 42
 
-def nthPalindromicPrime(n):
-    return 42
+def digitCompare(n):
+    n = abs(n)
+    digitClean = True
+    count = 1
+    #if n < 10: return count, digitClean
+    #not work when n < 10
+    while n >= 10:
+        n = n//10
+        foo = n % 10 == 0 or n % 10 % 2 == 0 or n % 10 % 5 == 0
+        # n = 0, 2, 4, 5, 6, 8
+        #print(n % 10%2)
+        if foo:
+            digitClean = False
+        count += 1
+        #print("digit:", n, "count:",count, digitClean)
+    return count, digitClean
+
+def isPrime(n):
+    if (n < 2):
+        return False
+    if (n <= 3):
+        return True
+    if (n % 2 == 0 or n % 3 == 0):
+        return False
+    maxFactor = roundHalfUp(n**0.5)
+    for factor in range(5, maxFactor+1, 6):
+        if n % factor == 0 or n % (factor+2) == 0:
+            return False
+    #print("prime:", True)
+    return True
+
+
+def digitRotate(n):
+    n = abs(n)
+    if (n <= 11):
+        return True
+    rotate = True
+    count, digitClean = digitCompare(n)
+    if not digitClean:
+        return False
+    for m in range(1, count):
+        #a = n
+        #while (a >= 10):
+        #a = a//10
+        #print("left:",a)
+        #foo = (n-a*10**(count-1))*10+a
+        rem = n % 10
+        div = n / 10
+        #print(rem, 10,"**", count-1, div)
+        foo = int(rem*10**(count-1)+div)
+        n = foo
+        #print("rotate:", m, foo)
+        if not isPrime(n):
+            #print("rotate:", False)
+            return False
+    #if rotate < m:
+        #rotate = False
+    # all True = m
+    # False = 0, True = 1
+    #print("rotate:", True)
+    return True
+
+def nthCircularPrime(nth):
+    found = 0
+    guess = 0
+    while (found <= nth):
+        guess += 1
+        count, digitClean = digitCompare(guess)
+        #print(count, digitClean)
+        cond = digitClean and isPrime(guess) and digitRotate(guess)
+        #cond = digitClean and isPrime(guess)
+        if cond:
+            found += 1
+            #print(guess, digitClean, isPrime(guess), digitRotate(guess))
+    return guess
+
+
+def digitCount(n):
+    n = abs(n)
+    count = 1
+    while n >= 10:
+        n //= 10
+        count += 1
+    return count
+
+def digitNth(n, nth):
+    for i in range(nth):
+        rem = n%10
+        n //= 10
+    #print("count:", count, "nth:", rem)
+    return rem
+
+def digitEqual(n):
+    if n > 10:
+        foo = n
+        count = digitCount(n)
+        for i in range(count):
+            if i >= count/2: break
+            a = n//10**(count-1-i) % 10
+            z = n//10**i % 10
+            cond = a == z
+            #print(a, "..?", z, cond)
+            #print(i, a, "..", z)
+            if not cond: return False
+        '''for i in range(1, count+1):
+            a = digitNth(n, count+1-i)
+            z = digitNth(n, i)'''
+    return True
+    '''
+        z = n % 10
+        a = n
+        count = 1
+        while (n >= 10):
+            n //= 10
+            count += 1
+            a = n
+        print("equal:",foo,"count",count,a,"...",z)
+        if not a == z:
+            return False
+        n = (foo-a*10**(count-1))//10
+        print(n)'''
+        # n>100 and count = even
+        #if count % 2 == 0 and n <= 10:
+            #return False
+    #return 42
+
+def nthPalindromicPrime(nth):
+    found = 0
+    guess = 0
+    while (found <= nth):
+        guess += 1
+        cond = digitEqual(guess) and isPrime(guess)
+        if cond:
+            found += 1
+            #print(guess, digitEqual(guess), isPrime(guess))
+    return guess
 
 #################################################
 # hw2-spicy-function
@@ -68,21 +203,157 @@ def nthPalindromicPrime(n):
 # functions below.
 #################################################
 
+def makeBoard(n):
+    board = 0
+    for i in range(n):
+        board += 8*10**i
+    return board
+
+def getLeftmostDigit(n):
+    while n >= 10: 
+        n //= 10
+    return n
+
+def clearLeftmostDigit(n):
+    count = digitCount(n)
+    a = getLeftmostDigit(n)
+    #print(count, a)
+    n = n-a*10**(count-1)
+    return n
+
+def makeMove(board, position, move):
+    if move != 1 and move != 2:
+        return "move must be 1 or 2!" # break and return
+    count = digitCount(board)
+    if position > count:
+        return "offboard!" # break and return
+    chg = getKthDigit(board, count-position)
+    #print(foo)
+    if chg != 8:
+        return "occupied!"  # break and return
+    board = setKthDigit(board, count-position, move)
+    #print(count-1)
+    return board
+
+def isWin(n):
+    #count = digitCount(board)
+    #for i in range(1, count-1):
+    while n//100 > 0:
+        rem3 = n%10
+        rem2 = n//10%10
+        rem1 = n//100%10
+        if rem1 == 1 and rem2 == 1 and rem3 == 2:
+            return True
+        n //= 10
+        #print(rem1, rem2, rem3)
+    return False
+        
+def isFull(n):
+    while n > 0:
+        if n%10 == 8:
+            return False
+        n //= 10
+    return True
+
 def play112(game):
-    return 42
+    left = getLeftmostDigit(game)
+    board = makeBoard(left)
+    moves = clearLeftmostDigit(game)
+    count = digitCount(moves)
+    #print(board, moves, count)
+    if moves < 10: 
+        return str(board) + ": Unfinished!"
+    for i in range(1, int(count/2)+1): # only run count/2 times
+        if i % 2 != 0: player = 1
+        if i % 2 == 0: player = 2
+        position = getKthDigit(moves, count+1-i*2)
+        #print(i, count)
+        move = getKthDigit(moves, count-i*2)
+        foo = board
+        board = makeMove(board, position, move)
+        msgPlayer = "Player " + str(player)
+        if type(board) != int:
+            return str(foo) + ": " + msgPlayer + ": "+board
+        #print(position, move, board)
+    if isWin(board):
+        return str(board) + ": "+ msgPlayer + " wins!"
+    if not isFull(board):
+        return str(board) + ": Unfinished!"
+    return str(board)+": Tie!"
+    #return 42
+
 
 #################################################
 # hw2-required-functions
 #################################################
 
 def carrylessAdd(x1, x2):
-    return 42
+    numb = 0
+    count1 = digitCount(x1)
+    count2 = digitCount(x2)
+    countMin = min(count1, count2)
+    #countMax = max(count1, count2)
+    numbMax = max(x1, x2)
+    #print(count1, "-", count2, "=", countMin)
+    for i in range(1, countMin+1):
+        rem = (x1%10+x2%10)%10
+        x1 //= 10
+        x2 //= 10
+        numb += rem*10**(i-1)
+        #print("rem:", rem, numb)
+    if count1-count2 != 0:
+        for i in range(1, countMin+1):
+            numbMax //= 10
+            #print("left:", numbMax)
+        numb += numbMax*10**countMin
+        #print(numb)
+    return numb
+
+    #return 42
 
 def findZeroWithBisection(f, x0, x1, epsilon):
-    return 42
+    xmid = (x0+x1)/2
+    while x1-x0 >= epsilon:
+        a = f(x0)
+        z = f(x1)
+        mid = f(xmid)   
+        if a*z > 0: return None
+        if mid != 0:
+            if a*mid >0: x0 = xmid
+            if z*mid >0: x1 = xmid
+            xmid = (x0+x1)/2 # new mid
+        #print(x0, "..", xmid,"..", x1)
+        if mid == 0:
+            return None
 
-def nthKaprekarNumber(n):
-    return 42
+    return xmid
+
+def checkKaprekar(n):
+    check = n
+    count = digitCount(n)
+    #print(count)
+    n = n**2
+    c1 = count
+    for i in range(2):
+        foo = n//10**(count-1+i)
+        bar = n-foo*10**(count-1+i)
+        #print(n, count-1+i, foo, bar)
+        if check == foo+bar and bar != 0:
+            return True
+    return False
+
+def nthKaprekarNumber(nth):
+    # 1, 9, 45, 55, 99, 297, 703, 999 , 2223, 2728,...
+    found = 0
+    guess = 0
+    while (found <= nth):
+        guess += 1
+        cond = checkKaprekar(guess)
+        if cond:
+            found += 1
+            #print(guess, checkKaprekar(guess))
+    return guess
+
 
 #################################################
 # hw2-bonus-functions
@@ -460,7 +731,7 @@ def testAll():
     testNthPalindromicPrime()
 
     # hw2-spicy
-    #testPlay112()
+    testPlay112()
 
     # hw2-required
     testCarrylessAdd()
@@ -468,8 +739,8 @@ def testAll():
     testNthKaprekarNumber()
 
     # hw2-bonus
-    testCarrylessMultiply()
-    testNearestKaprekarNumber()
+    #testCarrylessMultiply()
+    #testNearestKaprekarNumber()
 
     # hw2-spicy-bonus
     # testIntegerDataStructures()
@@ -478,5 +749,166 @@ def main():
     cs112_s21_week2_linter.lint()
     testAll()
 
+    #print(digitCompare(3))
+    #print(digitCompare(4))
+    #print(digitCompare(5))
+    #print(digitCompare(9))
+    #print(digitCompare(67))
+    #print(digitCompare(509))
+
+    #print("prime:",isPrime(3))
+    #print("prime:",isPrime(5))
+    #print("prime:",isPrime(17))
+    #print("prime:",isPrime(83))
+    #print("prime:",isPrime(173))
+    #print("prime:", isPrime(509))
+    #print("prime:", isPrime(511))
+    #print("prime:",isPrime(1373731))
+    #print("prime:",isPrime(149345643266432421))
+    #testNumb = 13173
+    #print(testNumb, isPrime(testNumb) and digitRotate(testNumb))
+
+    #print("rota: ",digitRotate(3))
+    #print("rota: ",digitRotate(5))
+    #print("rota: ", digitRotate(19))
+    #print("rota: ", digitRotate(23))
+    #print("rota: ", digitRotate(173))
+    #print("rota: ", digitRotate(509))
+    #print("rota: ", digitRotate(7937))
+
+    #print(nthCircularPrime(0), end="?2 ")
+    #print(nthCircularPrime(1), end="?3 ")
+    #print(nthCircularPrime(2), end="?5 ")
+    #print(nthCircularPrime(3), end="?7 ")
+    #print(nthCircularPrime(4), end="?11 ")
+    #print(nthCircularPrime(5), end="?13 ")
+    #print(nthCircularPrime(6), end="?17 ")
+    #print(nthCircularPrime(7), end="?31 ") #91
+    #print(nthCircularPrime(9), end="?71 ")
+    #print(nthCircularPrime(10), end="?73 ")
+    #print(nthCircularPrime(11), end="?79 ")
+    #print(nthCircularPrime(12), end="?97 ")
+    #print(nthCircularPrime(13), end="?113 ") #bug
+    #print(nthCircularPrime(14), end=" ")
+    #print(nthCircularPrime(15), end="?197 ")
+    #print(nthCircularPrime(16), end=" ")
+    #print(nthCircularPrime(20), end="?719 ")
+    #print(nthCircularPrime(25), end="?1193 ")
+    #print(nthCircularPrime(30), end="? ")
+    #print(digitNth(54321, 5))
+    #print(digitEqual(54321))
+    #print(digitEqual(9))
+    #print(digitEqual(121))
+    #print(digitEqual(3021))
+    #print(digitEqual(1011))
+    #print(digitEqual2(10201))
+    #print(digitEqual(102201))
+
+    #print(nthPalindromicPrime(5))  
+    #print(nthPalindromicPrime(20))  # 10301
+    #print(carrylessAdd(720085, 76))
+    #print(carrylessAdd(785, 376))
+    #print(carrylessAdd(30, 376))
+    #print(findZeroWithBisection(f1, 0, 2, 0.000000001))  # 1.41421356192
+    #print(findZeroWithBisection(f2, 0, 2, 0.000000001))  # 1.61803398887
+    #print(findZeroWithBisection(f3, 1, 2, 0.000000001))  # 17727855081
+
+    #print(checkKaprekar(1))
+    #print(checkKaprekar(230))
+    #print(checkKaprekar(297))
+    #print(checkKaprekar(703))
+    #print(checkKaprekar(999))
+    #print(checkKaprekar(2223))
+    #print(checkKaprekar(2728))
+    #print(checkKaprekar(2729))
+    #print(checkKaprekar(100))
+    #print(nthKaprekarNumber(0)) # 1
+    #print(nthKaprekarNumber(1)) # 9
+    '''print(nthKaprekarNumber(2)) # 45
+    print(nthKaprekarNumber(3)) # 55
+    print(nthKaprekarNumber(4)) # 99
+    print(nthKaprekarNumber(5)) # 297
+    print(nthKaprekarNumber(6)) # 703'''
+
+
+    '''assert(makeBoard(1) == 8)
+    assert(makeBoard(2) == 88)
+    assert(makeBoard(3) == 888)
+    assert(digitCount(0) == 1)
+    assert(digitCount(5) == digitCount(-5) == 1)
+    assert(digitCount(42) == digitCount(-42) == 2)
+    assert(digitCount(121) == digitCount(-121) == 3)
+    assert(getKthDigit(789, 0) == getKthDigit(-789, 0) == 9)
+    assert(getKthDigit(789, 1) == getKthDigit(-789, 1) == 8)
+    assert(getKthDigit(789, 2) == getKthDigit(-789, 2) == 7)
+    assert(getKthDigit(789, 3) == getKthDigit(-789, 3) == 0)
+    assert(getKthDigit(789, 4) == getKthDigit(-789, 4) == 0)
+    assert(setKthDigit(789, 0, 6) == 786)
+    assert(setKthDigit(789, 1, 6) == 769)
+    assert(setKthDigit(789, 2, 6) == 689)
+    assert(setKthDigit(789, 3, 6) == 6789)
+    assert(setKthDigit(789, 4, 6) == 60789)
+    assert(getLeftmostDigit(7089) == 7)
+    assert(getLeftmostDigit(89) == 8)
+    assert(getLeftmostDigit(9) == 9)
+    assert(getLeftmostDigit(0) == 0)
+    assert(clearLeftmostDigit(789) == 89)
+    assert(clearLeftmostDigit(89) == 9)
+    assert(clearLeftmostDigit(9) == 0)
+    assert(clearLeftmostDigit(0) == 0)
+    assert(clearLeftmostDigit(60789) == 789)
+    assert(makeMove(8, 1, 1) == 1)
+    assert(makeMove(888888, 1, 1) == 188888)
+    assert(makeMove(888888, 2, 1) == 818888)
+    assert(makeMove(888888, 5, 2) == 888828)
+    assert(makeMove(888888, 6, 2) == 888882)
+    assert(makeMove(888888, 6, 3) == "move must be 1 or 2!")
+    assert(makeMove(888888, 7, 1) == "offboard!")
+    assert(makeMove(888881, 6, 1) == "occupied!")
+    assert(isWin(888888) == False)
+    assert(isWin(112888) == True)
+    assert(isWin(811288) == True)
+    assert(isWin(888112) == True)
+    assert(isWin(211222) == True)
+    assert(isWin(212212) == False)
+    assert(isFull(888888) == False)
+    assert(isFull(121888) == False)
+    assert(isFull(812188) == False)
+    assert(isFull(888121) == False)
+    assert(isFull(212122) == True)
+    assert(isFull(212212) == True)
+    '''
+
+    #assert(play112( 52112315142 ) == "21121: Player 1 wins!")
+    #print(makeBoard(5))
+    #print(digitCount(543))
+    #print(getKthDigit(211231, 4))
+    #print(getLeftmostDigit(543))
+    #print(clearLeftmostDigit(543))
+    #print(makeMove(888888, 6, 1))
+    #print(makeMove(888888, 6, 3))
+    #print(makeMove(888888, 7, 1))
+    #print(makeMove(888881, 6, 1))
+    #print(isWin(888888))
+    #print(isWin(811288))
+    #print(isWin(112888))
+    #print(isFull(812188))
+    #print(isFull(212212))
+    
+    #print(play112(5 ))
+    #print(play112(521))
+    #print(play112(5211231 )) 
+    #print(play112(523))
+    #print(play112(51223))
+    #print(play112(51211))
+    #print(play112(5122221))
+    #print(play112(51261))
+
+    #print(play112(521123142))
+    #print(play112(51122324152))
+    
+
+
 if __name__ == '__main__':
     main()
+
