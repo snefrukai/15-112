@@ -8,6 +8,9 @@
 import cs112_s21_week2_linter
 import math
 from tkinter import *
+from hw2 import isPrime
+from hw2 import digitCount
+from hw2 import getLeftmostDigit
 
 #################################################
 # Helper functions
@@ -29,14 +32,6 @@ def roundHalfUp(d):
 # Functions for you to write
 ################################################
 
-def digitCount(n):
-    n = abs(n)
-    count = 1
-    #if n < 10: count = 1
-    while n >= 10:
-        n //= 10
-        count += 1
-    return count
 
 def gcd(m, n):
     #gcd(x,y) == gcd(y, x%y)
@@ -49,8 +44,38 @@ def gcd(m, n):
     #print(n)
     return n
 
-def nthLeftTruncatablePrime(n):
-    return 42
+def digitCompare(n):
+    n = abs(n)
+    digitCheck = True
+    count = 1
+    while n >= 10:
+        n = n//10
+        foo = n % 10 == 0
+        if foo: digitCheck = False
+        count += 1
+    return count, digitCheck
+
+def leftTruncatable(n):
+    while n > 10:
+        count = digitCount(n)
+        a = getLeftmostDigit(n)
+        n = n-a*10**(count-1)
+        prime = isPrime(n)  
+        #print(n, prime)
+        if not prime: return False
+    return True
+
+def nthLeftTruncatablePrime(nth):
+    found = 0
+    guess = 0
+    while (found <= nth):
+        guess += 1
+        cond = digitCompare(guess) and isPrime(
+            guess) and leftTruncatable(guess)
+        if cond:
+            found += 1
+            #print(guess, digitEqual(guess), isPrime(guess))
+    return guess
 
 def nthPowerfulNumber(n):
     return 42
@@ -379,6 +404,7 @@ def testAll():
     testDigitCount()
     testGcd()   
     testNthLeftTruncatablePrime()
+    '''
     testNthPowerfulNumber()
     testNthWithProperty309()
     testIntegral()
@@ -391,11 +417,13 @@ def testAll():
     testNthPerfectNumber()
     testHappyPrimes()
     testIsSemiPrime()
-    testPrimeCounting()
+    testPrimeCounting()'''
 
 def main():
     cs112_s21_week2_linter.lint()
     testAll()
+    #print(leftTruncatable(9137))
+    print(nthLeftTruncatablePrime(10))
 
 if __name__ == '__main__':
     main()
