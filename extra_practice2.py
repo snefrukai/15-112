@@ -70,15 +70,29 @@ def nthLeftTruncatablePrime(nth):
     guess = 0
     while (found <= nth):
         guess += 1
-        cond = digitCompare(guess) and isPrime(
-            guess) and leftTruncatable(guess)
+        cond = digitCompare(guess) and isPrime(guess) and leftTruncatable(guess)
         if cond:
             found += 1
             #print(guess, digitEqual(guess), isPrime(guess))
     return guess
 
-def nthPowerfulNumber(n):
-    return 42
+def digitPowerful(n):
+    for i in range(1, n+1):
+        if n % i == 0 and isPrime(i):
+            print(n, i)
+            if n % i**2 != 0: return False
+    return True
+    #
+
+def nthPowerfulNumber(nth):
+    found = 0
+    guess = 0
+    while (found <= nth):
+        guess += 1
+        cond = digitPowerful(guess) 
+        if cond:
+            found += 1
+    return guess
 
 def nthWithProperty309(n):
     return 42
@@ -423,7 +437,13 @@ def main():
     cs112_s21_week2_linter.lint()
     testAll()
     #print(leftTruncatable(9137))
-    print(nthLeftTruncatablePrime(10))
+    #print(nthLeftTruncatablePrime(10))
+    #print(digitPowerful(25))
+    #print(digitPowerful(25))
+    #print(digitPowerful(44))
+    #print(digitPowerful(176))
+    print(nthPowerfulNumber(1))
+
 
 if __name__ == '__main__':
     main()
