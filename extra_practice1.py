@@ -5,6 +5,7 @@
 import cs112_s21_week1_linter
 import math
 
+
 #################################################
 # Helper functions
 #################################################
@@ -145,21 +146,24 @@ def nearestOdd(n):
 
 def getKthDigit(n, k):
     n = abs(n)
-    if k == 0:
+    foo = n//10**(k)%10
+    '''if k == 0:
         n = n%10
     if k == 1:
         n = n//10%10
     if k == 2:
         n = n//100%10
     if k >= 3:
-        n = 0
-    #print(n)
-    return n
+        n = 0'''
+    return foo
 
 def setKthDigit(n, k, d):
-    foo = n
+    negative = n < 0
     n = abs(n)
-    if k == 0:
+    rem = n//(10**k)%10*(10**k)
+    foo = d*10**k + n-rem
+    if negative: foo = -foo
+    '''if k == 0:
         n = n-n%10+d
     if k == 1:
         n = n-(n//10%10-d)*10
@@ -168,9 +172,39 @@ def setKthDigit(n, k, d):
     if k >= 3:
         n = n+10**k*d
     if foo < 0:
-        n = -n
-    #print(n)
-    return n
+        n = -n'''
+    return foo
+
+#################################################
+# quiz older
+#################################################
+# fall-20/15-112/notes/quiz1a.html
+
+def isDoubly(n):
+    if type(n) != int:
+        return "not an int"
+    n = abs(n)
+    if n >= 10000:
+        return "too many digits"
+    if 0 < n < 1000:
+        return "not enough digits"
+    foo = n//100
+    bar = n-foo*100
+    cond = foo == bar
+    #print(foo, bar, cond)
+    if cond: return True
+    elif not cond: return False
+
+# spring-20/15-112/notes/quiz1a.pdf
+
+def splitPower(x, n):
+    negative = x < 0
+    x = abs(x)
+    x // 10
+    #base = 
+    #pow = 
+    #return 42
+
 
 #################################################
 # Test Functions
@@ -373,6 +407,27 @@ def testAll():
 def main():
     cs112_s21_week1_linter.lint()
     testAll()
+    #print(getKthDigit(321, 0))
+    #print(getKthDigit(321, 5))
+    #print(getKthDigit(-321, 5))
+    #print(setKthDigit(468, 0, 1))
+    #print(setKthDigit(468, 1, 1))
+    #print(setKthDigit(468, 2, 1))
+    #print(setKthDigit(468, 3, 1))
+    #print(isDoubly(1.212))  # not an int
+    #print(isDoubly('wow'))  # also not an int
+    #print(isDoubly(66666))  # too many digits
+    #print(isDoubly(333))   # not enough digits
+    #print(isDoubly(-424))  # not enough digits
+    #print(isDoubly(1212))
+    #print(isDoubly(3838))
+    #print(isDoubly(9999))
+    #print(isDoubly(-4242))  # negatives are ok
+    #print(isDoubly(1221))  # 12 != 21
+    #print(isDoubly(1122))  # 11 != 22
+    #print(splitPower(23, 1)) # 2**3 == 8
+    #print(splitPower(123, 2)) # 1**23 == 1
+    #print(splitPower(-902, 2)) # (-9)**2 == 81
 
 if __name__ == '__main__':
     main()
