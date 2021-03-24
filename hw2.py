@@ -57,23 +57,6 @@ def longestDigitRun(n):
         return val
 
 
-def digitCompare(n):
-    n = abs(n)
-    digitClean = True
-    count = 1
-    #if n < 10: return count, digitClean
-    #not work when n < 10
-    while n >= 10:
-        n = n//10
-        foo = n % 10 == 0 or n % 10 % 2 == 0 or n % 10 % 5 == 0
-        # n = 0, 2, 4, 5, 6, 8
-        #print(n % 10%2)
-        if foo:
-            digitClean = False
-        count += 1
-        #print("digit:", n, "count:",count, digitClean)
-    return count, digitClean
-
 def isPrime(n):
     if (n < 2):
         return False
@@ -88,15 +71,29 @@ def isPrime(n):
     #print("prime:", True)
     return True
 
+def digitExclude(n):
+    n = abs(n)
+    digitCheck = True
+    count = 1
+    #if n < 10: return count, digitCheck
+    #not work when n < 10
+    while n >= 10:
+        n = n//10
+        # n = 0, 2, 4, 5, 6, 8
+        #print(n % 10%2)
+        if n % 10 == 0 or n % 10 % 2 == 0 or n % 10 % 5 == 0:
+            digitCheck = False
+        #print("digit:", n, "count:",count, digitCheck)
+    return True
 
 def digitRotate(n):
     n = abs(n)
     if (n <= 11):
         return True
     rotate = True
-    count, digitClean = digitCompare(n)
-    if not digitClean:
-        return False
+    count = digitCount(n)
+    #count, digitCheck = digitExclude(n)
+    #if not digitCheck: return False
     for m in range(1, count):
         #a = n
         #while (a >= 10):
@@ -124,30 +121,29 @@ def nthCircularPrime(nth):
     guess = 0
     while (found <= nth):
         guess += 1
-        count, digitClean = digitCompare(guess)
-        #print(count, digitClean)
-        cond = digitClean and isPrime(guess) and digitRotate(guess)
-        #cond = digitClean and isPrime(guess)
+        cond = digitExclude(guess) and isPrime(guess) and digitRotate(guess)
+        #cond = digitCheck and isPrime(guess)
         if cond:
             found += 1
-            #print(guess, digitClean, isPrime(guess), digitRotate(guess))
+            #print(guess, digitCheck, isPrime(guess), digitRotate(guess))
     return guess
 
 
 def digitCount(n):
     n = abs(n)
     count = 1
+    #if n < 10: count = 1
     while n >= 10:
         n //= 10
         count += 1
     return count
 
-def digitNth(n, nth):
+'''def getKthDigit(n, nth):
     for i in range(nth):
         rem = n%10
         n //= 10
     #print("count:", count, "nth:", rem)
-    return rem
+    return rem'''
 
 def digitEqual(n):
     if n > 10:
@@ -162,8 +158,8 @@ def digitEqual(n):
             #print(i, a, "..", z)
             if not cond: return False
         '''for i in range(1, count+1):
-            a = digitNth(n, count+1-i)
-            z = digitNth(n, i)'''
+            a = getKthDigit(n, count+1-i)
+            z = getKthDigit(n, i)'''
     return True
     '''
         z = n % 10
@@ -749,12 +745,12 @@ def main():
     cs112_s21_week2_linter.lint()
     testAll()
 
-    #print(digitCompare(3))
-    #print(digitCompare(4))
-    #print(digitCompare(5))
-    #print(digitCompare(9))
-    #print(digitCompare(67))
-    #print(digitCompare(509))
+    #print(digitExclude(3))
+    #print(digitExclude(4))
+    #print(digitExclude(5))
+    #print(digitExclude(9))
+    #print(digitExclude(67))
+    #print(digitExclude(509))
 
     #print("prime:",isPrime(3))
     #print("prime:",isPrime(5))
@@ -768,13 +764,13 @@ def main():
     #testNumb = 13173
     #print(testNumb, isPrime(testNumb) and digitRotate(testNumb))
 
-    #print("rota: ",digitRotate(3))
-    #print("rota: ",digitRotate(5))
-    #print("rota: ", digitRotate(19))
-    #print("rota: ", digitRotate(23))
-    #print("rota: ", digitRotate(173))
-    #print("rota: ", digitRotate(509))
-    #print("rota: ", digitRotate(7937))
+    #print(digitRotate(3))
+    #print(digitRotate(5))
+    #print( digitRotate(19))
+    #print( digitRotate(23))
+    #print( digitRotate(173))
+    #print( digitRotate(509))
+    #print( digitRotate(7937))
 
     #print(nthCircularPrime(0), end="?2 ")
     #print(nthCircularPrime(1), end="?3 ")
@@ -795,7 +791,7 @@ def main():
     #print(nthCircularPrime(20), end="?719 ")
     #print(nthCircularPrime(25), end="?1193 ")
     #print(nthCircularPrime(30), end="? ")
-    #print(digitNth(54321, 5))
+    #print(getKthDigit(54321, 5))
     #print(digitEqual(54321))
     #print(digitEqual(9))
     #print(digitEqual(121))
