@@ -1,7 +1,7 @@
 {
-    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Enabled": false,
     "python.linting.enabled": true,
-    "python.linting.pylamaEnabled": false,
+    "python.linting.pylamaEnabled": true,
     "python.linting.pylintEnabled": false,
     "python.formatting.provider": "yapf"
 }
