@@ -4,21 +4,21 @@
 
 ```mermaid
 graph TD
-    input
-    --> 1{check int}
-        --F--> 91[rtn: not int]
-        1--T
-    --> 2{check digits}
-        -- F
-        --> 92[rtn: not circ]
+    0[input nth]
+    --> 1[n += 1]
+    --> 2{{circular_p_digit}}
+        --> 1
         2--T
-    --> 3{check prime}
-        --F--> 92
+    --> 3{{isPrime}}
+        --> 1
         3--T
-    --> 4{check rotate}
-        --F--> 92
+    --> 4{{circular_p_rotate}}
+        --> 1
         4--T
-    --> 90[rtn: n]
+    --> 6{{nth circular prime}}
+        --> 1
+        6--T
+    --> 9[return n]
 ```
 
 ---
@@ -33,62 +33,51 @@ graph TD
 ```puml
 start
 
-- n
-if (check int) then
-        stop
-    else (T)
-if (check digit) then
-        stop
-    else (T)
-if (check prime) then
-        stop
-    else (T)
-if (check rotate) then
-        stop
-    else (T)
-- n
+-> input nth;
+- circular_p_digit
+- isPrime
+- circular_p_rotate
 
+-> return n;
 stop
 ```
-
----
 
 ## uml-detailed
 
 ```puml
 start
+- input nth
 
-- check int
-    if (type(n) == int) then(T)
-    else
-        -> F, rtn "not int";
-        stop
-    endif
-- check digit
-    note right
-        0, 5
-        * 509 -> 950, 95
-        2, 4, 6, 8 - 2n
-        * 29 -> 92
-    end note
-    -> n not have(0, 5, 2n);
-    if (digit % x != 0) then(T)
-    else
-        -> rtn: not circ;
-        stop
-    endif
-- check prime
-    if (is_prime(n) == T) then (T)
-    else
-        stop
-    endif
-- check rotate
--> rotate[bac, cba] are prime;
-    if (is_prime(rotate) == T) then (T)
-    else
-        stop
-    endif
--> rtn n;
+repeat
+    repeat
+        repeat
+
+            repeat
+            - n = n + 1
+            partition circular_p_digit {
+                - n % 0 != 0
+                - n % 5 != 0
+                - n % 2 != 0
+            }
+            repeatwhile () is (F)
+        partition isPrime {
+            - n
+        }
+        repeatwhile () is (F)
+    repeatwhile (circular_p_rotate(n)) is (F)
+- n, as a circular prime
+repeatwhile (n is the nth circular prime) is (F)
+
+- return n
+stop
+```
+
+```puml
+start
+
+    while (circular_p_digit)
+    - n=n+1
+    endwhile
 
 stop
 ```
