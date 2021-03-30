@@ -54,7 +54,7 @@ def longestDigitRun(n):
             runNew += 1
             valNew = n % 10
             # val = valNew
-        elif runNew > run:  # save new max
+        elif runNew > run:  # save max
             run = runNew
             val = n % 10
             runNew = 1
@@ -82,9 +82,9 @@ def isPrime(n):
     return True
 
 
-def circular_p_digit(n):
+def circular_p_digit(n):  # not have [0, 5, 2, 4, 6, 8]
     n = abs(n)
-    # not work when n < 10
+    # when n < 10, return...?
     while n >= 10:
         n = n // 10
         # print(n % 10%2)
@@ -93,26 +93,22 @@ def circular_p_digit(n):
     return True
 
 
-def circular_p_rotate(n):
+def circular_p_rotate(n):  # all rotates are prime(n):
     n = abs(n)
-    if (n <= 11):
-        return True
-    count = digitCount(n)
+    if (n <= 11): return True
+    count = digit_count(n)
     # if not digitCheck: return False
-    for m in range(1, count):
+    for i in range(1, count):
         # a = n
+        # count1 = 1
         # while (a >= 10):
-        # a = a//10
-        # print("left:",a)
-        # foo = (n-a*10**(count-1))*10+a
-        rem = n % 10
-        div = n / 10
-        # print(rem, 10, "**", count-1, div)
-        foo = int(rem * 10**(count - 1) + div)
-        n = foo
-        # print("rotate:", m, foo)
-        if not isPrime(n):
-            return False
+        #     a = a // 10
+        #     count1 += 1
+        # # print("left1:", a, count1)
+        # foo = (n - a * 10**(count1 - 1)) * 10 + a
+        n = n // 10 + n % 10 * 10**(count - 1)
+        # print("rotate:", i, foo)
+        if not isPrime(n): return False
     return True
 
 
@@ -123,13 +119,12 @@ def nthCircularPrime(nth):
         guess += 1
         cond = circular_p_digit(guess) and isPrime(
             guess) and circular_p_rotate(guess)
-        if cond:
-            found += 1
-            # print(guess, isPrime(guess), circular_p_rotate(guess))
+        if cond: found += 1
+        # print(guess, isPrime(guess), circular_p_rotate(guess))
     return guess
 
 
-def digitCount(n):
+def digit_count(n):
     n = abs(n)
     count = 1
     # if n < 10: count = 1
@@ -139,48 +134,27 @@ def digitCount(n):
     return count
 
 
-'''def getKthDigit(n, nth):
-    for i in range(nth):
-        rem = n%10
-        n //= 10
-    # print("count:", count, "nth:", rem)
-    return rem'''
-
-
-def digitEqual(n):
+def palindromic_digit(n):
     if n > 10:
-        count = digitCount(n)
-        for i in range(count):
-            if i >= count / 2:
-                break
-            a = n // 10**(count - 1 - i) % 10
-            z = n // 10**i % 10
-            cond = a == z
-            # print(a, "..?", z, cond)
+        count = digit_count(n)
+        for i in range(int(count / 2)):
+            a = getKthDigit(n, count - 1 - i)
+            z = getKthDigit(n, i)
+            # a = n[i]
+            # z = n[-1 - i]
             # print(i, a, "..", z)
-            if not cond:
-                return False
-        '''for i in range(1, count+1):
-            a = getKthDigit(n, count+1-i)
-            z = getKthDigit(n, i)'''
+            if a != z: return False
     return True
-    '''
-        z = n % 10
-        a = n
-        count = 1
-        while (n >= 10):
-            n //= 10
-            count += 1
-            a = n
-        print("equal:",foo,"count",count,a,"...",z)
-        if not a == z:
-            return False
-        n = (foo-a*10**(count-1))//10
-        print(n)'''
-    # n>100 and count = even
-    # if count % 2 == 0 and n <= 10:
-    # return False
-    # return 42
+
+
+# def getNth(nth, cond):
+#     found = 0
+#     guess = 0
+#     while (found <= nth):
+#         guess += 1
+#         x = cond {cond1(guess), cond2(guess)}
+#         if x(guess): found += 1
+#     return guess
 
 
 def nthPalindromicPrime(nth):
@@ -188,10 +162,9 @@ def nthPalindromicPrime(nth):
     guess = 0
     while (found <= nth):
         guess += 1
-        cond = digitEqual(guess) and isPrime(guess)
-        if cond:
-            found += 1
-            # print(guess, digitEqual(guess), isPrime(guess))
+        cond = palindromic_digit(guess) and isPrime(guess)  # how to extract
+        if cond: found += 1
+        # print(guess, palindromic_digit(guess), isPrime(guess))
     return guess
 
 
@@ -219,7 +192,7 @@ def getLeftmostDigit(n):
 
 
 def clearLeftmostDigit(n):
-    count = digitCount(n)
+    count = digit_count(n)
     a = getLeftmostDigit(n)
     # print(count, a)
     n = n - a * 10**(count - 1)
@@ -229,7 +202,7 @@ def clearLeftmostDigit(n):
 def makeMove(board, position, move):
     if move != 1 and move != 2:
         return "move must be 1 or 2!"  # break and return
-    count = digitCount(board)
+    count = digit_count(board)
     if position > count:
         return "offboard!"  # break and return
     chg = getKthDigit(board, count - position)
@@ -242,7 +215,7 @@ def makeMove(board, position, move):
 
 
 def isWin(n):
-    # count = digitCount(board)
+    # count = digit_count(board)
     # for i in range(1, count-1):
     while n // 100 > 0:
         rem3 = n % 10
@@ -267,7 +240,7 @@ def play112(game):
     left = getLeftmostDigit(game)
     board = makeBoard(left)
     moves = clearLeftmostDigit(game)
-    count = digitCount(moves)
+    count = digit_count(moves)
     # print(board, moves, count)
     if moves < 10:
         return str(board) + ": Unfinished!"
@@ -299,26 +272,23 @@ def play112(game):
 
 
 def carrylessAdd(x1, x2):
-    numb = 0
-    count1 = digitCount(x1)
-    count2 = digitCount(x2)
-    countMin = min(count1, count2)
-    # countMax = max(count1, count2)
-    numbMax = max(x1, x2)
-    # print(count1, "-", count2, "=", countMin)
-    for i in range(1, countMin + 1):
+    n = 0
+    count_x1 = digit_count(x1)
+    count_x2 = digit_count(x2)
+    count_min = min(count_x1, count_x2)
+    # countMax = max(count_x1, count_x2)
+    n_max = max(x1, x2)
+    # print(count_x1, "-", count_x2, "=", count_min)
+    for i in range(count_min):
         rem = (x1 % 10 + x2 % 10) % 10
         x1 //= 10
         x2 //= 10
-        numb += rem * 10**(i - 1)
-        # print("rem:", rem, numb)
-    if count1 - count2 != 0:
-        for i in range(1, countMin + 1):
-            numbMax //= 10
-            # print("left:", numbMax)
-        numb += numbMax * 10**countMin
-        # print(numb)
-    return numb
+        n += rem * 10**i
+        # print("rem:", rem, n)
+    if count_x1 != count_x2:
+        # print("left:", n_max)
+        n = n + n_max // 10**count_min * 10**count_min
+    return n
 
     # return 42
 
@@ -346,7 +316,7 @@ def findZeroWithBisection(f, x0, x1, epsilon):
 
 def checkKaprekar(n):
     check = n
-    count = digitCount(n)
+    count = digit_count(n)
     # print(count)
     n = n**2
     for i in range(2):
@@ -904,7 +874,7 @@ def main():
     # print( circular_p_rotate(19))
     # print( circular_p_rotate(23))
     # print(circular_p_rotate(173))
-    # print(circular_p_rotate(509))
+    # print(circular_p_rotate(709))  # 097 970
     # print(circular_p_rotate(590))
     # print( circular_p_rotate(7937))
 
@@ -928,13 +898,13 @@ def main():
     # print(nthCircularPrime(25), end="?1193 ")
     # print(nthCircularPrime(30), end="? ")
     # print(getKthDigit(54321, 5))
-    # print(digitEqual(54321))
-    # print(digitEqual(9))
-    # print(digitEqual(121))
-    # print(digitEqual(3021))
-    # print(digitEqual(1011))
-    # print(digitEqual2(10201))
-    # print(digitEqual(102201))
+    # print(palindromic_digit(54321))
+    # print(palindromic_digit(9))
+    # print(palindromic_digit(121))
+    # print(palindromic_digit(3021))
+    # print(palindromic_digit(1011))
+    # print(palindromic_digit2(10201))
+    # print(palindromic_digit(102201))
 
     # print(nthPalindromicPrime(5))
     # print(nthPalindromicPrime(20))  # 10301
@@ -964,10 +934,10 @@ def main():
     '''assert(makeBoard(1) == 8)
     assert(makeBoard(2) == 88)
     assert(makeBoard(3) == 888)
-    assert(digitCount(0) == 1)
-    assert(digitCount(5) == digitCount(-5) == 1)
-    assert(digitCount(42) == digitCount(-42) == 2)
-    assert(digitCount(121) == digitCount(-121) == 3)
+    assert(digit_count(0) == 1)
+    assert(digit_count(5) == digit_count(-5) == 1)
+    assert(digit_count(42) == digit_count(-42) == 2)
+    assert(digit_count(121) == digit_count(-121) == 3)
     assert(getKthDigit(789, 0) == getKthDigit(-789, 0) == 9)
     assert(getKthDigit(789, 1) == getKthDigit(-789, 1) == 8)
     assert(getKthDigit(789, 2) == getKthDigit(-789, 2) == 7)
@@ -1011,7 +981,7 @@ def main():
 
     # assert(play112( 52112315142 ) == "21121: Player 1 wins!")
     # print(makeBoard(5))
-    # print(digitCount(543))
+    # print(digit_count(543))
     # print(getKthDigit(211231, 4))
     # print(getLeftmostDigit(543))
     # print(clearLeftmostDigit(543))
@@ -1036,6 +1006,8 @@ def main():
 
     # print(play112(521123142))
     # print(play112(51122324152))
+
+    # print(digit_equal_first_last(12325))
 
 
 if __name__ == '__main__':

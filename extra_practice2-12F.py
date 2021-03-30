@@ -2,7 +2,7 @@ import time
 import math
 
 
-def digitCount(n, digit):  # digitCount(123423526, 2) returns 3
+def digit_count(n, digit):  # digit_count(123423526, 2) returns 3
     n = abs(n)
     count = 0
     if n == 0 and digit == 0:
@@ -15,13 +15,13 @@ def digitCount(n, digit):  # digitCount(123423526, 2) returns 3
     return count
 
 
-# assert digitCount(123423526, 2) == 3
-# digitCount(224, 2) #2
-# digitCount(224, 0)  # 0
-# digitCount(2, 2)  # 1
-# digitCount(-2, 2)  # 1
-# digitCount(100, 0)  # 2
-# digitCount(0, 0)  # 1
+# assert digit_count(123423526, 2) == 3
+# digit_count(224, 2) #2
+# digit_count(224, 0)  # 0
+# digit_count(2, 2)  # 1
+# digit_count(-2, 2)  # 1
+# digit_count(100, 0)  # 2
+# digit_count(0, 0)  # 1
 
 # %%
 
@@ -44,7 +44,7 @@ def mostFrequentDigit(n):
             else:
                 val = digit
         digit += 1
-    return(run, val)
+    return (run, val)
 
 
 assert mostFrequentDigit(11) == (2, 1)
@@ -53,7 +53,6 @@ assert mostFrequentDigit(101) == (2, 1)
 assert mostFrequentDigit(100) == (2, 0)
 assert mostFrequentDigit(9898) == (2, 9)
 # print(mostFrequentDigit(9898))
-
 
 # %%
 # current_time_str = input("What is the current time (in hours 0-23)?")
