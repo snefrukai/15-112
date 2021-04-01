@@ -64,9 +64,10 @@ def largestNumber(s):
 
 
 def rotateStringLeft(s, n):
-    n = n % len(s)
     if n == 0: return s
-    return s[n:] + s[:n]
+    n = n % len(s)
+    s = s[n:] + s[:n]
+    return s
 
 
 def isRotation(s, t):
@@ -103,8 +104,6 @@ def topScorer(data):
             score_max = score_total
         elif score_total == score_max:
             winner += "," + name
-        # print(line)
-        # print(name, score_total)
     return winner
 
 
@@ -121,25 +120,40 @@ def topScorer(data):
 def count_match_exact(s, s1):
     count = 0
     len_s = len(s)
-    match_exact = ""
+    match = ""
     text = " exact match"
+    if s == s1: return s, s1, "win"
 
-    for i in range(len(s)):
+    # replace when match
+    i = 0
+    k = len(s)
+    while i < k:
         if s[i] == s1[i]:
+            s = str_del_kth(s, i)
+            s1 = str_del_kth(s1, i)
             count += 1
-            if not s[i] in match_exact:
-                match_exact += s[i]
-        # print(i, count, match_exact)
-    for c in match_exact:
-        s = s.replace(c, "")
-        s1 = s1.replace(c, "")
+            k -= 1
+        else:
+            i += 1
+        # print(i, k, count, s, s1)
 
-    if count == len_s: result_exact = 'You win!!!'
-    elif count == 0: result_exact = "none"
-    else:
+    # replace after match
+    # for i in len(s):
+    #     if s[i] == s1[i]:
+    #         match += str(i)
+
+    if count == 0: result = "none"
+    elif count < len_s:
         if count > 1: text += "es"
-        result_exact = str(count) + text
-    return s, s1, result_exact
+        result = str(count) + text
+    return s, s1, result
+
+
+def str_del_kth(s, i):
+    if i > len(s) - 1: return "out of range"
+    elif i == len(s) - 1: return s[:i]
+    elif i == 0: return s[i + 1:]
+    else: return s[:i] + s[i + 1:]
 
 
 def count_match_partial(s, s1):
@@ -151,39 +165,26 @@ def count_match_partial(s, s1):
         if k >= 0:
             count += 1
             s1 = str_del_kth(s1, k)
-            # print(count, k, s1)
 
-    if count == 0: result_partial = 'No matches'
+    if count == 0: result = 'No matches'
     else:
         if count > 1: text += "es"
-        result_partial = str(count) + text
-    return s, s1, result_partial
-
-
-def str_del_kth(s, k):
-    # print(s, k, len(s))
-    if k > len(s) - 1: return "out of range"
-    elif k == len(s) - 1: s = s[:k]
-    elif k == 0: s = s[k + 1:]
-    else: s = s[:k] + s[k + 1:]
-    # print(s[:k], s[k + 1:])
-    return s
+        result = str(count) + text
+    return s, s1, result
 
 
 def mastermindScore(s, s1):
     result = "sth bug"
-    # print(s, s1)
     s, s1, result_exact = count_match_exact(s, s1)
-    # print(s, s1, result_exact)
+    if result_exact == 'win': return 'You win!!!'
     s, s1, result_partial = count_match_partial(s, s1)
-    # print(s, s1, result_partial)
+
     if result_exact == "none":
-        result = result_partial
+        return result_partial
     elif result_partial == "No matches":
-        result = result_exact
+        return result_exact
     else:
-        result = result_exact + ", " + result_partial
-    return result
+        return result_exact + ", " + result_partial
 
 
 def topLevelFunctionNames(code):
@@ -250,8 +251,8 @@ def cipher_rotate(text, groups, step):
 
 def encodeRightLeftRouteCipher(text, rows):
     col = math.ceil(len(text) / rows)
-    fill = col * rows - len(text)
 
+    fill = col * rows - len(text)
     endcode = text + string.ascii_lowercase[-fill:][::-1]
     endcode = cipher_reindex(endcode, rows, col)
     endcode = cipher_rotate(endcode, rows, col)
@@ -268,8 +269,7 @@ def decodeRightLeftRouteCipher(text):
     # print(rows, col, decode)
     decode = cipher_rotate(decode, rows, col)
     decode = cipher_reindex(decode, col, rows)
-    while decode[-1] in string.ascii_lowercase:
-        decode = decode.replace(decode[-1], "")
+    decode = str_del_trailing(decode, string.ascii_lowercase)
 
     return decode
 
@@ -280,7 +280,7 @@ def decodeRightLeftRouteCipher(text):
 #################################################
 
 
-def trailing_remove(text, s):
+def str_del_trailing(text, s):
     while text[-1] in s:
         text = text[:-1]
     while text[0] in s:
@@ -307,7 +307,7 @@ def patternedMessage(msg, pattern):
             line_new += foo
         # print(line_new)
         pattern_new += "\n" + line_new
-    pattern_new = trailing_remove(pattern_new, "\n")
+    pattern_new = str_del_trailing(pattern_new, "\n")
 
     return pattern_new
 
@@ -344,7 +344,10 @@ def funDecode3(msg):
 # Test Functions
 #################################################
 
+# helper func
 
+
+# course func
 def testLargestNumber():
     print("Testing largestNumber()...", end="")
     # assert (largestNumber("I saw 3") == 3)
@@ -359,6 +362,8 @@ def testLargestNumber():
 
 
 def testRotateStringLeft():
+    # print(rotateStringLeft("abcde", 2))
+    # print(rotateStringLeft("abcde", -2))
     print('Testing rotateStringLeft()...', end='')
     assert (rotateStringLeft('abcde', 0) == 'abcde')
     assert (rotateStringLeft('abcde', 1) == 'bcdea')
@@ -376,6 +381,11 @@ def testRotateStringLeft():
 
 
 def testIsRotation():
+    # print(isRotation("ab", "ba"))
+    # data = '''\
+    # Fred,10,20,30,40
+    # Wilma,10,20,30, 40
+    # '''
     print('Testing isRotation()...', end='')
     assert (isRotation('a',
                        'a') == False)  # a string is not a rotation of itself
@@ -414,8 +424,49 @@ Wilma,10,20,30,1
     print('Passed!')
 
 
+def test_count_match_exact():
+    print("Testing mastermindScore()...", end="")
+    # print(count_match_exact('abcd', 'abcd'))
+    # assert count_match_exact('affa', 'ayyy') == (
+    # 'ffa', 'yyy', '1 exact match')
+    parms = [
+        # ('abcd', 'abcd'),
+        ('aafa', 'aayy'),
+        ('affb', 'ayyb'),
+        ('affa', 'ayyy'),
+        ('abcxyz', 'xyzabc')
+    ]
+    solns = [
+        # ('abcd', 'abcd', 'win'),
+        ('fa', 'yy', '2 exact matches'),
+        ('ff', 'yy', '2 exact matches'),
+        ('ffa', 'yyy', '1 exact match'),
+        ('abcxyz', 'xyzabc', 'none')
+    ]
+    for i, (s, s1) in enumerate(parms):
+        soln = solns[i]
+        observed = count_match_exact(s, s1)
+        if observed != soln:  # if bug show comparisons
+            print("\n! fix: \n", observed, "\n", solns[i])
+        assert (observed == soln)
+    print('Passed!')
+
+
+def test_count_match_partial():
+    # print(count_match_partial('ooffzx', 'yyazb'))  # z, 1
+    # print(count_match_partial('aaffzx', 'yyazb'))  # az, 2
+    # print(count_match_partial('aaffzx', 'ooo'))  # none
+    return 42
+
+
 def testMastermindScore():
     print("Testing mastermindScore()...", end="")
+    # print(mastermindScore('abcd', 'aabd'))
+    # print(mastermindScore('efgh', 'abef'))
+    # print(mastermindScore('efgh', 'efef'))
+    # print(mastermindScore('ijkl', 'mnop'))
+    # print(mastermindScore('abcd', 'aabd'))
+    # print(mastermindScore('abcd', 'aabd'))
     assert (mastermindScore('abcd',
                             'aabd') == '2 exact matches, 1 partial match')
     assert (mastermindScore('efgh', 'abef') == '2 partial matches')
@@ -543,7 +594,16 @@ def testPlayPoker():
     print('Passed!')
 
 
+def test_str_del_kth():
+    assert (str_del_kth("123", 3) == 'out of range')
+    assert (str_del_kth("123", 0) == '23')
+    assert (str_del_kth("123", 2) == '12')
+    assert (str_del_kth("123", 1) == '13')
+
+
 def testEncodeRightLeftRouteCipher():
+    # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 3))  # 3WTCTWNDKTEAAAAz
+    # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 5))  # 5WADACEAKWNATTTz
     print('Testing encodeRightLeftRouteCipher()...', end='')
     assert (encodeRightLeftRouteCipher("WEATTACKATDAWN",
                                        4) == "4WTAWNTAEACDzyAKT")
@@ -555,6 +615,8 @@ def testEncodeRightLeftRouteCipher():
 
 
 def testDecodeRightLeftRouteCipher():
+    # print(decodeRightLeftRouteCipher("3WTCTWNDKTEAAAAz"))
+    # print(decodeRightLeftRouteCipher("4WTAWNTAEACDzyAKT"))
     print('Testing decodeRightLeftRouteCipher()...', end='')
     assert (
         decodeRightLeftRouteCipher("4WTAWNTAEACDzyAKT") == "WEATTACKATDAWN")
@@ -573,6 +635,18 @@ def testEncodeAndDecodeRightLeftRouteCipher():
 
 
 def testPatternedMessage():
+    # print(patternedMessage("1 23", "******   ******"))
+    # print(
+    #     patternedMessage(
+    #         "Three Diamonds!", """
+    #     *     *     *
+    #    ***   ***   ***
+    #   ***** ***** *****
+    #    ***   ***   ***
+    #     *     *     *
+    # """))
+    # patternedMessage("Three Diamonds!", """
+    # """)
     print('Testing patternedMessage()...', end='')
     parms = [("Go Pirates!!!", """
 ***************
@@ -739,7 +813,9 @@ def testAll():
     testTopScorer()
 
     # hw3-spicy
-    testMastermindScore()
+    test_count_match_exact()
+    # test_count_match_partial()
+    # testMastermindScore()
     # testTopLevelFunctionNames()
 
     # hw3-required
@@ -747,6 +823,7 @@ def testAll():
     # testPlayPoker()
 
     # hw3-collaborative
+    test_str_del_kth()
     testEncodeAndDecodeRightLeftRouteCipher()
 
     # hw3-bonus
@@ -758,60 +835,7 @@ def testAll():
 def main():
     cs112_s21_week3_linter.lint()
     testAll()
-    # print(rotateStringLeft("abcde", 2))
-    # print(rotateStringLeft("abcde", -2))
-    # print(isRotation("ab", "ba"))
-    # data = '''\
-    # Fred,10,20,30,40
-    # Wilma,10,20,30, 40
-    # '''
-    # print(topScorer(data))
-    # print(count_match_exact('abcd', 'afff'))  # 1
-    # print(count_match_exact('abay', 'afaz'))  # 2
-    # print(count_match_exact('afay', 'afaz'))  # 3
-    # print(count_match_exact('abcd', 'abcd'))  # win
-    # print(count_match_partial('ooffzx', 'yyazb'))  # z, 1
-    # print(count_match_partial('aaffzx', 'yyazb'))  # az, 2
-    # print(count_match_partial('aaffzx', 'ooo'))  # none
-    # print(mastermindScore('abcd', 'aabd'))
-    # print(mastermindScore('efgh', 'abef'))
-    # print(mastermindScore('efgh', 'efef'))
-    # print(mastermindScore('ijkl', 'mnop'))
-    # print(mastermindScore('abcd', 'aabd'))
-    # print(mastermindScore('abcd', 'aabd'))
 
-    # print(str_del_kth("123", 3))
-    # print(str_del_kth("123", 0))
-    # print(str_del_kth("123", 2))
-    # print(str_del_kth("123", 1))
-
-    # print(encode_fill("WN", 1))
-    # print(encode_fill("WN", 2))
-    # print(encode_row_get("WEATTACKATDAWN", 3, 5, 0))
-    # print(encode_row_get("WEATTACKATDAWNz", 3, 5, 1))
-    # print(encode_row_get("WEATTACKATDAWNz", 3, 5, 2))
-    # print(encode_row_get("WEATTACKATDAWN", 3, 5, 2))
-    # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 3))  # 3WTCTWNDKTEAAAAz
-    # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 5))  # 5WADACEAKWNATTTz
-
-    # print(decodeRightLeftRouteCipher("3WTCTWNDKTEAAAAz"))
-    # print(decodeRightLeftRouteCipher("4WTAWNTAEACDzyAKT"))
-    # print(patternedMessage("1 23", "******   ******"))
-
-
-#     print(
-#         patternedMessage(
-#             "Three Diamonds!", """
-#     *     *     *
-#    ***   ***   ***
-#   ***** ***** *****
-#    ***   ***   ***
-#     *     *     *
-# """))
-
-#     patternedMessage(
-#         "Three Diamonds!", """
-# """)
 
 if __name__ == '__main__':
     main()

@@ -647,40 +647,64 @@ return s[n:] + s[:n]
 
 #### step
 
+- str_del_kth
+  - s = aaa-i-bbb
+  - s = s[:i-1] + s[i+1:]
 - `count_match_exact(s, s1)` # abab, afaf
-  - ~~replace when match~~
-    - for i in [0, len(s)-1]
-      - if s[k] == s1[k]
-    - i = 0, k = 0
-      - bab, faf
-      - s = s[k+1:]
-    - i = 1, k =1
-      - bab, faf
-      - s = s[:k] + s[k+1:]
-    - replace 需精确到个位
-    - i 会因为 replace 导致 out range
-  - **replace after match**
-    - loop str, save count and match
-      - for i
-        - i[0, len(s)]
-    - loop match and replace
-  - all match
+  - if all match
+    - s = s1
     - count == len(s)
-    - s == ""
+    - s = ""
+  - loop and replace when match
+    - for i
+      - i = 4 ?
+      - replace 需精确到个位
+      - i 会因为 replace 导致 out range
+    - while i
+      - i = 0
+      - k = len-1 = 3
+      - i[0] # afcd, abcd
+        - k -= 1 # 3
+        - count += 1
+      - i[0] # fcd, bcd
+        - i += 1
+      - i[1] # fcd, bcd
+        - k -= 1 # 2
+        - count += 1
+      - i[1] # fd, bd
+      - i = 2 = k, stop
+    - _cant use replace at 1st_
+  - ~~loop andreplace after match~~
+    - for i in len
+      - if s[i] == s1[i]
+        - save i to match
+        - [1, 9, 11]
+        - "1911"
+        - 但里要存成 list
+    - for val in mactch
+      - use helper to delete
+        - 不能直接用用 replace
+  - result fromcount
+    - no match
+    - multi match
 - `count_match_partial(s, s1)` # bc, ab
-  - loop str, save count and match
+  - loop str
     - for i
       - i[0, len(s)]
-      - should only count once
-        - if match: break?
       - 0 aaffzx, yyazb - a, 1
       - 1 aaffzx, yyzb - 1
       - 4 aaffzx, yyzb - z, 2
       - 5 aaffzx, yyb - x, 2
-  - no match
-    - count == 0
+    - should only count once
+      - if match: break?
+    - _could use replace at 1st_
+  - result from count
+    - no
+    - multi
 
 #### rev
+
+- replace all
 
 ### 6. topLevelFunctionNames(code)
 
