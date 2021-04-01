@@ -3,7 +3,6 @@
 # name:
 # andrew id:
 #################################################
-
 import cs112_s21_week3_linter
 import math, string, random, basic_graphics
 
@@ -32,6 +31,22 @@ def roundHalfUp(d):  #helper-fn
 # hw3-standard-functions
 #################################################
 
+# def largestNumber(s):
+#     n = 0
+#     n_new = ""
+#     for i in range(len(s) - 1):
+#         if s[i].isdigit():
+#             n_new += s[i]
+#             if not s[i + 1].isdigit():  # digits end, 78a
+#                 n = max(int(n_new), n)
+#                 n_new = ""
+#             if i + 2 == len(s):  # end with digit, a7
+#                 n_new += s[i + 1]  # "" + "7"
+#                 n = max(int(n_new), n)
+#     # print(n, n_new)
+#     if n == 0: return None
+#     return n
+
 
 def largestNumber(s):
     n = 0
@@ -41,7 +56,7 @@ def largestNumber(s):
             n_new += s[i]
             n = max(int(n_new), n)
             # print(n, n_new)
-        else:  # if find alpha
+        else:  # if digits end
             n_new = ""
     # print(n, n_new)
     if n == 0: return None
@@ -49,15 +64,48 @@ def largestNumber(s):
 
 
 def rotateStringLeft(s, n):
-    return 42
+    n = n % len(s)
+    if n == 0: return s
+    return s[n:] + s[:n]
 
 
 def isRotation(s, t):
-    return 42
+    if s == t: return False
+    if len(s) != len(t): return False
+
+    for i in range(1, len(s)):
+        s = rotateStringLeft(s, i)
+        # print(s, t)
+        if s == t: return True
+    return False
+
+
+def score_total_get(data):
+    name = ""
+    score_total = 0
+    for val in data.split(","):
+        val = val.strip()
+        # print(val, val.isalpha())
+        if val.isalpha(): name = val.strip()
+        if val.isdigit(): score_total += int(val)
+    return name, score_total
 
 
 def topScorer(data):
-    return 42
+    winner = ""
+    score_max = 0
+    if data == "": return None
+
+    for line in data.splitlines():
+        name, score_total = score_total_get(line)
+        if score_total > score_max:  # save max
+            winner = name
+            score_max = score_total
+        elif score_total == score_max:
+            winner += "," + name
+        # print(line)
+        # print(name, score_total)
+    return winner
 
 
 #################################################
@@ -70,8 +118,72 @@ def topScorer(data):
 #################################################
 
 
-def mastermindScore(target, guess):
-    return 42
+def count_match_exact(s, s1):
+    count = 0
+    len_s = len(s)
+    match_exact = ""
+    text = " exact match"
+
+    for i in range(len(s)):
+        if s[i] == s1[i]:
+            count += 1
+            if not s[i] in match_exact:
+                match_exact += s[i]
+        # print(i, count, match_exact)
+    for c in match_exact:
+        s = s.replace(c, "")
+        s1 = s1.replace(c, "")
+
+    if count == len_s: result_exact = 'You win!!!'
+    elif count == 0: result_exact = "none"
+    else:
+        if count > 1: text += "es"
+        result_exact = str(count) + text
+    return s, s1, result_exact
+
+
+def count_match_partial(s, s1):
+    count = 0
+    text = " partial match"
+
+    for c in s:
+        k = s1.find(c)
+        if k >= 0:
+            count += 1
+            s1 = str_del_kth(s1, k)
+            # print(count, k, s1)
+
+    if count == 0: result_partial = 'No matches'
+    else:
+        if count > 1: text += "es"
+        result_partial = str(count) + text
+    return s, s1, result_partial
+
+
+def str_del_kth(s, k):
+    # print(s, k, len(s))
+    if k > len(s) - 1: return "out of range"
+    elif k == len(s) - 1: s = s[:k]
+    elif k == 0: s = s[k + 1:]
+    else: s = s[:k] + s[k + 1:]
+    # print(s[:k], s[k + 1:])
+    return s
+
+
+def mastermindScore(s, s1):
+    result = "sth bug"
+    # print(s, s1)
+    s, s1, result_exact = count_match_exact(s, s1)
+    # print(s, s1, result_exact)
+    s, s1, result_partial = count_match_partial(s, s1)
+    # print(s, s1, result_partial)
+    if result_exact == "none":
+        result = result_partial
+    elif result_partial == "No matches":
+        result = result_exact
+    else:
+        result = result_exact + ", " + result_partial
+    return result
 
 
 def topLevelFunctionNames(code):
@@ -113,12 +225,53 @@ def playPoker(deck, players):
 #################################################
 
 
+def cipher_reindex(text, groups, step):
+    text_new = ""
+    for k in range(groups):
+        part = ""
+        for i in range(step):
+            index = i * groups + k
+            part += text[index]
+        # print(k, part)
+        text_new += part
+    return text_new
+
+
+def cipher_rotate(text, groups, step):
+    text_new = ""
+    for i in range(groups):
+        part = ""
+        part += text[i * step:(i + 1) * step]
+        if i % 2 != 0: part = part[::-1]
+        # print(part)
+        text_new += part
+    return text_new
+
+
 def encodeRightLeftRouteCipher(text, rows):
-    return 42
+    col = math.ceil(len(text) / rows)
+    fill = col * rows - len(text)
+
+    endcode = text + string.ascii_lowercase[-fill:][::-1]
+    endcode = cipher_reindex(endcode, rows, col)
+    endcode = cipher_rotate(endcode, rows, col)
+    endcode = str(rows) + endcode
+
+    return endcode
 
 
-def decodeRightLeftRouteCipher(cipher):
-    return 42
+def decodeRightLeftRouteCipher(text):
+    rows = int(text[0])
+    col = int(len(text) / rows)
+
+    decode = text.replace(text[0], "")
+    # print(rows, col, decode)
+    decode = cipher_rotate(decode, rows, col)
+    decode = cipher_reindex(decode, col, rows)
+    while decode[-1] in string.ascii_lowercase:
+        decode = decode.replace(decode[-1], "")
+
+    return decode
 
 
 #################################################
@@ -127,8 +280,36 @@ def decodeRightLeftRouteCipher(cipher):
 #################################################
 
 
+def trailing_remove(text, s):
+    while text[-1] in s:
+        text = text[:-1]
+    while text[0] in s:
+        text = text[1:]
+    return text
+
+
 def patternedMessage(msg, pattern):
-    return 42
+    if pattern == "": return ""
+    msg = msg.replace(" ", "")
+
+    k = 0
+    pattern_new = ""
+    for line in pattern.splitlines():
+        line_new = ""
+        for i in range(len(line)):
+            if line[i] != " ":
+                k = k % len(msg)
+                foo = msg[k]
+                k += 1
+                # print(foo, ",", end="")
+            else:
+                foo = " "
+            line_new += foo
+        # print(line_new)
+        pattern_new += "\n" + line_new
+    pattern_new = trailing_remove(pattern_new, "\n")
+
+    return pattern_new
 
 
 def getEvalSteps(expr):
@@ -399,39 +580,39 @@ def testPatternedMessage():
 ***************
 """),
              ("Three Diamonds!", """
-    *     *     *
+	*     *     *
    ***   ***   ***
   ***** ***** *****
    ***   ***   ***
-    *     *     *
+	*     *     *
 """),
              ("Go Steelers!", """
-                          oooo$$$$$$$$$$$$oooo
-                      oo$$$$$$$$$$$$$$$$$$$$$$$$o
-                   oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $$ o$
+						  oooo$$$$$$$$$$$$oooo
+					  oo$$$$$$$$$$$$$$$$$$$$$$$$o
+				   oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $$ o$
    o $ oo        o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o       $$ $$ $$o$
 oo $ $ '$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o$$o$
 '$$$$$$o$     o$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$o    $$$$$$$$
   $$$$$$$    $$$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$$$$$$$$$$$$$$
   $$$$$$$$$$$$$$$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$$$$$$  '$$$
    '$$$'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     '$$$
-    $$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     '$$$o
+	$$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     '$$$o
    o$$'   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$       $$$o
    $$$    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$' '$$$$$$ooooo$$$$o
   o$$$oooo$$$$$  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   o$$$$$$$$$$$$$$$$$
   $$$$$$$$'$$$$   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     $$$$'
  ''''       $$$$    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$'      o$$$
-            '$$$o     '$$$$$$$$$$$$$$$$$$'$$'         $$$
-              $$$o          '$$'$$$$$$'           o$$$
-               $$$$o                                o$$$'
-                '$$$$o      o$$$$$$o'$$$$o        o$$$$
-                  '$$$$$oo     '$$$$o$$$$$o   o$$$$'
-                     '$$$$$oooo  '$$$o$$$$$$$$$'
-                        '$$$$$$$oo $$$$$$$$$$
-                                '$$$$$$$$$$$
-                                    $$$$$$$$$$$$
-                                     $$$$$$$$$$'
-                                      '$$$'
+			'$$$o     '$$$$$$$$$$$$$$$$$$'$$'         $$$
+			  $$$o          '$$'$$$$$$'           o$$$
+			   $$$$o                                o$$$'
+				'$$$$o      o$$$$$$o'$$$$o        o$$$$
+				  '$$$$$oo     '$$$$o$$$$$o   o$$$$'
+					 '$$$$$oooo  '$$$o$$$$$$$$$'
+						'$$$$$$$oo $$$$$$$$$$
+								'$$$$$$$$$$$
+									$$$$$$$$$$$$
+									 $$$$$$$$$$'
+									  '$$$'
 """)]
     solns = [
         """
@@ -439,38 +620,38 @@ GoPirates!!!GoP
 irates   !!!GoP
 irates!!!GoPira
 """, """
-    T     h     r
+	T     h     r
    eeD   iam   ond
   s!Thr eeDia monds
    !Th   ree   Dia
-    m     o     n
+	m     o     n
 """, """
-                          GoSteelers!GoSteeler
-                      s!GoSteelers!GoSteelers!GoS
-                   teelers!GoSteelers!GoSteelers!GoS         te   el er
+						  GoSteelers!GoSteeler
+					  s!GoSteelers!GoSteelers!GoS
+				   teelers!GoSteelers!GoSteelers!GoS         te   el er
    s ! Go        Steelers!GoSteelers!GoSteelers!GoSteel       er s! GoSt
 ee l e rs      !GoSteeler    s!GoSteelers!    GoSteelers       !GoSteel
 ers!GoSte     elers!GoSt      eelers!GoSt      eelers!GoSt    eelers!G
   oSteele    rs!GoSteele      rs!GoSteele      rs!GoSteelers!GoSteeler
   s!GoSteelers!GoSteelers    !GoSteelers!G    oSteelers!GoSt  eele
    rs!GoSteelers!GoSteelers!GoSteelers!GoSteelers!GoSteel     ers!
-    GoS   teelers!GoSteelers!GoSteelers!GoSteelers!GoSteelers     !GoSt
+	GoS   teelers!GoSteelers!GoSteelers!GoSteelers!GoSteelers     !GoSt
    eele   rs!GoSteelers!GoSteelers!GoSteelers!GoSteelers!GoSt       eele
    rs!    GoSteelers!GoSteelers!GoSteelers!GoSteelers!Go Steelers!GoSteele
   rs!GoSteelers  !GoSteelers!GoSteelers!GoSteelers!GoS   teelers!GoSteelers
   !GoSteelers!G   oSteelers!GoSteelers!GoSteelers!Go     Steel
  ers!       GoSt    eelers!GoSteelers!GoSteelers!G      oSte
-            elers     !GoSteelers!GoSteelers!         GoS
-              teel          ers!GoSteel           ers!
-               GoSte                                elers
-                !GoSte      elers!GoSteele        rs!Go
-                  Steelers     !GoSteelers!   GoStee
-                     lers!GoSte  elers!GoSteeler
-                        s!GoSteele rs!GoSteel
-                                ers!GoSteele
-                                    rs!GoSteeler
-                                     s!GoSteeler
-                                      s!GoS
+			elers     !GoSteelers!GoSteelers!         GoS
+			  teel          ers!GoSteel           ers!
+			   GoSte                                elers
+				!GoSte      elers!GoSteele        rs!Go
+				  Steelers     !GoSteelers!   GoStee
+					 lers!GoSte  elers!GoSteeler
+						s!GoSteele rs!GoSteel
+								ers!GoSteele
+									rs!GoSteeler
+									 s!GoSteeler
+									  s!GoS
 """
     ]
     parms = [("A-C D?", """
@@ -508,18 +689,18 @@ def testGetEvalSteps():
     assert (getEvalSteps("2*3+4") == "2*3+4 = 6+4\n      = 10")
     assert (getEvalSteps("2+3*4-8**3%3") == """\
 2+3*4-8**3%3 = 2+3*4-512%3
-             = 2+12-512%3
-             = 2+12-2
-             = 14-2
-             = 12""")
+			 = 2+12-512%3
+			 = 2+12-2
+			 = 14-2
+			 = 12""")
     assert (getEvalSteps("2+3**4%2**4+15//3-8") == """\
 2+3**4%2**4+15//3-8 = 2+81%2**4+15//3-8
-                    = 2+81%16+15//3-8
-                    = 2+1+15//3-8
-                    = 2+1+5-8
-                    = 3+5-8
-                    = 8-8
-                    = 0""")
+					= 2+81%16+15//3-8
+					= 2+1+15//3-8
+					= 2+1+5-8
+					= 3+5-8
+					= 8-8
+					= 0""")
     print("Passed!")
 
 
@@ -553,12 +734,12 @@ def testAll():
     # comment out the tests you do not wish to run!
     # hw3-standard
     testLargestNumber()
-    # testRotateStringLeft()
-    # testIsRotation()
-    # testTopScorer()
+    testRotateStringLeft()
+    testIsRotation()
+    testTopScorer()
 
     # hw3-spicy
-    # testMastermindScore()
+    testMastermindScore()
     # testTopLevelFunctionNames()
 
     # hw3-required
@@ -566,10 +747,10 @@ def testAll():
     # testPlayPoker()
 
     # hw3-collaborative
-    # testEncodeAndDecodeRightLeftRouteCipher()
+    testEncodeAndDecodeRightLeftRouteCipher()
 
     # hw3-bonus
-    # testPatternedMessage()
+    testPatternedMessage()
     # testGetEvalSteps()
     # testFunDecoders()
 
@@ -577,7 +758,60 @@ def testAll():
 def main():
     cs112_s21_week3_linter.lint()
     testAll()
+    # print(rotateStringLeft("abcde", 2))
+    # print(rotateStringLeft("abcde", -2))
+    # print(isRotation("ab", "ba"))
+    # data = '''\
+    # Fred,10,20,30,40
+    # Wilma,10,20,30, 40
+    # '''
+    # print(topScorer(data))
+    # print(count_match_exact('abcd', 'afff'))  # 1
+    # print(count_match_exact('abay', 'afaz'))  # 2
+    # print(count_match_exact('afay', 'afaz'))  # 3
+    # print(count_match_exact('abcd', 'abcd'))  # win
+    # print(count_match_partial('ooffzx', 'yyazb'))  # z, 1
+    # print(count_match_partial('aaffzx', 'yyazb'))  # az, 2
+    # print(count_match_partial('aaffzx', 'ooo'))  # none
+    # print(mastermindScore('abcd', 'aabd'))
+    # print(mastermindScore('efgh', 'abef'))
+    # print(mastermindScore('efgh', 'efef'))
+    # print(mastermindScore('ijkl', 'mnop'))
+    # print(mastermindScore('abcd', 'aabd'))
+    # print(mastermindScore('abcd', 'aabd'))
 
+    # print(str_del_kth("123", 3))
+    # print(str_del_kth("123", 0))
+    # print(str_del_kth("123", 2))
+    # print(str_del_kth("123", 1))
+
+    # print(encode_fill("WN", 1))
+    # print(encode_fill("WN", 2))
+    # print(encode_row_get("WEATTACKATDAWN", 3, 5, 0))
+    # print(encode_row_get("WEATTACKATDAWNz", 3, 5, 1))
+    # print(encode_row_get("WEATTACKATDAWNz", 3, 5, 2))
+    # print(encode_row_get("WEATTACKATDAWN", 3, 5, 2))
+    # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 3))  # 3WTCTWNDKTEAAAAz
+    # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 5))  # 5WADACEAKWNATTTz
+
+    # print(decodeRightLeftRouteCipher("3WTCTWNDKTEAAAAz"))
+    # print(decodeRightLeftRouteCipher("4WTAWNTAEACDzyAKT"))
+    # print(patternedMessage("1 23", "******   ******"))
+
+
+#     print(
+#         patternedMessage(
+#             "Three Diamonds!", """
+#     *     *     *
+#    ***   ***   ***
+#   ***** ***** *****
+#    ***   ***   ***
+#     *     *     *
+# """))
+
+#     patternedMessage(
+#         "Three Diamonds!", """
+# """)
 
 if __name__ == '__main__':
     main()
