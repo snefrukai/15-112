@@ -1,12 +1,18 @@
+import pyperclip
+
 toc = """
-intro: asd
-Chapter 7: Getting Modular: Modules, methods, classes, and objects](zotero://open-pdf/0_MJMVS3VW/331)
-
-
+Introduction
+Chapter 1: Started 
+test line
 """
-
 start = "chapter", "Chapter", "Introduction", "introduction", "intro:", "Intro:", "preface", "Preface", "Forward", "forward"
+
+toc = pyperclip.paste()
+foo = "TOC short\r\n"
 
 for line in toc.splitlines():
     if (line.startswith(start)):
-        print(line.capitalize())
+        foo += line + "\r\n"
+
+pyperclip.copy(foo)
+print(foo)
