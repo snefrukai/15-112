@@ -173,7 +173,7 @@
   - 连续次数 m，max(m)
   - not very robust?
 
-### nthCircularPrime
+### nthCircularPrime(n)
 
 #### def
 
@@ -189,12 +189,14 @@
 #### step
 
 1. check digit
-   - [0, 5, 2n]
+   - if mode [0, 5, 2n] -> F
      - [2, 4, 6, 8] -> 2n
 2. check prime
-3. check rotates
-   - abc -> bca, cab
+3. - if not prime -> F
+4. check rotates
+   - if not prime -> F
    - for i
+     - abc -> bca, cab
      - i[max] = 2 = count - 1
      - i[min] = 1
    - delete right1 digit # 709 -> 970
@@ -203,23 +205,23 @@
    - ~~delete left1 digit # 709, 097, 970~~
      - bca = (n - a*10\*\*2)*10 + a
      - leading 0 导致位数变化，无法到达 970（？
-4. `nthCircularPrime(nth)`
-   - cond = TTT
+5. check cond
+   - if TTT -> T
 
 ```python
 # to check if n is circular prime
 isPrime(n) # return if n is prime
 count = digit_count(n) # count n's digits
 
-1. if (digits in n) % {0, 5, 2n} == 0
-  return Fals
-2. if not isPrime(n)
+if digits{n} % x{0, 5, 2n} == 0
   return False
-3. for i in (1, count) # rotate count-1 times
+if not isPrime(n)
+  return False
+for i in (1, count) # rotate count-1 times
     n = n//10 + n%10 * 10**(count-1)
     if not isPrime(n) # rorates are not prime
       return False
-4. if 1, 2, 3 all are True
+if all are True
   return True
 ```
 
@@ -379,7 +381,7 @@ for i in count_min
       - chk offboard
       - chk occupied
       - chk numb
-      - chk result
+      - chk winner
         - 11288118
         - check player
     - r2
@@ -505,27 +507,319 @@ Do not use lists, list indexing, or recursion this week.
 
 ```python
 # "I saw 3 dogs, 1700 cats, and 14 cows!"
-n = 0
-n_new = ""
 for i in len(s)
   if s[i] is digit
-    n_new += s[i] 
-    n = max(int(n_new), n) 
-  else # if find alpha
-    n_new = ""
-if n == 0: return None 
+    n_new += s[i]
+    n = max(int(n_new), n)
+  else # if digits end
+    clear n_new
+if n == 0: return None
 return n
 ```
 
-```python
-for i in len(s)-1
-  n = s[i]
-  m = s[i+1]
+```puml
+start
+- digit
+  repeat
+      repeat
+      - stack str
+      - save n[max]
+      repeatwhile (is digit) is (F)
+    - next char
+  repeatwhile (last char) is (F)
+
+stop
 ```
+
+#### rev
+
+- **冒泡和判断大小在之前哪里用过**？
+- 注意 clear n_new 的步骤位置
+- 注意 save max 的步骤位置
+  - bubble 要先存了才能继续
+  - 同样是一个操作，判断出赋值更好吗？
+    - 最少减少了 print
+- 用 i+1 判断，step 只相差 2
+- psuedo 已经几乎等于最后的代码了
+
+### 2. rotateStringLeft(s, n)
+
+#### def
+
+- no loop
+- list
+  - 1, bcde + a
+    - s[n] at the end
+  - 2, cde + ab
+  - 5, abcde
+  - -1, e + abcd
+    - s[n] at the start
+  - -25, abcde
+
+#### step
+
+- mode n # abcde, 5
+  - by len(s)
+- get 1st 2nd part
+  - 3, de + abc
+    - s[3:] + s[:3]
+  - -2, de + abc
+    - s[-2:] + s[:-2]
+- adjust sequence
+  - s[n:] + s[:n]
+
+```python
+n = n % len(s)
+if n == 0
+  return s
+return s[n:] + s[:n]
+```
+
+#### rev
+
+- psuedo 已经几乎等于最后的代码了
+
+### 3. isRotation(s, t)
+
+#### def
+
+- assert (isRotation('abcd', 'abcd') == False)
+- assert (isRotation('abcd', 'bcd') == False)
+- assert (isRotation('abcd', 'cdab') == True)
+  assert (isRotation('abcd', 'bcda') == True)
+
+#### step
+
+- check equal
+  - if euqal -> F
+- check length
+  - if not euqal -> F
+- check rotate
+  - if rotate(s) == t -> T
+  - for i
+    - i[1, len(s)-1]
+    - `rotateStringLeft(s, n)`
+
+```python
+
+```
+
+### 4. topScorer(data)
+
+#### def
+
+- multi-line string
+- comma-separated values
+  - name, score[1], score[2], ..., score[n]
+- tie
+  - return name with ","
+
+#### step
+
+- `score_total_get`
+  - split
+    - a 10 10 10
+    - b 20 20 20
+  - save name
+  - add and save score
+  - return name, score_total_get
+    - a 30
+    - b 60
+- split lines
+- compare total score
+  - for i
+    - `score_total_get(line[i])`
+    - if score_total_get[i] > max
+      - winner = name
+    - if score_total_get[i] = max
+      - winner += name
+- return winner
+
+### 5. mastermindScore
+
+#### def
+
+- 'abcd', 'aabd'
+- 'a' 'd'
+  - 2 exact match
+- 'b'
+  - 1 partial match
+
+#### step
+
+- str_del_kth
+  - s = aaa-i-bbb
+  - s = s[:i-1] + s[i+1:]
+- `count_match_exact(s, s1)` # abab, afaf
+  - if all match
+    - s = s1
+    - count == len(s)
+    - s = ""
+  - loop and replace when match
+    - for i
+      - i = 4 ?
+      - replace 需精确到个位
+      - i 会因为 replace 导致 out range
+    - while i
+      - i = 0
+      - k = len-1 = 3
+      - i[0] # afcd, abcd
+        - k -= 1 # 3
+        - count += 1
+      - i[0] # fcd, bcd
+        - i += 1
+      - i[1] # fcd, bcd
+        - k -= 1 # 2
+        - count += 1
+      - i[1] # fd, bd
+      - i = 2 = k, stop
+    - _cant use replace at 1st_
+  - ~~loop andreplace after match~~
+    - for i in len
+      - if s[i] == s1[i]
+        - save i to match
+        - [1, 9, 11]
+        - "1911"
+        - 但里要存成 list
+    - for val in mactch
+      - use helper to delete
+        - 不能直接用用 replace
+  - result fromcount
+    - no match
+    - multi match
+- `count_match_partial(s, s1)` # bc, ab
+  - loop str
+    - for i
+      - i[0, len(s)]
+      - 0 aaffzx, yyazb - a, 1
+      - 1 aaffzx, yyzb - 1
+      - 4 aaffzx, yyzb - z, 2
+      - 5 aaffzx, yyb - x, 2
+    - should only count once
+      - if match: break?
+    - _could use replace at 1st_
+  - result from count
+    - no
+    - multi
+
+#### rev
+
+- replace all
+
+### 6. topLevelFunctionNames(code)
+
+#### def
+
+- multi-line string of Python code
+- string with the names of the top-level functions
+
+### 9. encodeRightLeftRouteCipher(s, n)
+
+def
+
+- 3WEATTACKATDAWN, 3 # 3-WTCTW-NDKTE-AAAAz
+  - W T C T W
+  - E T K D N
+  - A A A A z
+
+step
+
+- get col
+  - col = round up len(s)/rows # 5
+    - 14/3 = 4.6
+- fill missing grid
+  - get difference
+  - fill from ascii_lowercase
+- get code parts by rows
+  - row1 = _WTCTW_ # WEA-TTA-CKA-TDA-WNz
+    - col1[0] + col2[0] +...+ col[nth][0]
+    - s[0] + s[3] + s[6] + s[9] + s[12]
+    - s[0*3] + s[1*3] +...+ s[4*3]
+  - [nth]
+  - for i in col
+    - step = 1
+- attach code parts
+  - row2 = s[0+1] + s[1*3+1] +...+ s[4*3+1]
+  - row[nth] = s[i[0]*rows+k] +...+ s[i[nth]*rows+k]
+  - [nth] = rows
+  - for k
+    - rotate if k is odd
+      - row2 ETKDN -> _NDKTE_
+- format
+  - str(rows) + ...
+
+decode
+
+- 3WTCTWNDKTEAAAAz
+
+step
+
+- get rows, col, new cipher
+  - delete 1st digit
+- rotate even part # WTCTW-NDKTE-AAAAz
+  - get 1st part
+  - get 2nd part
+    - rotate
+    - attach to 1st part
+  - get [nth] part
+  - [nth] = col
+  - for i
+    - part = cipher[i*col : (i+1)*col]
+    - step 5 的等差数列
+- get decode
+  - for k in col
+    - for i in rows
+      - i\*col + k
+  - k = 0
+    - s[0] = s[0]
+    - s[1] = s[5]
+    - s[2] = s[10]
+  - k = 1
+    - s[3] = s[1]
+    - s[4] = s[6]
+    - s[5] = s[11]
+- delete fill
 
 rev
 
-- clear n_new 的时机需要在顶级
+- course 上的解法推了半天，发现和自己的逻辑是一样的
+  - 课程的解法是罗列 row 和 col 组合，然后找表达式
+  - 自己的解法是把每 row 的表达式带入到整体
+    - 没意识到已经把 text 的 index 表达出来了
+- ~~split s by col # WEA, TTA, CKA, TDA, WNz~~
+  - 因为不能用 list，最后出来的还是 str
+  - for i in [1, col]
+  - col1 = s[0:3]
+  - col2 = s[3:6]
+  - col[i]
+
+### 10. patternedMessage
+
+def
+
+- white space
+  - skip msg
+  - persevere pattern
+
+step
+
+- remove white space in msg
+- get each character in pattern
+  - if white_space_check: skip
+  - if not white_space_check
+    - mode [i]
+    - replace with message[i]
+      - 123
+      - 0 1 2
+      - 3 4 5
+        - 0+3, 1+3, 2+3
+      - 6 7 8
+        - 0+3*2, 1+3*2, 2+3\*2
+      - 0+len*n, 1+len*n, 2+len\*n
+      - mode
+    - i += 1
+  - check next
+- remove trailing lines in pattern
 
 ## [extra-practice3](https://www.cs.cmu.edu/~112/notes/extra-practice3.html)
 

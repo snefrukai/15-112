@@ -8,7 +8,7 @@ test line
 start = "chapter", "Chapter", "Introduction", "introduction", "intro:", "Intro:", "preface", "Preface", "Forward", "forward"
 
 toc = pyperclip.paste()
-foo = "TOC short\r\n"
+foo = "TOC s\r\n"
 
 for line in toc.splitlines():
     if (line.startswith(start)):
