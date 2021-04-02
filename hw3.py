@@ -3,9 +3,14 @@
 # name:
 # andrew id:
 #################################################
-import cs112_s21_week3_linter
-import math, string, random, basic_graphics
+import math
+import random
+import string
+
 from icecream import ic
+
+import basic_graphics
+import cs112_s21_week3_linter
 
 
 #################################################
@@ -212,6 +217,57 @@ def topLevelFunctionNames(code):
 # hw3-required-functions
 #################################################
 
+# ============================================================================ #
+#
+
+
+def get_rad(n, digit):
+    # if digit != 12 and digit != 60: return "digit has to be 12 or 60"
+    rad = (n / digit) * 2 * math.pi - math.pi / 2
+    return rad
+
+
+def draw_clock(canvas, x0, y0, r):
+    r_numb = r * 0.8
+    canvas.create_oval(x0, y0, x0 + r * 2, y0 + r * 2)
+
+    for i in range(12):  # draw numb
+        angle = get_rad(i, 12)
+        y_numb = (y0 + r) + r_numb * math.sin(angle)
+        x_numb = (x0 + r) + r_numb * math.cos(angle)
+        canvas.create_text(x_numb, y_numb, text=i)
+
+
+def draw(canvas, width, height):
+    width, margin = 100, 10
+    r = width / 2
+    r_hr = r * 0.5
+    r_min = r * 0.5
+    hr = 0
+
+    for k in range(3):
+        for i in range(4):
+            x0 = 100 + i * r * 2 + i * margin
+            y0 = 100 + k * r * 2 + k * margin
+            cx = x0 + r
+            cy = y0 + r
+            hr += 1
+            draw_clock(canvas, x0, y0, r)
+
+            angle_hr = get_rad(hr, 12)
+            x_hr = cx + r_hr * math.cos(angle_hr)
+            y_hr = cy + r_hr * math.sin(angle_hr)
+            canvas.create_line(cx, cy, x_hr, y_hr)  # hand hr
+
+            # angle_min = get_rad(min, 60)
+            # x_min = cx + r_min * math.cos(angle_min)
+            # y_min = cy + r_min * math.sin(angle_min)
+            canvas.create_line(cx, cy, x0 + r, y0)  # hand minute
+
+
+# ============================================================================ #
+#
+
 
 def drawFlagOfQatar(canvas, x0, y0, x1, y1):
     # Replace all of this with your drawing of the flag of Qatar
@@ -226,6 +282,10 @@ def drawFlagOfQatar(canvas, x0, y0, x1, y1):
                            y1 - 10,
                            text='Remember to add the title!',
                            font='Arial 12 bold')
+
+
+# ============================================================================ #
+#
 
 
 def playPoker(deck, players):
@@ -878,6 +938,8 @@ def testAll():
 def main():
     cs112_s21_week3_linter.lint()
     testAll()
+
+    # basic_graphics.run(width=800, height=600)
 
 
 if __name__ == '__main__':
