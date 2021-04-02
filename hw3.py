@@ -5,10 +5,16 @@
 #################################################
 import cs112_s21_week3_linter
 import math, string, random, basic_graphics
+from icecream import ic
+
 
 #################################################
 # Helper functions
 #################################################
+def test_func(output, expect):
+    if output != expect:
+        print("\n? bug: ", expect)
+        ic(output)
 
 
 def almostEqual(d1, d2, epsilon=10**-7):  #helper-fn
@@ -31,6 +37,8 @@ def roundHalfUp(d):  #helper-fn
 # hw3-standard-functions
 #################################################
 
+# ============================================================================ #
+# 1
 #     for i in range(len(s) - 1):
 #         if s[i].isdigit():
 #             n_new += s[i]
@@ -57,15 +65,23 @@ def largestNumber(s):
     return n
 
 
+# ============================================================================ #
+# 2
+
+
 def rotateStringLeft(s, n):
     if n == 0: return s
     n = n % len(s)
     return s[n:] + s[:n]
 
 
+# ============================================================================ #
+# 3
+
+
 def isRotation(s, t):
     if s == t: return False
-    if len(s) != len(t): return False
+    elif len(s) != len(t): return False
 
     for i in range(1, len(s)):
         s = rotateStringLeft(s, i)
@@ -74,15 +90,22 @@ def isRotation(s, t):
     return False
 
 
+# ============================================================================ #
+# 4
+
+
 def score_total_get(data):
-    name = ""
+    # name = ""
     score_total = 0
     for val in data.split(","):
         val = val.strip()
-        # print(val, val.isalpha())
         if val.isalpha(): name = val.strip()
         if val.isdigit(): score_total += int(val)
     return name, score_total
+
+
+# ============================================================================ #
+# 5
 
 
 def topScorer(data):
@@ -177,6 +200,10 @@ def mastermindScore(s, s1):
     else: return result_exact + ", " + result_partial  # TT
 
 
+# ============================================================================ #
+#
+
+
 def topLevelFunctionNames(code):
     return 42
 
@@ -216,6 +243,7 @@ def playPoker(deck, players):
 #################################################
 
 
+# %%
 def cipher_reindex(text, groups):
     if len(text) % groups != 0: return "need to fiil length"
     text_new = ""
@@ -390,6 +418,26 @@ def testIsRotation():
     print('Passed!')
 
 
+def test_score_total_get():
+    parms = [
+        ('''\
+        Fred,10,20,30
+        '''),
+        ('''\
+        Fred,0,0,0,
+        '''),
+    ]
+    solns = [
+        ('Fred', 60),
+        ('Fred', 0),
+    ]
+    for i, data in enumerate(parms):
+        expect = solns[i]
+        output = score_total_get(data)
+        test_func(output, expect)
+        assert (output == expect)
+
+
 def testTopScorer():
     print('Testing topScorer()...', end='')
     data = '''\
@@ -414,10 +462,8 @@ Wilma,10,20,30,1
 
 
 def test_count_match_exact():
-    print("Testing mastermindScore()...", end="")
+    print("Testing count_match_exact()...", end="")
     # print(count_match_exact('abcd', 'abcd'))
-    # assert count_match_exact('affa', 'ayyy') == (
-    # 'ffa', 'yyy', '1 exact match')
     parms = [
         # ('abcd', 'abcd'),
         ('aafa', 'aayy'),
@@ -433,11 +479,11 @@ def test_count_match_exact():
         ('abcxyz', 'xyzabc', 'none')
     ]
     for i, (s, s1) in enumerate(parms):
-        soln = solns[i]
-        observed = count_match_exact(s, s1)
-        if observed != soln:  # if bug show comparisons
-            print("\n! fix: \n", observed, "\n", solns[i])
-        assert (observed == soln)
+        expect = solns[i]
+        output = count_match_exact(s, s1)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
     print('Passed!')
 
 
@@ -799,12 +845,13 @@ def testAll():
     testLargestNumber()
     testRotateStringLeft()
     testIsRotation()
+    test_score_total_get()
     testTopScorer()
 
     # hw3-spicy
     test_count_match_exact()
-    # test_count_match_partial()
-    # testMastermindScore()
+    test_count_match_partial()
+    testMastermindScore()
     # testTopLevelFunctionNames()
 
     # hw3-required
@@ -817,8 +864,15 @@ def testAll():
 
     # hw3-bonus
     testPatternedMessage()
+
     # testGetEvalSteps()
     # testFunDecoders()
+
+    def plus_five(num):
+        return num + 5
+
+    (plus_five(4))
+    (plus_five(5))
 
 
 def main():
@@ -828,3 +882,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# %%

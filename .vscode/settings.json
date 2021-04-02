@@ -3,5 +3,6 @@
     "python.linting.enabled": true,
     "python.linting.pylamaEnabled": false,
     "python.linting.pylintEnabled": true,
-    "python.formatting.provider": "yapf"
+    "python.formatting.provider": "yapf",
+    "python.pythonPath": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python39\\python.exe"
 }
