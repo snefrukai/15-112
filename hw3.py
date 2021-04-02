@@ -266,22 +266,36 @@ def draw(canvas, width, height):
 
 
 # ============================================================================ #
-#
+# 7.
+
+
+def draw_triangle(canvas, x0, y0, step):
+    canvas.create_polygon(
+        x0,
+        y0,
+        x0 + step * 1.6,  # length
+        y0 + step / 2,  # vertical midpoint
+        x0,
+        y0 + step,  # height
+        fill="white")
 
 
 def drawFlagOfQatar(canvas, x0, y0, x1, y1):
     # Replace all of this with your drawing of the flag of Qatar
     # Also: remember to add the title "Qatar" centered above the flag!
     canvas.create_rectangle(x0, y0, x1, y1, fill='orange')
-    font = 'Arial 20 bold' if (x1 - x0 > 150) else 'Arial 12 bold'
-    canvas.create_text((x0 + x1) / 2, (y0 + y1) / 2,
-                       text='Draw the flag\nof Qatar here!',
-                       font=font)
-    if (x1 - x0 > 100):
-        canvas.create_text((x0 + x1) / 2,
-                           y1 - 10,
-                           text='Remember to add the title!',
-                           font='Arial 12 bold')
+
+    cx = x0 + (x1 - x0) / 3
+    cy = y0 + (y1 - y0) / 3
+
+    canvas.create_rectangle(x0, y0, cx, y1, fill='white')
+    canvas.create_rectangle(cx, y0, x1, y1, fill='#B31722')
+    step = (y1 - y0) / 9
+    for i in range(9):
+        draw_triangle(canvas, cx, y0 + i * step, step)
+
+    font = 'Arial 14 bold'
+    canvas.create_text((x0 + x1) / 2, y0 - 20, text='Qatar', font=font)
 
 
 # ============================================================================ #
@@ -915,7 +929,7 @@ def testAll():
     # testTopLevelFunctionNames()
 
     # hw3-required
-    # testDrawFlagOfQatar()
+    testDrawFlagOfQatar()
     # testPlayPoker()
 
     # hw3-collaborative

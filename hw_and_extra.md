@@ -713,6 +713,25 @@ return s[n:] + s[:n]
 - multi-line string of Python code
 - string with the names of the top-level functions
 
+### 7. drawFlagOfQatar(canvas, x0, y0, x1, y1)
+
+def
+
+- border
+  - 1px, black
+- name
+  - 'Qatar', center
+- color
+  - #FFFFFF, #B31722
+
+step
+
+- 1/3 white
+- 2/3 red
+- repeat white triangles \*9
+  - for i
+    - y = y + (y1-y0)/9
+
 ### 9. encodeRightLeftRouteCipher(s, n)
 
 def
