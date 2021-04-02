@@ -31,9 +31,6 @@ def roundHalfUp(d):  #helper-fn
 # hw3-standard-functions
 #################################################
 
-# def largestNumber(s):
-#     n = 0
-#     n_new = ""
 #     for i in range(len(s) - 1):
 #         if s[i].isdigit():
 #             n_new += s[i]
@@ -43,9 +40,6 @@ def roundHalfUp(d):  #helper-fn
 #             if i + 2 == len(s):  # end with digit, a7
 #                 n_new += s[i + 1]  # "" + "7"
 #                 n = max(int(n_new), n)
-#     # print(n, n_new)
-#     if n == 0: return None
-#     return n
 
 
 def largestNumber(s):
@@ -55,8 +49,8 @@ def largestNumber(s):
         if s[i].isdigit():
             n_new += s[i]
             n = max(int(n_new), n)
-            # print(n, n_new)
         else:  # if digits end
+            # print(n_new, n)
             n_new = ""
     # print(n, n_new)
     if n == 0: return None
@@ -66,8 +60,7 @@ def largestNumber(s):
 def rotateStringLeft(s, n):
     if n == 0: return s
     n = n % len(s)
-    s = s[n:] + s[:n]
-    return s
+    return s[n:] + s[:n]
 
 
 def isRotation(s, t):
@@ -176,15 +169,12 @@ def count_match_partial(s, s1):
 def mastermindScore(s, s1):
     result = "sth bug"
     s, s1, result_exact = count_match_exact(s, s1)
-    if result_exact == 'win': return 'You win!!!'
+    if result_exact == 'win': return 'You win!!!'  # T/
     s, s1, result_partial = count_match_partial(s, s1)
 
-    if result_exact == "none":
-        return result_partial
-    elif result_partial == "No matches":
-        return result_exact
-    else:
-        return result_exact + ", " + result_partial
+    if result_exact == "none": return result_partial  # FT or FF
+    elif result_partial == "No matches": return result_exact  # TF
+    else: return result_exact + ", " + result_partial  # TT
 
 
 def topLevelFunctionNames(code):
@@ -226,51 +216,50 @@ def playPoker(deck, players):
 #################################################
 
 
-def cipher_reindex(text, groups, step):
+def cipher_reindex(text, groups):
+    if len(text) % groups != 0: return "need to fiil length"
     text_new = ""
+    step = int(len(text) / groups)
     for k in range(groups):
         part = ""
         for i in range(step):
             index = i * groups + k
             part += text[index]
-        # print(k, part)
         text_new += part
     return text_new
 
 
-def cipher_rotate(text, groups, step):
+def cipher_rotate(text, groups):
     text_new = ""
+    step = int(len(text) / groups)
     for i in range(groups):
         part = ""
         part += text[i * step:(i + 1) * step]
         if i % 2 != 0: part = part[::-1]
-        # print(part)
         text_new += part
     return text_new
 
 
 def encodeRightLeftRouteCipher(text, rows):
-    col = math.ceil(len(text) / rows)
+    fill = len(text) % rows
+    if fill != 0: text += string.ascii_lowercase[-(rows - fill):][::-1]
 
-    fill = col * rows - len(text)
-    endcode = text + string.ascii_lowercase[-fill:][::-1]
-    endcode = cipher_reindex(endcode, rows, col)
-    endcode = cipher_rotate(endcode, rows, col)
-    endcode = str(rows) + endcode
+    text = cipher_reindex(text, rows)
+    text = cipher_rotate(text, rows)
 
-    return endcode
+    text = str(rows) + text
+    return text
 
 
 def decodeRightLeftRouteCipher(text):
     rows = int(text[0])
     col = int(len(text) / rows)
-
     decode = text.replace(text[0], "")
-    # print(rows, col, decode)
-    decode = cipher_rotate(decode, rows, col)
-    decode = cipher_reindex(decode, col, rows)
-    decode = str_del_trailing(decode, string.ascii_lowercase)
 
+    decode = cipher_rotate(decode, rows)
+    decode = cipher_reindex(decode, col)
+
+    decode = str_del_trailing(decode, string.ascii_lowercase)
     return decode
 
 

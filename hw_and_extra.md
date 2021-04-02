@@ -480,7 +480,11 @@ You want to make sure the Markdown render will not touch your special characters
 
 ## [hw3](https://www.cs.cmu.edu/~112/notes/hw3.html)
 
-Do not use lists, list indexing, or recursion this week.
+- Do not use lists, list indexing, or recursion this week.
+
+### rev
+
+- count_match_exact 的 replace 比较有意思
 
 ### 1. largestNumber(s)
 
@@ -640,10 +644,8 @@ return s[n:] + s[:n]
 #### def
 
 - 'abcd', 'aabd'
-- 'a' 'd'
-  - 2 exact match
-- 'b'
-  - 1 partial match
+  - 'a' 'd', 2 exact match
+  - 'b', 1 partial match
 
 #### step
 
@@ -704,8 +706,6 @@ return s[n:] + s[:n]
 
 #### rev
 
-- replace all
-
 ### 6. topLevelFunctionNames(code)
 
 #### def
@@ -729,6 +729,12 @@ step
     - 14/3 = 4.6
 - fill missing grid
   - get difference
+    - 15%3, 0
+    - 16%3, 1
+      - fill = 3-1
+    - 17%3, 2
+      - fill = 3-2
+    - 18%3, 0
   - fill from ascii_lowercase
 - get code parts by rows
   - row1 = _WTCTW_ # WEA-TTA-CKA-TDA-WNz
@@ -792,6 +798,7 @@ rev
   - col1 = s[0:3]
   - col2 = s[3:6]
   - col[i]
+- reduce parameter(step)
 
 ### 10. patternedMessage
 
