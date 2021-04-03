@@ -1067,6 +1067,25 @@ step
 - repeat
 - check if all are ''
 
+### 6. hasBalancedParentheses(s)
+
+def
+
+- ignoring all non-parentheses
+- right match left
+- no left parentheses are left unclosed
+
+step
+
+- check order
+  - `)(`
+  - right before left
+- get 1st left parentheses
+  - check if light exsist
+- replace 1st left and right
+- repeat until no left
+  - if right: F
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)

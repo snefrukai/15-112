@@ -110,7 +110,14 @@ def sameChars(s1, s2):
 
 
 def hasBalancedParentheses(s):
-    return 42
+    if s.find(")") < s.find("("): return False
+
+    while s.count("(") != 0:
+        if s.count(")") == 0: return False
+        s = s.replace("(", '', 1)
+        s = s.replace(")", '', 1)
+    if s.count(")") != 0: return False
+    return True
 
 
 def leastFrequentLetters(s):
@@ -219,6 +226,7 @@ def testSameChars():
 
 def testHasBalancedParentheses():
     print("Testing hasBalancedParentheses()...", end="")
+    # ic(hasBalancedParentheses("()aa)("))
     assert (hasBalancedParentheses("()") == True)
     assert (hasBalancedParentheses("") == True)
     assert (hasBalancedParentheses("())") == False)
@@ -320,7 +328,7 @@ def testAll():
     testApplyCaesarCipher()
     testAreAnagrams()
     testSameChars()
-    # testHasBalancedParentheses()
+    testHasBalancedParentheses()
     # testLeastFrequentLetters()
     # testLongestCommonSubstring()
     # testLongestSubpalindrome()
