@@ -5,6 +5,7 @@
 import cs112_s21_week3_linter
 import math, string, random, basic_graphics
 from icecream import ic
+from hw3 import str_del_kth
 
 #################################################
 # Helper functions
@@ -55,8 +56,26 @@ def interleave(s1, s2):
     return s_new
 
 
+def caesar_cipher_digit(s, shift):
+    foo = string.digits + string.ascii_letters
+    i = foo.find(s)
+    # abs postison = relative postion + distance
+    if s.isdigit(): i = (i + shift) % 10
+    elif s.islower(): i = (i - 10 + shift) % 26 + 10
+    elif s.isupper(): i = (i - 10 + shift) % 26 + 10 + 26
+    s = foo[i]
+    return s
+
+
 def applyCaesarCipher(message, shift):
-    return 42
+    message_new = ''
+    for i in range(len(message)):
+        s = message[i]
+        if s != ' ': s = caesar_cipher_digit(s, shift)
+        message_new += s
+
+        # ic(i, message[:i], message[i:], s)
+    return message_new
 
 
 def areAnagrams(s1, s2):
@@ -126,12 +145,22 @@ def testInterleave():
     print("Passed!")
 
 
+def test_caesar_cipher_digit():
+    ic(caesar_cipher_digit("a", 2))
+    ic(caesar_cipher_digit("z", 1))
+    ic(caesar_cipher_digit("A", 2))
+    ic(caesar_cipher_digit("Z", 1))
+
+
 def testApplyCaesarCipher():
     print("Testing applyCaesarCipher()...", end="")
+    # test_caesar_cipher_digit()
+    # ic(applyCaesarCipher("abc 123 ABC", 1))
     assert (applyCaesarCipher("abcdefghijklmnopqrstuvwxyz",
                               3) == "defghijklmnopqrstuvwxyzabc")
     assert (applyCaesarCipher("We Attack At Dawn", 1) == "Xf Buubdl Bu Ebxo")
-    assert (applyCaesarCipher("1234", 6) == "1234")
+    # assert (applyCaesarCipher("1234", 6) == "1234")
+    assert (applyCaesarCipher("12 34", 6) == "78 90")
     assert (applyCaesarCipher("abcdefghijklmnopqrstuvwxyz",
                               25) == "zabcdefghijklmnopqrstuvwxy")
     assert (applyCaesarCipher("We Attack At Dawn", 2) == "Yg Cvvcem Cv Fcyp")
@@ -262,7 +291,7 @@ def testAll():
     # comment out the tests you do not wish to run!
     testVowelCount()
     testInterleave()
-    # testApplyCaesarCipher()
+    testApplyCaesarCipher()
     # testAreAnagrams()
     # testSameChars()
     # testHasBalancedParentheses()

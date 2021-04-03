@@ -1011,6 +1011,29 @@ step
   - add each digit
 - add rest str
 
+### 3. applyCaesarCipher(message, shift)
+
+def
+
+- shift in step
+  - between -25 and 25
+- skip non-letter
+- ascii_lowercase
+  - 'abcdefghijklmnopqrstuvwxyz'
+  - 25
+- ascii_uppercase
+  - 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+step
+
+- get each char
+- check index
+  - check case
+- get new index
+  - add step
+  - deal with extreme
+    - mode
+- get new char
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)
