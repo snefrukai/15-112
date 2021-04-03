@@ -112,6 +112,53 @@ def ct3(x):
 # ============================================================================ #
 
 
+# ============================================================================ #
+# CT
+def ct1(x, y):
+    for i in range(x):
+        for j in range(i, y):
+            if (i + j) % 3 == 0:
+                print(j)
+        if i < 2:
+            print(112)
+            if (i + j > 4):
+                break
+
+
+# ct1(3, 5)
+def ct2(a, b, c):
+    n = 0
+    while n < 1234:
+        print(n)
+        n += c
+        n *= a
+        b, c = c, b
+    return n
+
+
+# print(ct2(10, 7, 2))
+
+
+def rc1(x):
+    if not isinstance(x, int):
+        return False
+    elif (x < 1000) or (5000 < x):
+        return False
+
+    t = 0
+    while x > 0:
+        t *= 100
+        a = x % 10
+        b = (x % 100) - a
+        x = x // 100
+        t += 10 * a + b // 10
+    return t == 2021
+
+
+# ============================================================================ #
+# FR
+
+
 def snarf_prime_digit(n):
     while n > 9:
         if n % 10 % 2 + n // 10 % 10 % 2 != 1:
@@ -181,6 +228,7 @@ def test_all():
     test_snarf_prime_digit()
     test_isPrime()
     testNthSnarfPrime()
+    print(rc1(1202))
 
 
 test_all()
