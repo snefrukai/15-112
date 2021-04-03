@@ -700,9 +700,11 @@ return s[n:] + s[:n]
     - should only count once
       - if match: break?
     - _could use replace at 1st_
-  - result from count
+  - calculate result groups
+    - win
     - no
-    - multi
+    - one or multi
+    - single or dual
 
 #### rev
 
@@ -732,6 +734,134 @@ step
   - for i
     - y = y + (y1-y0)/9
 
+### 8. playPoker(deck, players)
+
+#### def
+
+- 'AS-2D-3S-4C-5H-6D-7S-8D', 4
+- players take turns to get cards
+  - start from player[1]
+- max 2 cards
+- order of score
+  - straight flush
+  - flush
+  - straight
+  - pair
+  - high card
+- tie
+  - flush
+    - highest card in hand
+    - 8D-5D, 6H-9H
+    - 9H > 8D
+  - ties in individual cards
+    - by rank
+    - then by suit
+    - 7C-2D, 7H-5S
+    - 7H > 7C
+- meta
+  - sub
+    - get h
+- no "actual tie" cuz card is unique of 1
+
+#### step
+
+- check length
+  - min =
+    - player, group, len
+    - 1, 2, 5
+    - 2, 4, 11
+- get score of hand1 # _'AS-2D-3S-4C-5H-6D-7S-8D'_
+  - get hand
+    - for
+      - 'AS-2D-3S-4C-5H-6D-7S-8D', 1
+        - 01-34
+      - 'AS-2D-3S-4C-5H-6D-7S-8D', 2
+        - 01-67 # 1 grp
+        - 34-910
+      - 'AS-2D-3S-4C-5H-6D-7S-8D', 3
+        - 01-910 # 2 grp
+        - 34-1213
+        - 67-1516
+      - i = i\*3
+      - step = 3\*player
+        - len(grp) of 'ab-' = 3
+    - **hand**
+      - ('AS-5H')
+        - ('AS-2D-3S-4C-5H-6D-7S-8D', 1, 4)
+  - change to index # - _'A23456789TJQK', 'CDHS'_
+    - **index in number**
+      - (0, 3)
+      - (4, 2)
+        - 'AS-5H'
+  - get category and result
+    - category
+      - 5 straight and flush
+      - 4 flush
+      - 3 straight
+      - 2 pair
+      - 1 high card
+      - split then compare each card
+        - 'AH', '5H'
+      - compare each card in a string that rep hand
+        - 'AS-5H'
+      - **category, highest**
+        - (1, '5H')
+          - 'AS-5H'
+          - '2C-3C' # s flush
+          - '2D-6D' # flush
+          - 'QD-KC' # straight
+          - '2D-2H' # pair
+          - '2C-2S'
+          - '2D-5H' # high card
+    - score
+      - category \* 1000 + rank \* 10 + suit
+      - max = 5123 # flush KS
+        - min = 1000 # high card AC
+      - **score, highest**
+        - (1042, '5H')
+        - 'AS-5H'
+          - 1000*1 + 10*4 + 2
+  - evaluate hand[n]'s score and result str
+    - **score, highest**
+      - (1042, 'a high card of 5H')
+      - 'AS-5H'
+- get score of next hand and compare
+  - if max
+    - save player ID
+      - 'player 1'
+    - save result str
+      - 'a high card of 5H'
+
+#### rev
+
+- 用赋值 score 判断结果的确比 if 嵌套更清晰
+  - if meta1
+    - check sub
+  - elif meta2
+- to improve
+  - 如果 card 的数量不确定
+    - 如何比较和求出 card 的种类
+    - 如何求出 card_highest
+    - v1
+      - split，根据 rank 排序
+        - 'AS-2D-2S-4C-5D'
+          - '5D-2D-AS-2S-4C'
+      - if flush
+        - 'AS-2S'
+        - '2D-5D'
+        - if straight
+          - 'AS-2S'
+        - if not straight
+          - get highest
+            - '5D'
+            - 'AS-4S'
+            - '2D-5D'
+      - elif straight
+        - get highest
+          - '3C'
+            - 'AS-2H'
+            - '2D-3C'
+
 ### 9. encodeRightLeftRouteCipher(s, n)
 
 def
@@ -741,7 +871,7 @@ def
   - E T K D N
   - A A A A z
 
-step
+#### step
 
 - get col
   - col = round up len(s)/rows # 5
@@ -777,7 +907,7 @@ decode
 
 - 3WTCTWNDKTEAAAAz
 
-step
+#### step
 
 - get rows, col, new cipher
   - delete 1st digit
@@ -805,8 +935,9 @@ step
     - s[5] = s[11]
 - delete fill
 
-rev
+#### rev
 
+- 起初没看 hint 直接上的
 - course 上的解法推了半天，发现和自己的逻辑是一样的
   - 课程的解法是罗列 row 和 col 组合，然后找表达式
   - 自己的解法是把每 row 的表达式带入到整体

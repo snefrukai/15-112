@@ -18,7 +18,7 @@ import cs112_s21_week3_linter
 #################################################
 def test_func(output, expect):
     if output != expect:
-        print("\n? bug: ", expect)
+        print("\n? expect: ", expect)
         ic(output)
 
 
@@ -138,43 +138,40 @@ def topScorer(data):
 #################################################
 
 
-def count_match_exact(s, s1):
-    count = 0
-    len_s = len(s)
-    match = ""
-    text = " exact match"
-    if s == s1: return s, s1, "win"
-
-    # replace when match
-    i = 0
-    k = len(s)
-    while i < k:
-        if s[i] == s1[i]:
-            s = str_del_kth(s, i)
-            s1 = str_del_kth(s1, i)
-            count += 1
-            k -= 1
-        else:
-            i += 1
-        # print(i, k, count, s, s1)
-
-    # replace after match
-    # for i in len(s):
-    #     if s[i] == s1[i]:
-    #         match += str(i)
-
-    if count == 0: result = "none"
-    elif count < len_s:
-        if count > 1: text += "es"
-        result = str(count) + text
-    return s, s1, result
-
-
 def str_del_kth(s, i):
     if i > len(s) - 1: return "out of range"
     elif i == len(s) - 1: return s[:i]
     elif i == 0: return s[i + 1:]
     else: return s[:i] + s[i + 1:]
+
+
+def count_match_exact(s, s1):
+    count = 0
+    len_s = len(s)
+    text = " exact match"
+    if s == s1: return s, s1, "win"
+
+    i = 0
+    k = len(s)
+    while i < k:
+        if s[i] == s1[i]:
+            s = str_del_kth(s, i)  # replace when match
+            s1 = str_del_kth(s1, i)
+            count += 1
+            k -= 1
+        else:
+            i += 1
+
+    # match = ""
+    # for i in len(s):
+    #     if s[i] == s1[i]:
+    #         match += str(i)  # replace after match
+
+    if count == 0: result_exact = "none"
+    elif count < len_s:
+        if count > 1: text += "es"
+        result_exact = str(count) + text
+    return s, s1, result_exact
 
 
 def count_match_partial(s, s1):
@@ -187,11 +184,11 @@ def count_match_partial(s, s1):
             count += 1
             s1 = str_del_kth(s1, k)
 
-    if count == 0: result = 'No matches'
+    if count == 0: result_partial = 'No matches'
     else:
         if count > 1: text += "es"
-        result = str(count) + text
-    return s, s1, result
+        result_partial = str(count) + text
+    return s, s1, result_partial
 
 
 def mastermindScore(s, s1):
@@ -302,8 +299,78 @@ def drawFlagOfQatar(canvas, x0, y0, x1, y1):
 #
 
 
+def poker_hand_get(deck, player_id, player_count):
+    card1 = (player_id - 1) * 3
+    card2 = (player_id - 1) * 3 + 3 * player_count
+    hand = deck[card1:card1 + 2] + '-' + deck[card2:card2 + 2]
+    return hand
+
+
+def poker_card_index(card):
+    rank = 'A23456789TJQK'.find(card[0])
+    suit = 'CDHS'.find(card[1])
+    return rank, suit
+
+
+def poker_card_highest(rank1, suit1, rank2, suit2):
+    if rank1 > rank2: return 1
+    elif rank1 == rank2:
+        if suit1 > suit2: return 1
+        else: return 2
+    else: return 2
+
+
+def poker_hand_eval(hand):  # 'A23456789TJQK', 'CDHS'
+    category = 0
+    result = 'i need result!~'
+    card1, card2 = hand[:2], hand[3:]
+    rank1, suit1 = poker_card_index(card1)
+    rank2, suit2 = poker_card_index(card2)
+    rank, suit = 0, 0
+
+    card_highest = poker_card_highest(rank1, suit1, rank2, suit2)
+    if card_highest == 1:
+        card_highest = card1
+        rank, suit = rank1, suit1
+    else:
+        card_highest = card2
+        rank, suit = rank2, suit2
+
+    flush = suit1 == suit2
+    straight = abs(rank1 - rank2) == 1
+    if flush and straight:
+        category = 5
+        result = 'a straight flush to ' + card_highest
+    elif flush:
+        category = 4
+        result = 'a flush to ' + card_highest
+    elif straight:
+        result = 'a straight to ' + card_highest
+        category = 3
+    elif rank1 == rank2:
+        category = 2
+        result = 'a pair to ' + card_highest
+    else:
+        category = 1
+        result = 'a high card of ' + card_highest
+
+    score = category * 1000 + rank * 10 + suit
+    return score, result
+
+
 def playPoker(deck, players):
-    return 42
+    if len(deck.replace('-', '')) / 4 < players: return 'Not enough cards'
+
+    score_max = 0
+    result_max = 'i need result!~'
+
+    for i in range(players):
+        hand = poker_hand_get(deck, i + 1, players)
+        score, result = poker_hand_eval(hand)
+        if score > score_max:
+            score_max = score
+            result_max = 'Player ' + str(i + 1) + ' wins with ' + result
+    return result_max
 
 
 #################################################
@@ -317,11 +384,12 @@ def playPoker(deck, players):
 #################################################
 
 
-# %%
 def cipher_reindex(text, groups):
     if len(text) % groups != 0: return "need to fiil length"
+
     text_new = ""
     step = int(len(text) / groups)
+
     for k in range(groups):
         part = ""
         for i in range(step):
@@ -334,6 +402,7 @@ def cipher_reindex(text, groups):
 def cipher_rotate(text, groups):
     text_new = ""
     step = int(len(text) / groups)
+
     for i in range(groups):
         part = ""
         part += text[i * step:(i + 1) * step]
@@ -670,8 +739,66 @@ def testDrawFlagOfQatar():
     basic_graphics.run(width=600, height=400, drawFn=testDrawFlagOfQatarDrawFn)
 
 
+def test_poker_get_hand():
+    parm = [
+        ('AS-2D-3S-4C-5H-6D-7S-8D', 1, 4),
+        ('AS-2D-3S-4C-5H-6D-7S-8D', 2, 4),
+        ('AS-2D-3S-4C-5H-6D-7S-8D', 3, 4),
+        ('AS-2D-3S-4C-5H-6D-7S-8D', 4, 4),
+        ('AS-2D-3S-4C-5H-6D-7S-8D', 2, 3),
+    ]
+    soln = [
+        'AS-5H',
+        '2D-6D',
+        '3S-7S',
+        '4C-8D',
+        '2D-5H',
+    ]
+    for i, (a, b, c) in enumerate(parm):
+        expect = soln[i]
+        output = poker_hand_get(a, b, c)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+
+def test_poker_hand_eval():
+    parm = [
+        '2C-3C',
+        '2D-6D',
+        'QD-KC',
+        '2D-2H',
+        '5H-2D',
+    ]
+    soln = [
+        (5020, 'a straight flush to 3C'),
+        (4051, 'a flush to 6D'),
+        (3120, 'a straight to KC'),
+        (2012, 'a pair to 2H'),
+        (1042, 'a high card of 5H'),
+    ]
+    for i, (hand) in enumerate(parm):
+        expect = soln[i]
+        output = poker_hand_eval(hand)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+
 def testPlayPoker():
     print('Testing playPoker()...', end='')
+    test_poker_get_hand()
+    test_poker_hand_eval()
+
+    parm = [('AS-2D-3S-4C-5H-6D-7S-8D', 4), ('5S-2H-3C-4D', 2)]
+    soln = [
+        'Player 3 wins with a flush to 7S',
+        'Player 1 wins with a high card of 5S'
+    ]
+    for i, (deck, players) in enumerate(parm):
+        expect = soln[i]
+        output = playPoker(deck, players)
+        # ic(output)
     assert (playPoker('QD-3S', 1) == 'Player 1 wins with a high card of QD')
     assert (playPoker('QD-QC', 1) == 'Player 1 wins with a pair to QD')
     assert (playPoker('QD-JS', 1) == 'Player 1 wins with a straight to QD')
@@ -929,8 +1056,8 @@ def testAll():
     # testTopLevelFunctionNames()
 
     # hw3-required
-    testDrawFlagOfQatar()
-    # testPlayPoker()
+    # testDrawFlagOfQatar()
+    testPlayPoker()
 
     # hw3-collaborative
     test_str_del_kth()
