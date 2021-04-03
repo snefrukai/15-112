@@ -70,15 +70,14 @@ def longestDigitRun(n):
 
 
 def isPrime(n):
-    if (n < 2):
-        return False
-    if (n <= 3):
-        return True
-    if (n % 2 == 0 or n % 3 == 0):
-        return False
-    for factor in range(5, int(n**0.5) + 1, 6):
-        if n % factor == 0 or n % (factor + 2) == 0:
-            return False
+    if n == 2 or n == 3: return True
+    factor = int(n**0.5)
+    cond = n < 2 or n % 2 == 0 or n % 3 == 0 or n == factor**2
+    if cond: return False
+
+    for i in range(5, factor + 1, 6):
+        cond = n % i == 0 or n % (i + 2) == 0
+        if cond: return False
     return True
 
 
