@@ -1034,6 +1034,24 @@ step
   - deal with extreme
     - mode
 - get new char
+
+### 4. areAnagrams(s1, s2)
+
+
+def
+
+- "Aba" and "BAA" are anagrams
+- may not use sort() or sorted() or any other list-based
+
+step
+
+- get digit
+- count as lower or upper
+  - replace
+- change to upper or lower, count
+  - replace
+- get next digit
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)

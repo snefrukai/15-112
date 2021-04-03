@@ -78,8 +78,21 @@ def applyCaesarCipher(message, shift):
     return message_new
 
 
-def areAnagrams(s1, s2):
+def anagrams_count(s):
     return 42
+
+
+def areAnagrams(s1, s2):
+    if len(s1) != len(s2): return False
+    while s1 != '':
+        l, u = s1[0].lower(), s1[0].upper()
+        count1 = s1.count(l) + s1.count(u)
+        count2 = s2.count(l) + s2.count(u)
+        # ic(l, u, s1, count1, s2, count2)
+        if count1 != count2: return False
+        s1 = s1.replace(l, "")
+        s1 = s1.replace(u, "")
+    return True
 
 
 def sameChars(s1, s2):
@@ -174,7 +187,9 @@ def testApplyCaesarCipher():
 
 def testAreAnagrams():
     print("Testing areAnagrams()...", end="")
+    # ic(areAnagrams("aaAAyyYY", "aayBBBaa"))
     assert (areAnagrams("", "") == True)
+    assert (areAnagrams("", "a") == False)  # self
     assert (areAnagrams("abCdabCd", "abcdabcd") == True)
     assert (areAnagrams("abcdaBcD", "AAbbcddc") == True)
     assert (areAnagrams("abcdaabcd", "aabbcddcb") == False)
@@ -292,7 +307,7 @@ def testAll():
     testVowelCount()
     testInterleave()
     testApplyCaesarCipher()
-    # testAreAnagrams()
+    testAreAnagrams()
     # testSameChars()
     # testHasBalancedParentheses()
     # testLeastFrequentLetters()
