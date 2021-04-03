@@ -312,24 +312,15 @@ def poker_card_index(card):
     return rank, suit
 
 
-def poker_card_highest(rank1, suit1, rank2, suit2):
-    if rank1 > rank2: return 1
-    elif rank1 == rank2:
-        if suit1 > suit2: return 1
-        else: return 2
-    else: return 2
-
-
 def poker_hand_eval(hand):  # 'A23456789TJQK', 'CDHS'
-    category = 0
     result = 'i need result!~'
     card1, card2 = hand[:2], hand[3:]
     rank1, suit1 = poker_card_index(card1)
     rank2, suit2 = poker_card_index(card2)
-    rank, suit = 0, 0
+    # category = 0
+    # rank, suit = 0, 0
 
-    card_highest = poker_card_highest(rank1, suit1, rank2, suit2)
-    if card_highest == 1:
+    if rank1 > rank2 or (rank1 == rank2 and suit1 > suit2):
         card_highest = card1
         rank, suit = rank1, suit1
     else:
@@ -360,17 +351,16 @@ def poker_hand_eval(hand):  # 'A23456789TJQK', 'CDHS'
 
 def playPoker(deck, players):
     if len(deck.replace('-', '')) / 4 < players: return 'Not enough cards'
-
-    score_max = 0
-    result_max = 'i need result!~'
+    score = 0
+    result = 'i need result!~'
 
     for i in range(players):
         hand = poker_hand_get(deck, i + 1, players)
-        score, result = poker_hand_eval(hand)
-        if score > score_max:
-            score_max = score
-            result_max = 'Player ' + str(i + 1) + ' wins with ' + result
-    return result_max
+        score_new, result_new = poker_hand_eval(hand)
+        if score_new > score:
+            score = score_new
+            result = 'Player ' + str(i + 1) + ' wins with ' + result_new
+    return result
 
 
 #################################################
