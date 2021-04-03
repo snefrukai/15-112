@@ -1037,7 +1037,6 @@ step
 
 ### 4. areAnagrams(s1, s2)
 
-
 def
 
 - "Aba" and "BAA" are anagrams
@@ -1051,6 +1050,22 @@ step
 - change to upper or lower, count
   - replace
 - get next digit
+
+### 5. areAnagrams
+
+def
+
+- case sensi
+- ("abcabcabc", "cba") == True
+
+step
+
+- get s1[0]
+- check with s2
+  - if find
+- replace to ''
+- repeat
+- check if all are ''
 
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 

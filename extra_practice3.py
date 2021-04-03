@@ -90,13 +90,23 @@ def areAnagrams(s1, s2):
         count2 = s2.count(l) + s2.count(u)
         # ic(l, u, s1, count1, s2, count2)
         if count1 != count2: return False
-        s1 = s1.replace(l, "")
-        s1 = s1.replace(u, "")
+        s1 = s1.replace(l, '')
+        s1 = s1.replace(u, '')
     return True
 
 
 def sameChars(s1, s2):
-    return 42
+    if type(s1) != str or type(s2) != str: return False
+    if s1 == '' and s2 == '': return True
+
+    while s1 != '':
+        foo = s1[0]
+        find = s2.find(foo)
+        s1 = s1.replace(foo, '')
+        s2 = s2.replace(foo, '')
+        # ic(s1, s2, foo, find)
+    if s2 != '': return False
+    return True
 
 
 def hasBalancedParentheses(s):
@@ -198,6 +208,7 @@ def testAreAnagrams():
 
 def testSameChars():
     print("Testing sameChars()...", end="")
+    # ic(sameChars("aabbcc", "abcbcyyzz"))
     assert (sameChars("abcabcabc", "cba") == True)
     assert (sameChars("abcabcabc", "cbad") == False)
     assert (sameChars("abcabcabc", "cBa") == False)
@@ -308,7 +319,7 @@ def testAll():
     testInterleave()
     testApplyCaesarCipher()
     testAreAnagrams()
-    # testSameChars()
+    testSameChars()
     # testHasBalancedParentheses()
     # testLeastFrequentLetters()
     # testLongestCommonSubstring()
