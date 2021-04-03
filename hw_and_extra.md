@@ -980,4 +980,62 @@ step
 
 ## [extra-practice3](https://www.cs.cmu.edu/~112/notes/extra-practice3.html)
 
+### 1. vowelCount(s)
+
+def
+
+- str
+- 'aeiouAEIOU'
+
+step
+
+- check each digit
+  - for i - if s[i] in vowel - count += 1
+    rev
+- 这也太简单了吧
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
+
+### Code Tracing (CT)
+
+#### 1
+
+step
+
+- print(ct1("net", "two"))
+  - for c in 'net' # n e t
+    - if (c.upper() not in "NO!!!"): # N E T
+      - i = 'two'.find(c)
+        - e, -1
+        - t, 0
+      - if (result != ""): result += ":"
+      - result += "%d%s%s%s" % (i, c, s[i], t[i])
+        - += "%d%s%s%s" % (-1, 'e', 'net'[-1], 'two'[-1])
+        - += "%d%s%s%s" % (0, 't', 'net'[0], 'two'[0])
+
+print
+-'-1eto:0tnt'
+
+#### 2
+
+step
+print
+
+### Reasoning Over Code (ROC)
+
+Find values for the parameters so the functons return True:
+
+#### 1 rc1(nn)
+
+def
+
+- n is int
+- s is str of n
+- 2000 > n > 1000
+
+step
+
+- `n == int( s[0] * len(s) )`
+  - len(s) = 4 # repeat 4 time
+  - s[0] = 1
+- 1111
