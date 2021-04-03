@@ -994,6 +994,23 @@ step
     rev
 - 这也太简单了吧
 
+### 2. interleave(s1, s2)
+
+def
+
+- ('pto', 'yhn')
+  - "python"
+- ('a#', 'cD!f2')
+  - "ac#D!f2"
+
+step
+
+- get min len
+- for i
+  - get each digit
+  - add each digit
+- add rest str
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)

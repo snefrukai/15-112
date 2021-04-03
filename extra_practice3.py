@@ -42,7 +42,17 @@ def vowelCount(s):
 
 
 def interleave(s1, s2):
-    return 42
+    s_new = ''
+    len_min = min(len(s1), len(s2))
+
+    for i in range(len_min):
+        s_new += s1[i] + s2[i]
+
+    if len_min < len(s1):
+        s_new += s1[len_min:]
+    elif len_min < len(s2):
+        s_new += s2[len_min:]
+    return s_new
 
 
 def applyCaesarCipher(message, shift):
@@ -106,6 +116,7 @@ def testVowelCount():
 
 def testInterleave():
     print("Testing interleave()...", end="")
+    # ic(interleave("aaa", "bbbyyy"))
     assert (interleave("abcdefg", "abcdefg") == "aabbccddeeffgg")
     assert (interleave("abcde", "abcdefgh") == "aabbccddeefgh")
     assert (interleave("abcdefgh", "abcde") == "aabbccddeefgh")
@@ -250,7 +261,7 @@ fg""")
 def testAll():
     # comment out the tests you do not wish to run!
     testVowelCount()
-    # testInterleave()
+    testInterleave()
     # testApplyCaesarCipher()
     # testAreAnagrams()
     # testSameChars()
