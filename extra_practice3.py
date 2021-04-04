@@ -215,12 +215,23 @@ def replace(s, c_old, c_new):
 
 
 def collapseWhitespace(s):
-    s = replace(s, '\n', ' ')
-    s = replace(s, '\t', ' ')
+    char_prev_space = False
+    s_new = ''
 
-    while s.find('  ') != -1:
-        s = replace(s, '  ', ' ')
-    return s
+    for c in s:
+        if not c.isspace():
+            s_new += c
+            char_prev_space = False
+        elif c.isspace() and not char_prev_space:  # prev is char
+            s_new += ' '
+            char_prev_space = True
+        # ic(c, char_prev_space, s_new)
+
+    # s = replace(s, '\n', ' ')
+    # s = replace(s, '\t', ' ')
+    # while s.find('  ') != -1:
+    #     s = replace(s, '  ', ' ')
+    return s_new
 
 
 def wordWrap(text, width):
@@ -405,6 +416,7 @@ def testReplace():
 
 def testCollapseWhitespace():
     print("Testing collapseWhitespace()...", end="")
+    # ic(collapseWhitespace(" A B "))
     # ic(collapseWhitespace(" A  \n\n  \t\t\t z  \t\t "))  # " A z "
     assert (collapseWhitespace("a\nb") == "a b")
     assert (collapseWhitespace("a\n   \t    b") == "a b")
