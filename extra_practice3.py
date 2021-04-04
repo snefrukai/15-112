@@ -179,8 +179,24 @@ def longestCommonSubstring(s1, s2):
     return result
 
 
+def is_palindro(s):
+    for i in range(int(len(s) / 2)):
+        if s[i] != s[-1 - i]: return False
+    return True
+
+
 def longestSubpalindrome(s):
-    return 42
+    result, s_temp, result_new = '', '', ''
+
+    for i in range(len(s)):
+        result_new = s[i:]
+        while result_new != '' and not is_palindro(result_new):
+            result_new = result_new[:-1]
+        if len(result_new) > len(result) or (len(result_new) == len(result)
+                                             and result_new > result):
+            result = result_new
+        # ic(i, result_new)
+    return result
 
 
 def replace(s1, s2, s3):
@@ -320,9 +336,15 @@ def testLeastFrequentLetters():
     print("Passed!")
 
 
+def test_is_included():
+    ic(is_included('abc', 'a'))
+
+
 def testLongestCommonSubstring():
+    # test_is_included()
     print("Testing longestCommonSubstring()...", end="")
-    # ic(longestCommonSubstring("abcdbcy", "abcd"))  # abcd, bc
+    # ic(longestCommonSubstring("abcdef", "ghi"))
+    # ic(longestCommonSubstring("abcbcy", "abc"))  # abc
     # ic(longestCommonSubstring("abxAB", "abyAB"))  # ab, AB
     # ic(longestCommonSubstring("00yy111", "00yy-yy111"))  #
     assert (longestCommonSubstring("abcdef", "abqrcdest") == "cde")
@@ -333,8 +355,17 @@ def testLongestCommonSubstring():
     print("Passed!")
 
 
+def test_is_palindro():
+    ic(is_palindro('a'))
+    ic(is_palindro('aba'))
+    ic(is_palindro('abca'))
+    ic(is_palindro('abccba'))
+
+
 def testLongestSubpalindrome():
     print("Testing longestSubpalindrome()...", end="")
+    # test_is_palindro()
+    # ic(longestSubpalindrome("abcbcy"))
     assert (longestSubpalindrome("ab-4-be!!!") == "b-4-b")
     assert (longestSubpalindrome("abcbce") == "cbc")
     assert (longestSubpalindrome("aba") == "aba")
@@ -393,7 +424,7 @@ def testAll():
     testHasBalancedParentheses()
     testLeastFrequentLetters()
     testLongestCommonSubstring()
-    # testLongestSubpalindrome()
+    testLongestSubpalindrome()
     # testReplace()
     # testCollapseWhitespace()
     # testWordWrap()

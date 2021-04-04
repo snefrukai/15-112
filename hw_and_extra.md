@@ -1121,7 +1121,7 @@ step
       - 123-4
       - 1234
 
-### 8. longestCommonSubstring
+### 8. longestCommonSubstring(s1, s2)
 
 def
 
@@ -1136,13 +1136,15 @@ def
 
 step
 
-- get char s1[i]
-  - check - if s2 has
-    - break if last char
-  - add char with s1[i+1]
-  - repeat
-  - return result
-  - skip this part in s1
+- start from s1[0]
+  - while temp is inclu in s2 # get new str
+    - += s1[0+1]
+    - break
+      - if last char
+      - if += next not inclu
+    - repeat
+  - save result
+- start from s1[1]
 - repeat
 
 rev
@@ -1153,6 +1155,37 @@ rev
   - 00[yy]111
     - 00yy-yy111
   - i 需重置到 i+1 ？
+  - 既然要逐个检查，那就还是用 for 好了
+- while
+  - break 的一些条件可以放到 while 那儿去
+
+### 9. longestSubpalindrome(s)
+
+def
+
+- consecutive char
+- case insensi
+- cant skip char in case of multual include
+  - ab[c]bce
+  - bcb, cbc
+- helper palindro
+  - for i
+    - abc, 1
+    - abcd, 2
+
+step
+
+- start from s[0] # 0123
+  - while temp is not palindro # get new str
+    - abc...xyz
+    - abc...xy
+  - save result
+- start from s[1] # 123
+  - remove left chars
+  - compare results
+    - len
+    - lexi
+- repeat
 
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
