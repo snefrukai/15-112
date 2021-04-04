@@ -1215,6 +1215,23 @@ step
   - for i in count
 - add whats left in s
 
+### 11. collapseWhitespace(s)
+
+def
+
+- multi space into one
+
+step
+- change format with 10.
+  - to ' '
+  - \n
+  - \t
+- change white space 
+  - '  ' to ' '
+    - 2 to 1
+  - repeat
+    - until cant find
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)

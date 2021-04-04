@@ -208,14 +208,19 @@ def replace(s, c_old, c_new):
     for i in range(count):
         posn = s.find(c_old)
         s_new += s[:posn] + c_new
-        ic(count, s, posn, s_new)
+        # ic(count, s, posn, s_new)
         s = s[posn + dist:]
     s = s_new + s
     return s
 
 
 def collapseWhitespace(s):
-    return 42
+    s = replace(s, '\n', ' ')
+    s = replace(s, '\t', ' ')
+
+    while s.find('  ') != -1:
+        s = replace(s, '  ', ' ')
+    return s
 
 
 def wordWrap(text, width):
@@ -400,6 +405,7 @@ def testReplace():
 
 def testCollapseWhitespace():
     print("Testing collapseWhitespace()...", end="")
+    # ic(collapseWhitespace(" A  \n\n  \t\t\t z  \t\t "))  # " A z "
     assert (collapseWhitespace("a\nb") == "a b")
     assert (collapseWhitespace("a\n   \t    b") == "a b")
     assert (collapseWhitespace("a\n   \t    b  \n\n  \t\t\t c   ") == "a b c ")
@@ -441,7 +447,7 @@ def testAll():
     testLongestCommonSubstring()
     testLongestSubpalindrome()
     testReplace()
-    # testCollapseWhitespace()
+    testCollapseWhitespace()
     # testWordWrap()
 
 
