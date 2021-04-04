@@ -1085,7 +1085,36 @@ step
 - replace 1st left and right
 - repeat until no left
   - if right: F
-
+### 7. leastFrequentLetters(s)
+def
+- case insensi
+- return str of lowercase
+  - in alpha order
+step
+- get 1st digit
+  - if alpha
+    - if count == min
+      - add to result
+    - replace
+  - if not alpha
+    - replace
+- repeat until s is''
+- order result
+  - bubble
+    - for i in len
+      - if s[i] ? s[i+1]
+        - 4332
+        - 34-32
+    - 4321
+      - 34-21
+      - 324-1
+      - 3214
+    - 23-14
+      - 213-4
+      - 2134
+    - 12-34
+      - 123-4
+      - 1234
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)

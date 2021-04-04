@@ -120,8 +120,38 @@ def hasBalancedParentheses(s):
     return True
 
 
+def order_bubble(s):
+    foo = string.ascii_letters + string.digits
+    for i in range(len(s) - 1):
+        s_old = s
+        for i in range(len(s) - 1):
+            if foo.find(s[i]) > foo.find(s[i + 1]):
+                s = s[:i] + (s[i + 1] + s[i]) + s[i + 2:]
+        if s == s_old: return s
+    return s
+
+
 def leastFrequentLetters(s):
-    return 42
+    if s == '': return ''
+    result = ''
+    count_min, k = 0, 0
+    while s != '':
+        if s[0].isalpha():
+            s_lower = s[0].lower()
+            s_upper = s[0].upper()
+            count_new = s.count(s_lower) + s.count(s_upper)
+            if k == 0 or count_new < count_min:
+                count_min = count_new
+                result = s_lower
+            elif count_new == count_min:
+                result += s_lower
+            k = 1
+            s = s.replace(s_lower, '')
+            s = s.replace(s_upper, '')
+        else:
+            s = s.replace(s[0], '')
+    result = order_bubble(result)
+    return result
 
 
 def longestCommonSubstring(s1, s2):
@@ -239,8 +269,16 @@ def testHasBalancedParentheses():
     print("Passed!")
 
 
+def test_order_bubble():
+    ic(order_bubble('654321'))
+    ic(order_bubble('123645'))
+    ic(order_bubble('cba'))
+
+
 def testLeastFrequentLetters():
     print("Testing leastFrequentLetters()...", end="")
+    # test_order_bubble()
+    # ic(leastFrequentLetters("bac ABC Cxy'xy!!!"))
     assert (leastFrequentLetters("abc def! GFE'cag!!!") == "bd")
     assert (leastFrequentLetters("abc def! GFE'cag!!!".lower()) == "bd")
     assert (leastFrequentLetters("abc def! GFE'cag!!!".upper()) == "bd")
@@ -329,7 +367,7 @@ def testAll():
     testAreAnagrams()
     testSameChars()
     testHasBalancedParentheses()
-    # testLeastFrequentLetters()
+    testLeastFrequentLetters()
     # testLongestCommonSubstring()
     # testLongestSubpalindrome()
     # testReplace()
