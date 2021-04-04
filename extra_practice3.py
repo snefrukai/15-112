@@ -154,8 +154,29 @@ def leastFrequentLetters(s):
     return result
 
 
+def is_included(s, check):
+    if s.find(check) == -1: return False
+    elif s.find(check) >= 0: return True
+
+
 def longestCommonSubstring(s1, s2):
-    return 42
+    if s1 == '' or s2 == '': return ''
+    i = 0
+    result, s_temp, result_new = '', '', ''
+
+    for i in range(len(s1)):
+        if is_included(s2, s1[i]):
+            result_new = s1[i]
+        # last char, or no further match
+        while i < len(s1) - 1 and is_included(s2, result_new + s1[i + 1]):
+            result_new += s1[i + 1]
+            i += 1
+            # ic(i, len(s1), result_new)
+        if len(result_new) > len(result) or (len(result_new) == len(result)
+                                             and result_new < result):
+            result = result_new
+        # ic(i, result_new)
+    return result
 
 
 def longestSubpalindrome(s):
@@ -301,6 +322,9 @@ def testLeastFrequentLetters():
 
 def testLongestCommonSubstring():
     print("Testing longestCommonSubstring()...", end="")
+    # ic(longestCommonSubstring("abcdbcy", "abcd"))  # abcd, bc
+    # ic(longestCommonSubstring("abxAB", "abyAB"))  # ab, AB
+    # ic(longestCommonSubstring("00yy111", "00yy-yy111"))  #
     assert (longestCommonSubstring("abcdef", "abqrcdest") == "cde")
     assert (longestCommonSubstring("abcdef", "ghi") == "")
     assert (longestCommonSubstring("", "abqrcdest") == "")
@@ -368,7 +392,7 @@ def testAll():
     testSameChars()
     testHasBalancedParentheses()
     testLeastFrequentLetters()
-    # testLongestCommonSubstring()
+    testLongestCommonSubstring()
     # testLongestSubpalindrome()
     # testReplace()
     # testCollapseWhitespace()

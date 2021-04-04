@@ -1085,12 +1085,17 @@ step
 - replace 1st left and right
 - repeat until no left
   - if right: F
+
 ### 7. leastFrequentLetters(s)
+
 def
+
 - case insensi
 - return str of lowercase
   - in alpha order
+
 step
+
 - get 1st digit
   - if alpha
     - if count == min
@@ -1115,6 +1120,40 @@ step
     - 12-34
       - 123-4
       - 1234
+
+### 8. longestCommonSubstring
+
+def
+
+- longest string that occurs in both strings
+- list
+  - abcyy, abc
+    - a, a
+    - ab, ab
+    - abc, abc
+    - abcy, none
+-
+
+step
+
+- get char s1[i]
+  - check - if s2 has
+    - break if last char
+  - add char with s1[i+1]
+  - repeat
+  - return result
+  - skip this part in s1
+- repeat
+
+rev
+
+- 重新检验被互相包含的
+  - 00y[y]y111
+    - 00yy111
+  - 00[yy]111
+    - 00yy-yy111
+  - i 需重置到 i+1 ？
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)
