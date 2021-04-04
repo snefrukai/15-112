@@ -199,8 +199,19 @@ def longestSubpalindrome(s):
     return result
 
 
-def replace(s1, s2, s3):
-    return 42
+def replace(s, c_old, c_new):
+    if s.find(c_old) == -1: return s
+    s_new = ''
+    dist = len(c_old)
+    count = s.count(c_old)
+
+    for i in range(count):
+        posn = s.find(c_old)
+        s_new += s[:posn] + c_new
+        ic(count, s, posn, s_new)
+        s = s[posn + dist:]
+    s = s_new + s
+    return s
 
 
 def collapseWhitespace(s):
@@ -375,6 +386,10 @@ def testLongestSubpalindrome():
 
 def testReplace():
     print('Testing replace()...', end='')
+    # ic(replace('abcd', 'bc', 'x'))
+    # ic(replace('abcd', 'x', 'y'))
+    # ic(replace('abc abc', 'b', 'y'))
+    # ic(replace('abc abc', 'ab', 'abd'))
     assert (replace('abc', 'd', 'e') == 'abc'.replace('d', 'e'))
     assert (replace('abc', 'b', 'e') == 'abc'.replace('b', 'e'))
     assert (replace('abcb abc', 'b', 'e') == 'abcb abc'.replace('b', 'e'))
@@ -425,7 +440,7 @@ def testAll():
     testLeastFrequentLetters()
     testLongestCommonSubstring()
     testLongestSubpalindrome()
-    # testReplace()
+    testReplace()
     # testCollapseWhitespace()
     # testWordWrap()
 

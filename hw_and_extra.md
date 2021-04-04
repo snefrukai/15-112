@@ -1187,6 +1187,34 @@ step
     - lexi
 - repeat
 
+### 10. replace(s,c_old, c_new)
+
+def
+
+- no .replace
+- hypo
+  - abc...mn...xyz
+    - find
+  - abc... + mn + ...xyz
+    - contact
+- cant use while
+  - need to ignore the newly added chars
+
+step
+
+- if cant find c_old: return s
+- get 1st part that has c_old
+  - form s_new
+  - s_new = abc + mn
+    - abcyy
+  - del s after c_old
+- get 2nd part that has c_old
+  - form s_new
+    - s_new += efg + mn
+- repeat
+  - for i in count
+- add whats left in s
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)
