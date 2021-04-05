@@ -1232,6 +1232,29 @@ step
   - repeat
     - until cant find
 
+### 12. wordWrap(s, n)
+def
+
+step
+- form lines
+  - add \n by n
+    - "ababab", 2
+      - ab
+- remove trailing white
+  - 'a b c de f '
+    - 'a b '
+    - 'c de'
+    - ' f '
+  - loop line
+    - 
+  - loop c
+    - len = 5*3 = 14
+    - i
+      - 0, 3
+      - 5, 8
+      - 10, ~~12~~
+- replace white
+  - '-'
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)

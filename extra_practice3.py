@@ -234,8 +234,33 @@ def collapseWhitespace(s):
     return s_new
 
 
-def wordWrap(text, width):
-    return 42
+def wordWrap(s, n):
+    s_new = ''
+
+    for i in range(1, math.ceil(len(s) / n) + 1):
+        s_new += s[:n] + '\n'
+        s = s[n:]
+        # ic(i, s, s_new)
+
+    # s = ''
+    # k = 0
+    # for line in s_new.splitlines():
+    #     line = line.strip()
+    #     line = line.replace(' ', '-')
+    #     if k == 0: s = line
+    #     else: s += '\n' + line
+    #     k = 1
+
+    ### course method
+    s = s_new
+    while s.count(' ') != 0:
+        posn = s.find(' ')
+        if s[posn - 1].isalpha() and s[posn + 1] != '\n':
+            s = s.replace(' ', '-', 1)
+        else:
+            s = s.replace(' ', '', 1)
+
+    return s
 
 
 #################################################
@@ -429,16 +454,19 @@ def testCollapseWhitespace():
 
 def testWordWrap():
     print('Testing wordWrap()...', end='')
-    assert (wordWrap("abc", 3) == "abc")
-    assert (wordWrap("abc", 2) == "ab\nc")
-    assert (wordWrap("abcdefghij", 4) == """\
-abcd
-efgh
-ij""")
-    assert (wordWrap("a b c de fg", 4) == """\
-a-b
-c-de
-fg""")
+    # ic(wordWrap("a cxyz", 3))
+    # ic(wordWrap("abcdefghij", 4))
+    ic(wordWrap("a b c de f ", 4))
+    #     assert (wordWrap("abc", 3) == "abc")
+    #     assert (wordWrap("abc", 2) == "ab\nc")
+    #     assert (wordWrap("abcdefghij", 4) == """\
+    # abcd
+    # efgh
+    # ij""")
+    #     assert (wordWrap("a b c de fg", 4) == """\
+    # a-b
+    # c-de
+    # fg""")
     print('Passed!')
 
 
@@ -460,7 +488,7 @@ def testAll():
     testLongestSubpalindrome()
     testReplace()
     testCollapseWhitespace()
-    # testWordWrap()
+    testWordWrap()
 
 
 def main():
