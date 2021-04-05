@@ -241,3 +241,106 @@ step
 rev
 
 - 26min
+
+## [Quiz 3](https://www.cs.cmu.edu/~112/notes/quiz3a.html)
+
+- MAY NOT use VS Code or any other editor or resource for this quiz.
+- may not use LISTS (except implicitly in loops), LIST INDEXING, SETS, DICTIONARIES, or RECURSION either.
+- 15 min
+
+Fill-in-the-Blank: averageGrade(gradebook) [50 points]
+
+- rounded average quiz score
+  - or None
+  - not take a quiz
+    - score will be '--' and will not count in average
+
+```python
+def averageGrade(student, gradebook):
+    student = student.lower()
+    gradebook = gradebook.lower()
+    for line in gradebook.splitlines():
+        name = None
+        score = count = 0
+        for entry in line.split(','):
+            if (name == None):
+                name = entry
+            elif name != None:
+                score += int(entry)
+                count += 1
+        if (name == student):
+            if (count == 0):
+              return None
+            else:
+              return score
+    return None
+```
+
+CT1
+
+- s = 'a'
+- t = 'A'
+- s = s + 'z' = 'az'
+- t = t \* len('az'+'A')
+  - = 'A' \* 3
+  - = 'AAA'
+
+print
+
+- f's+t{s+t}'
+- ~~'az' + t{'azAAA'}~~
+- 's+t' + 'azAAA'
+- = st+azAAA
+
+CT2
+
+- r = 'amazing'
+- s = 'zambia'
+- t = ''
+- len(r) = 7
+- i =
+  - 0
+    - 'zambia'.find(r[0])
+    - a
+    - t += 1
+  - 2
+    - a
+    - 1 += 1
+  - 4
+    - i
+    - 2 += 4
+  - 6
+    - g
+    - 6 += -1
+  - t = 7
+  - 7 == eval(7)
+
+print
+
+- ~~False~~
+- f'{t}=={eval(t)}'
+- '114-1==113'
+- '114-1==' + '113'
+- t = '114-1'
+  - '1' + '1' + '4' + '-1'
+
+RC1
+def
+
+- c = 4
+- chr(n) = 'B'
+
+step
+
+- xxxx
+  - c from 0 to 4
+- (B+4)(B+3)(B+2)(B+1)
+  - n -=1 -> B
+  - ord(s[0]) == n
+- 'FEDC'
+
+rev
+
+- 17min
+  - not RC1
+  - not bonus

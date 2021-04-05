@@ -1,4 +1,8 @@
 import math
+from icecream import ic
+# ============================================================================ #
+# quiz 1
+# ============================================================================ #
 
 
 def integerSquareRoot(v):
@@ -14,27 +18,6 @@ def integerSquareRoot(v):
     return M - 1
 
 
-'''print(integerSquareRoot(0))
-print(integerSquareRoot(24))
-print(integerSquareRoot(25))
-print(integerSquareRoot(35))
-print(integerSquareRoot(36))
-print(integerSquareRoot(37))
-print(integerSquareRoot(123**2))'''
-assert (integerSquareRoot(0) == 0)
-assert (integerSquareRoot(1) == 1)
-assert (integerSquareRoot(2) == 1)
-assert (integerSquareRoot(3) == 1)
-assert (integerSquareRoot(4) == 2)
-assert (integerSquareRoot(5) == 2)
-assert (integerSquareRoot(99) == 9)
-assert (integerSquareRoot(123**2) == 123)
-assert (integerSquareRoot(123**2 - 1) == 122)
-assert (integerSquareRoot(2.4) == None)
-assert (integerSquareRoot(-5) == None)
-assert (integerSquareRoot('Do not crash here!') == None)
-
-
 def alternatesEvenOdd(n):
     c = n % 10
     b = n // 10 % 10
@@ -48,20 +31,6 @@ def alternatesEvenOdd(n):
     else: return False
     #print(a,b,c)
 
-
-#print(alternatesEvenOdd(147))
-#print(alternatesEvenOdd(478))
-assert (alternatesEvenOdd(147) == True)
-assert (alternatesEvenOdd(478) == True)
-assert (alternatesEvenOdd(124) == False)
-assert (alternatesEvenOdd(235) == False)
-assert (alternatesEvenOdd(777) == False)
-assert (alternatesEvenOdd(222) == False)
-assert (alternatesEvenOdd(787) == True)
-assert (alternatesEvenOdd(878) == True)
-assert (alternatesEvenOdd(943) == True)
-assert (alternatesEvenOdd(652) == True)
-assert (alternatesEvenOdd(692) == True)
 
 ### 1. Code Tracing
 
@@ -191,12 +160,106 @@ def nthSnarfPrime(n):
 
 
 # ============================================================================ #
+# quiz 3
+# ============================================================================ #
+def averageGrade(student, gradebook):
+    student = student.lower()
+    gradebook = gradebook.lower()
+    for line in gradebook.splitlines():
+        name = None
+        score = count = 0
+        for entry in line.split(','):
+            # ic(entry)
+            if (name == None):
+                name = entry
+            elif entry != '--':  # wrong: name != None
+                score += int(entry)
+                count += 1
+        # ic(score)
+        if (name == student):
+            if (count == 0):
+                return None
+            else:
+                return int(score / count)  # wrong: score
+    return None
+
+
+def ct1(s):
+    t = s.upper()
+    s += 'z'
+    t *= len(s + t)
+    return f's+t{s+t}'
+
+
+# print(ct1('a'))
+def ct2(r, s):
+    t = ''
+    for i in range(0, len(r), 2):
+        t += str(s.find(r[i]))
+
+    result = f'{t}=={eval(t)}'
+    return result
+
+
+# print(ct2('amazing', 'zambia'))
+
+
+def rc1(s):
+    n, c = ord(s[0]), 0
+    while s != '':
+        assert (ord(s[0]) == n)
+        n -= 1
+        c += 1
+        s = s[1:]
+    return (chr(n) == 'B') and (c == 4)
+
+
+print(rc1('FEDC'))
+# ============================================================================ #
 # test
 # ============================================================================ #
 
 
+def test_integerSquareRoot():
+    '''print(integerSquareRoot(0))
+    print(integerSquareRoot(24))
+    print(integerSquareRoot(25))
+    print(integerSquareRoot(35))
+    print(integerSquareRoot(36))
+    print(integerSquareRoot(37))
+    print(integerSquareRoot(123**2))'''
+    assert (integerSquareRoot(0) == 0)
+    assert (integerSquareRoot(1) == 1)
+    assert (integerSquareRoot(2) == 1)
+    assert (integerSquareRoot(3) == 1)
+    assert (integerSquareRoot(4) == 2)
+    assert (integerSquareRoot(5) == 2)
+    assert (integerSquareRoot(99) == 9)
+    assert (integerSquareRoot(123**2) == 123)
+    assert (integerSquareRoot(123**2 - 1) == 122)
+    assert (integerSquareRoot(2.4) == None)
+    assert (integerSquareRoot(-5) == None)
+    assert (integerSquareRoot('Do not crash here!') == None)
+
+
+def test_alternatesEvenOdd():
+    #print(alternatesEvenOdd(147))
+    #print(alternatesEvenOdd(478))
+    assert (alternatesEvenOdd(147) == True)
+    assert (alternatesEvenOdd(478) == True)
+    assert (alternatesEvenOdd(124) == False)
+    assert (alternatesEvenOdd(235) == False)
+    assert (alternatesEvenOdd(777) == False)
+    assert (alternatesEvenOdd(222) == False)
+    assert (alternatesEvenOdd(787) == True)
+    assert (alternatesEvenOdd(878) == True)
+    assert (alternatesEvenOdd(943) == True)
+    assert (alternatesEvenOdd(652) == True)
+    assert (alternatesEvenOdd(692) == True)
+
+
 def test_snarf_prime_digit():
-    print('test_snarf_prime_digit ', end='')
+    # print('test_snarf_prime_digit ', end='')
     # print(snarf_prime_digit(984))
     # print(snarf_prime_digit(983))
     # print(snarf_prime_digit(895))
@@ -211,7 +274,7 @@ def test_isPrime():
 
 
 def testNthSnarfPrime():
-    print('Testing nthSnarfPrime()...', end='')
+    # print('Testing nthSnarfPrime()...', end='')
     # print(nthSnarfPrime(0))
     # print(nthSnarfPrime(1))
     # print(nthSnarfPrime(29))
@@ -221,14 +284,37 @@ def testNthSnarfPrime():
     assert (nthSnarfPrime(1) == 29)
     assert (nthSnarfPrime(5) == 61)
     assert (nthSnarfPrime(9) == 101)
-    print('Passed!')
+    # print('Passed!')
+
+
+def tes_averageGrade():
+    gradebook = '''\
+dan,80,78,--
+mae,86,87,88
+sue,--,--,--'''
+
+    # ic(averageGrade('dan', gradebook))
+    assert (type(averageGrade('dan', gradebook) == int))
+    assert (averageGrade('dan', gradebook) == 79)
+    assert (averageGrade('mae', gradebook) == 87)
+    assert (averageGrade('sue', gradebook) == None)
+    assert (averageGrade('max', gradebook) == None)
+    assert (averageGrade('DAN', gradebook) == 79)
 
 
 def test_all():
+    # quiz 1
+    test_integerSquareRoot()
+    test_alternatesEvenOdd()
+
+    # quiz 2
     test_snarf_prime_digit()
     test_isPrime()
     testNthSnarfPrime()
-    print(rc1(1202))
+    # print(rc1(1202))
+
+    # quiz 3
+    tes_averageGrade()
 
 
 test_all()

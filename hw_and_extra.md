@@ -1222,20 +1222,23 @@ def
 - multi space into one
 
 step
+
 - change format with 10.
   - to ' '
   - \n
   - \t
-- change white space 
-  - '  ' to ' '
+- change white space
+  - ' ' to ' '
     - 2 to 1
   - repeat
     - until cant find
 
 ### 12. wordWrap(s, n)
+
 def
 
 step
+
 - form lines
   - add \n by n
     - "ababab", 2
@@ -1245,16 +1248,16 @@ step
     - 'a b '
     - 'c de'
     - ' f '
-  - loop line
-    - 
+  - ## loop line
   - loop c
-    - len = 5*3 = 14
+    - len = 5\*3 = 14
     - i
       - 0, 3
       - 5, 8
       - 10, ~~12~~
 - replace white
   - '-'
+
 ## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
 
 ### Code Tracing (CT)
@@ -1300,3 +1303,16 @@ step
   - len(s) = 4 # repeat 4 time
   - s[0] = 1
 - 1111
+
+## [hw4](https://www.cs.cmu.edu/~112/notes/hw4.html)
+
+not use lists, list indexing, or recursion
+
+## extra-practice4
+
+we encourage you to write short animations that use the mouse, keyboard, and timer. Here are some ideas to get you started:
+
+- Write an app where a dot is centered in the screen, and it keeps growing larger until it fills the canvas, then it keeps growing smaller until it is its original size, then it stops changing.
+- Write an app with a red dot and a green dot. The red dot moves in some interesting way, say sweeping across the canvas left-to-right or top-to-bottom. The green dot moves in response to the arrow keys. The goal is to make the dots touch, at which point 'You Win!' is drawn.
+- Write an app where the user presses the mouse 3 times to enter 3 points, then the triangle formed by connecting those 3 points is drawn, then you display the length (to the nearest integer) of each side, and then using threeLinesArea from week1 you display the area of the triangle.
+- You get the idea. Short apps that use some combination of mouse, keyboard, and timer. Invent your own. Have fun!!!!
