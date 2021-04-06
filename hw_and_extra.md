@@ -1306,7 +1306,96 @@ step
 
 ## [hw4](https://www.cs.cmu.edu/~112/notes/hw4.html)
 
-not use lists, list indexing, or recursion
+def
+
+- not use lists, list indexing, or recursion
+- one feature at a time
+  - draw the title
+  - choose a random word and draw the underlines in place of the letters of the word
+  - actually draw the word instead of the underscores when the user presses the mouse (and hide it again if they press the mouse again)
+- **structure**
+  - title
+    - 'Word Guessing Game'
+    - cap first letter
+  - target world
+    - len = 7
+    - shown as alpha or underscore
+  - list of alpha
+    - A to Z
+    - upper
+    - 2 lines, 13 char each
+  - info
+    - guess count
+      - start 0
+      - count same key pressed
+    - time count
+      - count each sec
+    - feedback copy
+  - p.s.
+    - 4 areas have equal height
+    - responsive
+
+step
+
+- 1 title
+  - resize
+- 2 dispaly
+  - distance box
+    - start from left
+    - or start from mid
+  - underline
+    - len of word
+    - 20px of each char
+    - for i in len=4
+      - draw 4 times
+      - full width = 20px \* 4 = 80px
+      - starting from - 40px
+      - step is i\*20px
+- 3 choices
+  - trigger and reaction
+    - 1 string
+      - add space better chars
+      - if hit
+        - replace s[i] with char
+    - 2 strings
+      - 1 is random word
+        - CERTAIN
+      - 1 is guess w \_
+        - `_ _ _ T A _ _`
+      - when adding char to `'_ _ _'`
+      - margin and position problem
+    - check input
+      - check c in word, lock prev inputs
+      - if not letter
+      - elif c not in choices_temp
+        - 'You already guessed ' c '. Guess again.'
+        - count += 1
+      - elif c in new guess str
+        - fill 'green'
+        - replace c in choices
+        - 'Good job! Keep guessing...'
+      - elif c not in
+        - fill 'red'
+        - replace c in choices
+        - 'Sorry... Guess again.'
+      - final
+        - 'You got it! (press the mouse to restart)'
+    -
+- 4 info
+  - 'Guesses: 0'
+  - 'Time: 0s'
+  - 'Guess a letter...'
+- basic
+  - line
+    - draw sections - 1 times
+  - reset
+    - F5
+    - game round += 1
+  - stop when
+
+rev
+
+- how to place underscore directly under chars?
 
 ## extra-practice4
 
