@@ -2,7 +2,7 @@
 # extra-practice5.py
 #################################################
 
-import math, string
+import math, string, time
 from icecream import ic
 
 #################################################
@@ -45,6 +45,75 @@ def locker_problem(n):
 # ============================================================================ #
 #
 
+
+def isPrime(n):
+    if n == 2 or n == 3 or n == 5: return True  # exclude 2,3,5
+    if n < 2 or prime_wheel_basis(n): return False
+
+    for i in range(7, int(n**0.5), 2):  # factor start from 7
+        if not prime_wheel_basis((i)) and n % i == 0: return False
+    return True
+
+
+def nthPrime(nth):
+    found = 0
+    guess = 0
+    while (found <= nth):
+        guess += 1
+        if (isPrime(guess)): found += 1
+    return guess
+
+
+def prime_wheel_basis(n):
+    pre = n != 2 and n != 3 and n != 5
+    factor = n % 2 == 0 or n % 3 == 0 or n % 5 == 0 or n**0.5 == int(n**0.5)
+    return pre and factor
+
+
+def sieve_eratos_des(n):  #* destructive list
+    l = [i for i in range(n) if not (prime_wheel_basis(i))]
+    ic(l)
+
+    for p in l:
+        for i in range(p**2, n + 1, p * 2):  # while p * i <= n
+            if i in l and not prime_wheel_basis(i):
+                l.remove(i)
+    ic(p, i)
+    return l
+
+
+def sieve_eratos(n):  #* non-destructive list
+    l = [True] * (n + 1)
+    l[0] = l[1] = False
+    for i in range(4, len(l)):
+        if i % 2 == 0 or i % 3 == 0 or i % 5 == 0:  # or i**0.5 == int(i**0.5)
+            l[i] = False
+    l_new = [2, 3, 5]
+
+    for p in range(7, n + 1, 2):
+        if l[p] == True:
+            # ic(p)
+            l_new += (p, )
+            for i in range(p**2, n + 1, p * 2):  # p*p+p = p*(p+1) is even
+                # ic(i)
+                l[i] = False
+    return l_new
+
+
+def sieve_course(n):  #* course method
+    isPrime = [True] * (n + 1)  # assume all are prime to start
+    isPrime[0] = isPrime[1] = False  # except 0 and 1, of course
+    primes = []
+    for prime in range(n + 1):
+        if (isPrime[prime] == True):
+            # we found a prime, so add it to our result
+            primes.append(prime)
+            # and mark all its multiples as not prime
+            for multiple in range(2 * prime, n + 1, prime):
+                isPrime[multiple] = False
+    return primes
+
+
 #################################################
 # ep5-functions
 #################################################
@@ -68,6 +137,44 @@ def test_locker_problem():
     ]
 
 
+def test_isPrime():
+    assert (isPrime(3)) == True
+    assert (isPrime(5)) == True
+    assert (isPrime(17)) == True
+    assert (isPrime(83)) == True
+    assert (isPrime(173)) == True
+    assert (isPrime(509)) == True
+    assert (isPrime(511)) == False
+    assert (isPrime(1373731)) == False
+
+
+def test_sieve_eratos():
+    # ic(sieve_eratos_des(10))
+    # ic(sieve_eratos_des(30))
+    ic(sieve_eratos_des(50))
+    # ic(sieve_eratos(100))
+    # ic(sieve_eratos(500))
+    # ic(sieve_eratos(1000))
+    n = 4000
+    nth = 50
+    # ic(sieve_eratos(1000)[nth])
+    # sieve_eratos_des(n)[nth] == nthPrime(nth)
+    # test_time(sieve_eratos, n)
+    # test_time(sieve_eratos_des, n)
+    # test_time(sieve_course, n)
+
+
+def test_time(func_name, input):
+    param = input
+    time0 = time.time()
+    times = 6
+    for i in range(times):
+        func_name(param)
+        # print(i, end='')
+    dist = round((time.time() - time0) * 1000 / times, 2)
+    print("Timing sieve_eratos(", param, "):", dist, "ms")
+
+
 #################################################
 # testAll and main
 #################################################
@@ -75,6 +182,8 @@ def test_locker_problem():
 
 def testAll():
     test_locker_problem()
+    test_isPrime()
+    test_sieve_eratos()
 
 
 def main():

@@ -1429,10 +1429,35 @@ step
 
 adv: mathematical solution
 
--
-ref
+- ref
 - https://proofwiki.org/wiki/Locker_Problem
 - https://tasks.illustrativemathematics.org/content-standards/tasks/938
+
+### 2 sieve prime
+
+Qs
+
+- why edit list is faster than create new list
+
+step
+- destructive 
+  - get list
+    - remove by basis[2,3,5]
+  - check item 
+    - remove not prime
+- non-destructive 
+  - get list of bool
+    - set F by basis [2,3,5]
+  - check item
+    - if prime
+      - add to new list
+      - check list by Eratos, set F
+
+ref
+
+- https://en.wikipedia.org/wiki/Wheel_factorization
+  - factor is coprime with basis in prime{2,3,5,7}
+
 ## [extra-practice5](https://www.cs.cmu.edu/~112/notes/extra-practice5.html)
 
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)

@@ -856,14 +856,14 @@ def main():
     # print(circular_p_digit(67))
     # print(circular_p_digit(509))
 
-    # print("prime:",isPrime(3))
-    # print("prime:",isPrime(5))
-    # print("prime:",isPrime(17))
-    # print("prime:",isPrime(83))
-    # print("prime:",isPrime(173))
-    # print("prime:", isPrime(509))
-    # print("prime:", isPrime(511))
-    # print("prime:",isPrime(1373731))
+    assert (isPrime(3)) == True
+    assert (isPrime(5)) == True
+    assert (isPrime(17)) == True
+    assert (isPrime(83)) == True
+    assert (isPrime(173)) == True
+    assert (isPrime(509)) == True
+    assert (isPrime(511)) == False
+    assert (isPrime(1373731)) == False
     # print("prime:",isPrime(149345643266432421))
     # testNumb = 13173
     # print(testNumb, isPrime(testNumb) and circular_p_rotate(testNumb))
