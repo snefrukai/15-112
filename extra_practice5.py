@@ -4,6 +4,7 @@
 
 import math, string, time
 from icecream import ic
+from hw3 import test_func
 
 #################################################
 # Helper functions
@@ -134,6 +135,20 @@ def rc2(L):
 # ep5-functions
 #################################################
 
+
+def alternatingSum(l):
+    if len(l) == 0: return False
+    sum = 0
+    if l[0] >= 0: foo = 2
+    else: foo = 2 + 1
+
+    for i in range(len(l)):
+        sign = (-1)**(i + foo)
+        sum += l[i] * sign
+        # ic(i, sign)
+    return sum
+
+
 #################################################
 # Test Functions
 #################################################
@@ -201,6 +216,29 @@ def test_time(func_name, input):
     print("Timing sieve_eratos(", param, "):", dist, "ms")
 
 
+# ============================================================================ #
+#
+def test_alternatingSum():
+    parm = [
+        [],
+        [1, 1],
+        [1, 1, 1],
+        [-2, 1, 1],
+    ]
+    soln = [
+        0,
+        0,
+        1,
+        2,
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = alternatingSum(l)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -212,6 +250,8 @@ def testAll():
     test_locker_problem()
     test_isPrime()
     test_sieve_eratos()
+
+    test_alternatingSum()
 
 
 def main():
