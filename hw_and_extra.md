@@ -1405,3 +1405,34 @@ we encourage you to write short animations that use the mouse, keyboard, and tim
 - Write an app with a red dot and a green dot. The red dot moves in some interesting way, say sweeping across the canvas left-to-right or top-to-bottom. The green dot moves in response to the arrow keys. The goal is to make the dots touch, at which point 'You Win!' is drawn.
 - Write an app where the user presses the mouse 3 times to enter 3 points, then the triangle formed by connecting those 3 points is drawn, then you display the length (to the nearest integer) of each side, and then using threeLinesArea from week1 you display the area of the triangle.
 - You get the idea. Short apps that use some combination of mouse, keyboard, and timer. Invent your own. Have fun!!!!
+
+## [week 5: Worked Examples](https://www.cs.cmu.edu/~112/notes/notes-1d-lists-examples.html)
+
+### 1 Locker Problem
+
+def
+
+- all close
+- 1st open all
+- 2nd close all even
+- start from 3rd
+  - change state
+
+step
+
+- prepare the list
+  - close = F
+  - open = T
+- loop
+  - for i in [3, n]
+  - toggle
+
+adv: mathematical solution
+
+-
+ref
+- https://proofwiki.org/wiki/Locker_Problem
+- https://tasks.illustrativemathematics.org/content-standards/tasks/938
+## [extra-practice5](https://www.cs.cmu.edu/~112/notes/extra-practice5.html)
+
+## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
