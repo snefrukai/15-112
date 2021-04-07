@@ -1484,6 +1484,37 @@ ref
 10. square
     1. M = [i**2 for i in L]
 
+### 3 alternatingSum(a)
+
+def
+
+- l1-l2 + l3-l4 ...
+- empty -> 0
+
+step
+
+- check L[0] with 0
+- assign sign
+  - for i
+    - i = 1
+    - i = 2
+    - (-1)\*\*0 = -1
+
+### 4 median(a)
+
+def
+
+- non-destructive
+- middle or average of middle 2
+- empty -> None
+
+step
+
+- get new list
+  - order
+- get middle
+  - if len % 2 == 0
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT
@@ -1567,7 +1598,7 @@ ref
   - b = a + 1
   - c = b + 2
   - a + (a+1) + (a+1 + 2) + (a+1) + a = 15
-    - 5*a + 5 = 15
+    - 5\*a + 5 = 15
     - a = 2
   - [2,3,5,3,2]
 
@@ -1585,15 +1616,15 @@ ref
   - [None, None, -1, None, None]
   - i = 0
     - j = L[0] = 1
-    - L[0] = None, [None, x, -1, x,  x]
+    - L[0] = None, [None, x, -1, x, x]
     - i = j = 1
   - i = 1
     - j = L[1] = 3
-    - L[1] = None, [None, None, -1, x,  x]
+    - L[1] = None, [None, None, -1, x, x]
     - i = j = 3
   - i = 3
     - j = L[3] = 4
-    - L[3] = None, [None, None, -1, None,  x]
+    - L[3] = None, [None, None, -1, None, x]
     - i = j = 4
   - i = 4
     - j = L[4] = x

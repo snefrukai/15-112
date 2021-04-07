@@ -149,6 +149,23 @@ def alternatingSum(l):
     return sum
 
 
+# ============================================================================ #
+#
+def median(l):
+    if len(l) == 0: return None
+    l_new = sorted(l)
+    mid_nth = len(l) / 2
+
+    if int(mid_nth) != mid_nth:
+        mid_nth = math.floor(mid_nth)
+        n = l_new[mid_nth]
+    else:
+        mid_nth = int(mid_nth)
+        n = (l_new[mid_nth] + l_new[mid_nth - 1]) / 2
+    # ic(l_new, mid_nth, mid)
+    return n
+
+
 #################################################
 # Test Functions
 #################################################
@@ -239,6 +256,26 @@ def test_alternatingSum():
         assert (output == expect)
 
 
+def test_median():
+    parm = [
+        [],
+        [1],
+        [1, 2],
+        [3, 2, 1],
+        [3, 4, 2, 1],
+        [3, 4, 5, 2, 1],
+        [3.5, 4, 5, 2, 1],
+        [6, 3.5, 4, 5, 2, 1],
+    ]
+    soln = [None, 1, 1.5, 2, 2.5, 3, 3.5, 3.75]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = median(l)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -252,6 +289,7 @@ def testAll():
     test_sieve_eratos()
 
     test_alternatingSum()
+    test_median()
 
 
 def main():
