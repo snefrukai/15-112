@@ -114,6 +114,22 @@ def sieve_course(n):  #* course method
     return primes
 
 
+# ============================================================================ #
+# ct and roc
+# ============================================================================ #
+
+
+def rc2(L):
+    assert ((isinstance(L, list)) and (None not in L))
+    i = 0
+    while (L[i] != None):
+        j = L[i]
+        L[i] = None
+        i = j
+        a = [None] * 2
+    return (L == a + [-1] + a)
+
+
 #################################################
 # ep5-functions
 #################################################
@@ -121,6 +137,16 @@ def sieve_course(n):  #* course method
 #################################################
 # Test Functions
 #################################################
+
+
+def test_rc2():
+    for i in [0, 1, 3, 4]:
+        l = [1, 3, -1, 4, i]
+        assert rc2(l)
+
+
+# ============================================================================ #
+#
 
 
 def test_locker_problem():
@@ -151,14 +177,14 @@ def test_isPrime():
 def test_sieve_eratos():
     # ic(sieve_eratos_des(10))
     # ic(sieve_eratos_des(30))
-    ic(sieve_eratos_des(50))
+    # ic(sieve_eratos_des(50))
     # ic(sieve_eratos(100))
     # ic(sieve_eratos(500))
     # ic(sieve_eratos(1000))
     n = 4000
     nth = 50
     # ic(sieve_eratos(1000)[nth])
-    # sieve_eratos_des(n)[nth] == nthPrime(nth)
+    sieve_eratos(n)[nth] == nthPrime(nth)
     # test_time(sieve_eratos, n)
     # test_time(sieve_eratos_des, n)
     # test_time(sieve_course, n)
@@ -181,6 +207,8 @@ def test_time(func_name, input):
 
 
 def testAll():
+    test_rc2()
+
     test_locker_problem()
     test_isPrime()
     test_sieve_eratos()

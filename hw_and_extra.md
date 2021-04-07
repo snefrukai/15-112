@@ -1440,12 +1440,13 @@ Qs
 - why edit list is faster than create new list
 
 step
-- destructive 
+
+- destructive
   - get list
     - remove by basis[2,3,5]
-  - check item 
+  - check item
     - remove not prime
-- non-destructive 
+- non-destructive
   - get list of bool
     - set F by basis [2,3,5]
   - check item
@@ -1460,4 +1461,147 @@ ref
 
 ## [extra-practice5](https://www.cs.cmu.edu/~112/notes/extra-practice5.html)
 
+### 2 Short Answer Practice Problems
+
+1. D
+   - M = L is alias
+2. A
+   - destructive func is more likely not to return value
+3. ~~C~~ B
+   - str dont have .index() ?
+   - list dont have .find, only .index
+4. ~~D~~ B
+   1. extend adds a list of values
+5. M = L[:3] + ~~5~~ [5] + L[3:]
+6. B
+   1. use while if edit the val of list when looping
+7. B
+   1. .sort() is destructive
+8. C
+   1. tuples immutable
+9. len 1 tuple
+   1. ~~(42)~~ (42,)
+10. square
+    1. M = [i**2 for i in L]
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
+
+### CT
+
+1
+
+- step
+  - ct1([2,1,0])
+    - for i in range(3)
+      - l[0] = 2+3+2 = [7,1,0]
+      - l[1] = 1+8+7 = [7,16,0]
+      - l[2] = 0+23+16 = [7,16,39]
+    - sort n%10
+      - [7,6,9]
+  - a
+    - ~~[5,6,7]~~
+- print
+  - [16,7,39]
+    - ~~[5,6,7]~~
+  - [7,16,39]
+    - ~~[2,1,0]~~
+
+2
+
+- ct2([4], [2,3])
+  - a = [4]+[3] = [4,3]
+  - a(local) = [4,3] + [4] = [4,3,4]
+  - for c in [4,3]
+    - for i in range(0,2)
+      - c = 4, i = 0
+        - b[0] = 2, not in a
+        - b[0] += 4 = 6
+        - b = [6,3]
+        - 'A'
+      - c = 4, i = 1
+        - b[1] = 3, in a, b[-1] = 3 != c
+        - b(local) = [6,3] + ~~[c]~~ 4 = [6,3,4]
+        - 'C'
+      - ~~c = 3, i = 0
+        - b[0] = 6, not in a
+        - b[0] += 3 = 9 [9,3,c]
+    - for i in (0,3)
+      - c = 3, i = 1
+        - b[1] = 3, in a, b[-1] = c == c, 3%2 ==1
+      - c = 4, i = 0
+        - b[0] = 9 not in a
+      - c = 4, i = 1
+        - b[1] = 3~~
+      - c = 3, i = 0
+        - b[0] = 6 not in a
+        - b[local] = [9,3,4]
+      - c = 3, i = 1
+        - b[1] = 3
+        - b[local] += [3] = [9,3,4,3]
+      - ~~c = 4, i = 1
+        - b[0] = 9 not in a
+        - b[local] += [4] = [9,3,4,3,4]~~
+      - c = 3, i = 2
+        - b[2] = 4 not in a, 3%2 == 1
+        - b[local] += [3] = [9,3,4,3,3]
+    - - for i in (0,5)
+- print
+  - ~~ACAB~~
+  - ~~[4,3,4],[9,3]~~
+  - [4,3], [6,3]
+
+### ROC
+
+1
+
+- M is list
+- len = 5
+- for i in (-1,3)
+  - M[-1] = M[-2] + (-1)
+  - M[0] = M[-1] + 0
+  - M[1] = M[0] + 1
+  - M[2] = M[1] + 2
+- abcde
+  - e = d-1
+  - a = e
+  - b = a + 1
+  - c = b + 2
+  - a + (a+1) + (a+1 + 2) + (a+1) + a = 15
+    - 5*a + 5 = 15
+    - a = 2
+  - [2,3,5,3,2]
+
+2
+
+- list, no None
+  - [item1, item2,...]
+- L[0] != None
+  - j = L[0]
+  - L[0] = None
+  - i = L[0] = item1
+  - a = [None, None]
+- [None, item2,....]
+- [1, 3, -1, 4, None]
+  - [None, None, -1, None, None]
+  - i = 0
+    - j = L[0] = 1
+    - L[0] = None, [None, x, -1, x,  x]
+    - i = j = 1
+  - i = 1
+    - j = L[1] = 3
+    - L[1] = None, [None, None, -1, x,  x]
+    - i = j = 3
+  - i = 3
+    - j = L[3] = 4
+    - L[3] = None, [None, None, -1, None,  x]
+    - i = j = 4
+  - i = 4
+    - j = L[4] = x
+    - L[4] = None, [None, None, -1, None, None]
+    - i = j = x = [0,1,3,4]
+  - End
+- L
+  - [1,3,-1,4,0]
+  - [1,3,-1,4,1]
+  - [1,3,-1,4,3]
+  - [1,3,-1,4,4]
