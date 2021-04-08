@@ -1620,6 +1620,20 @@ step
 
 - l_new += [l1[0] + l2[0]]
 
+## 14 dotProduct
+
+def
+
+- the sum of the products of the corresponding terms
+  - [1,2,3] and [4,5,6] is (1*4)+(2*5)+(3\*6), or 4+10+18, or 32
+- non-destructively
+- ignore the extra elements in the longer list
+
+step
+
+- use func 13
+- change lambda expression
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

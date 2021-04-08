@@ -16,7 +16,7 @@ import cs112_s21_week3_linter
 #################################################
 # Helper functions
 #################################################
-def test_func(output, expect):
+def test_unexpected(output, expect):
     if output != expect:
         print("\n? expect: ", expect)
         ic(output)
@@ -567,7 +567,7 @@ def test_score_total_get():
     for i, data in enumerate(parms):
         expect = solns[i]
         output = score_total_get(data)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -615,7 +615,7 @@ def test_count_match_exact():
         expect = solns[i]
         output = count_match_exact(s, s1)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
     print('Passed!')
 
@@ -748,7 +748,7 @@ def test_poker_get_hand():
         expect = soln[i]
         output = poker_hand_get(a, b, c)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -771,7 +771,7 @@ def test_poker_hand_eval():
         expect = soln[i]
         output = poker_hand_eval(hand)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 

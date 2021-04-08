@@ -4,7 +4,7 @@
 
 import math, string, time
 from icecream import ic
-from hw3 import test_func
+from hw3 import test_unexpected
 
 #################################################
 # Helper functions
@@ -84,6 +84,11 @@ def sieve_eratos_des(n):  #* destructive list
 
 
 def sieve_eratos(n):  #* non-destructive list
+    # l = [
+    #     False if i > 3 and (i % 2 == 0 or i % 3 == 0 or i % 5 == 0) else True
+    #     for i in range(n + 1)
+    # ]
+    # ic(l)
     l = [True] * (n + 1)
     l[0] = l[1] = False
     for i in range(4, len(l)):
@@ -264,6 +269,8 @@ def isPalindromicList(l):
 
 # ============================================================================ #
 #
+
+
 def reverse(l):
     for i in range(len(l)):
         # ic(i, l, l[-1])
@@ -273,14 +280,29 @@ def reverse(l):
 
 # ============================================================================ #
 #
-def vectorSum(l1, l2):
-    l_new = []
 
-    for i in range(len(l1)):
-        l_new += [l1[i] + l2[i]]  #* non-dest
+
+def l_op_two(l1, l2, f):
+    l_new = []
+    l_len = min(len(l1), len(l2))
+    for i in range(l_len):
+        l_new += [f(l1[i], l2[i])]
+        #     l_new += [l1[i] + l2[i]]  #* non-dest
+        #     # l1[i] = l1[i] + l2[i] #* dest
+        # return l1 + l2
         # ic(l_new)
-        # l1[i] = l1[i] + l2[i] #* dest
     return l_new
+
+
+def vectorSum(l1, l2):
+    # l = l_op_two(l1, l2, lambda l1, l2: l1 + l2)
+    l = l_op_two(l1, l2, lambda *args: sum(args))
+    return l
+
+
+def dotProduct(l1, l2):
+    l = l_op_two(l1, l2, lambda l1, l2: l1 * l2)
+    return sum(l)
 
 
 #################################################
@@ -327,6 +349,8 @@ def test_sieve_eratos():
     # ic(sieve_eratos_des(10))
     # ic(sieve_eratos_des(30))
     # ic(sieve_eratos_des(50))
+
+    # ic(sieve_eratos(10))
     # ic(sieve_eratos(100))
     # ic(sieve_eratos(500))
     # ic(sieve_eratos(1000))
@@ -369,7 +393,7 @@ def test_alternatingSum():
         expect = soln[i]
         output = alternatingSum(l)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -389,7 +413,7 @@ def test_median():
         expect = soln[i]
         output = median(l)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -408,7 +432,7 @@ def test_isSorted():
         output = isSorted(l)
         # ic(output)
         # ic(i)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -431,7 +455,7 @@ def test_smallestDifference():
         expect = soln[i]
         output = smallestDifference(l)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -456,7 +480,7 @@ def test_lookAndSay():
         expect = soln[i]
         output = lookAndSay(l)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
     i = 4
@@ -477,7 +501,7 @@ def test_nondestructiveRemoveRepeats():
         expect = soln[i]
         output = nondestructiveRemoveRepeats(l)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
     L = [1, 3, 5, 3, 3, 2, 1, 7, 5]
@@ -512,7 +536,7 @@ def test_isPalindromicList():
         expect = soln[i]
         output = isPalindromicList(l)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -532,7 +556,7 @@ def test_reverse():
         output = reverse(l)
         # ic(l)
         assert l == expect
-        # test_func(output, expect)
+        # test_unexpected(output, expect)
         # assert (output == expect)
 
 
@@ -540,20 +564,33 @@ def test_vectorSum():
     parm = [
         ([2, 4], [20, 30]),
         ([1, 2, 3], [1, 2, 3]),
-        # [1, 1, 3],
-        # [4, 3, 2, 1],
     ]
     soln = [
         [22, 34],
         [2, 4, 6],
-        # [3, 1, 1],
-        # [1, 2, 3, 4],
     ]
     for i, (l1, l2) in enumerate(parm):
         expect = soln[i]
         output = vectorSum(l1, l2)
         # ic(output)
-        test_func(output, expect)
+        test_unexpected(output, expect)
+        assert (output == expect)
+
+
+def test_dotProduct():
+    parm = [
+        ([1, 2, 3], [4, 5, 6]),
+        ([2, 2, 3], [4, 5, 6]),
+    ]
+    soln = [
+        32,
+        36,
+    ]
+    for i, (l1, l2) in enumerate(parm):
+        expect = soln[i]
+        output = dotProduct(l1, l2)
+        # ic(output)
+        test_unexpected(output, expect)
         assert (output == expect)
 
 
@@ -578,6 +615,7 @@ def testAll():
     test_isPalindromicList()
     test_reverse()
     test_vectorSum()
+    test_dotProduct()
 
 
 def main():
