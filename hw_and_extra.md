@@ -1687,10 +1687,12 @@ step
 - elif l[i] == 1
   - += 2\*\*(len-1-i)
 
-## 17 split
+## 17 split(s, delimiter)
 
 def
 
+- split("ab,cd,efg", ",")
+  - returns ["ab", "cd", "efg"].
 - "ab,cd,efg", ","
   - 0
     - 'ab,cd,efg'
@@ -1701,7 +1703,12 @@ def
   - 2
     - 'efg'
     - ['ab','cd']
-
+step
+- find index in s
+  - l += s[:i]
+  - slice s
+- check deli posn
+  - if not last: += s
 ## 18 join
 
 step

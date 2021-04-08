@@ -340,6 +340,22 @@ def binaryListToDecimal(l):
     return n
 
 
+# ============================================================================ #
+#
+def split(s, delimiter):
+    l = []
+    while delimiter in s:
+        i = s.find(delimiter)
+        if i == 0:
+            s = s[i + 1:]
+            continue
+        l += [s[:i]]
+        s = s[i + 1:]
+        # ic(s)
+    if s != '': l += [s]
+    return l
+
+
 #################################################
 # Test Functions
 #################################################
@@ -647,11 +663,12 @@ def test_moveToBack():
         test_unexpected(l1, expect)
         assert (l1 == expect)
 
-
     # l_hit = [3, 0], [2, 0]
     # moveToBack_hit(l_hit, 3)
     # moveToBack_hit(l_hit, 2)
     # ic(l_hit)
+
+
 def test_binaryListToDecimal():
     parm = [
         [1, 0],
@@ -666,6 +683,27 @@ def test_binaryListToDecimal():
     for i, l in enumerate(parm):
         expect = soln[i]
         output = binaryListToDecimal(l)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert (output == expect)
+
+
+def test_split():
+    parm = [
+        ("ab,cd,efg", ","),
+        ("ab,cd,efg,", ","),
+        (",ab,cd,efg,", ","),
+        (", ab ,cd,efg,", ","),
+    ]
+    soln = [
+        ["ab", "cd", "efg"],
+        ["ab", "cd", "efg"],
+        ["ab", "cd", "efg"],
+        [" ab ", "cd", "efg"],
+    ]
+    for i, (s, d) in enumerate(parm):
+        expect = soln[i]
+        output = split(s, d)
         # ic(output)
         test_unexpected(output, expect)
         assert (output == expect)
@@ -695,6 +733,7 @@ def testAll():
     test_dotProduct()
     test_moveToBack()
     test_binaryListToDecimal()
+    test_split()
 
 
 def main():
