@@ -365,6 +365,17 @@ def join(l, delimiter):
     return s
 
 
+# ============================================================================ #
+#
+def repeatingPattern(l):
+    for k in range(2, int(len(l) / 2) + 1):
+        foo = len(l) / k
+        # ic(k, foo, l[:k])
+        if foo != int(foo): continue
+        elif l[:k] * int(foo) == l: return True
+    return False
+
+
 #################################################
 # Test Functions
 #################################################
@@ -735,6 +746,25 @@ def test_join():
         assert output == expect
 
 
+def test_repeatingPattern():
+    parm = [
+        [1, 2, 3, 1, 2, 3],  # True (b==[1,2,3] and k=2)
+        [1, 2, 3, 1, 2],
+        [1, 2, 1, 2, 1, 2],
+    ]
+    soln = [
+        True,
+        False,
+        True,
+    ]
+    for i, (l) in enumerate(parm):
+        expect = soln[i]
+        output = repeatingPattern(l)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
 #################################################
 # testAll and main
 #################################################
@@ -761,6 +791,7 @@ def testAll():
     test_binaryListToDecimal()
     test_split()
     test_join()
+    test_repeatingPattern()
 
 
 def main():

@@ -1723,10 +1723,10 @@ step
 
 def
 
+- takes a list a and
+  - returns True if a == b\*k for some list b
 - a == b\*k
 - k is int, k > 1
-  - min = 2
-  - max = len
 - if len is odd
   - b is odd
 
@@ -1736,7 +1736,8 @@ step
   - if l[:x] \* n == l: T
     - abcd, l[1]
     - abcde, l[2]
-    - int(len/2) - 1
+    - min = 2
+    - max = int(len/2)
 
 ## 20 mostAnagrams(wordList)
 
