@@ -305,6 +305,30 @@ def dotProduct(l1, l2):
     return sum(l)
 
 
+# ============================================================================ #
+#
+def moveToBack_hit(l_hit, n):
+    for i in range(len(l_hit)):
+        if n == l_hit[i][0]: l_hit[i][1] += 1
+
+
+def moveToBack(l1, l2):
+    l_hits = [0] * len(l2)
+
+    for i in range(len(l2)):
+        n = l2[i]
+        if n in l1:
+            l_hits[i] = l1.count(n)
+            while n in l1:
+                l1.remove(n)
+    # ic(l1, l2, l_hits)
+
+    for i in range(len(l2)):
+        if l_hits[i] != 0:
+            l1 += [l2[i]] * l_hits[i]
+    # ic(l1)
+
+
 #################################################
 # Test Functions
 #################################################
@@ -594,6 +618,30 @@ def test_dotProduct():
         assert (output == expect)
 
 
+def test_moveToBack():
+    parm = [
+        ([2, 3, 3, 4, 1, 5], [3, 2]),
+        ([2, 3, 3, 4, 1, 5, 3, 2], [3, 2]),
+        ([2, 3, 3, 4, 1, 5], [3, 0]),
+    ]
+    soln = [
+        [4, 1, 5, 3, 3, 2],
+        [4, 1, 5, 3, 3, 3, 2, 2],
+        [2, 4, 1, 5, 3, 3],
+    ]
+    for i, (l1, l2) in enumerate(parm):
+        expect = soln[i]
+        output = moveToBack(l1, l2)
+        # ic(output)
+        test_unexpected(l1, expect)
+        assert (l1 == expect)
+
+    # l_hit = [3, 0], [2, 0]
+    # moveToBack_hit(l_hit, 3)
+    # moveToBack_hit(l_hit, 2)
+    # ic(l_hit)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -616,6 +664,7 @@ def testAll():
     test_reverse()
     test_vectorSum()
     test_dotProduct()
+    test_moveToBack()
 
 
 def main():

@@ -1605,7 +1605,7 @@ step
 step
 
 - for i in len(l)
-  - insert l[-1]
+  - insert l[-1] at l[i]
   - pop l[-1]
 
 ## 13 vectorSum
@@ -1633,6 +1633,115 @@ step
 
 - use func 13
 - change lambda expression
+
+## 15 moveToBack
+
+def
+
+- two list
+- destructively modify a
+- without creating another list of length len(a).
+- ([2, 3, 3, 4, 1, 5], [3, 2])
+  - [4, 1, 5, 3, 3, 2]
+- ([2, 3, 3, 4, 1, 5, 3, 2], [3, 2])
+  - [4, 1, 5, 3, 3, 3, 2, 2]
+
+step
+
+- v2 edit the hit list
+  - create hit list
+    - with count = 0
+    - indexing with l2
+    - [3,2]
+    - [0,0]
+- v1 create new hit list # hard to deal w non-consecutive a[i] in b
+  - create hit list
+    - while a[i] in b
+      - l_hit = [(count, number),(...)...]
+      - pop a[i]
+      - [4, 1, 5]
+      - [2, 3]
+- add count to l_hit
+- add d in l_hit to a
+  - d\*hit
+    - for b in l_hit
+    - [3, 2]
+
+## 16 binaryListToDecimal
+
+def
+
+- binaryListToDecmial([1, 0]) -> 2
+  - `2**1 + 0`
+- binaryListToDecmial([1, 0, 1, 1]) ->11
+  - `2**3 + 0 + 2**1 + 2**0`
+- binaryListToDecmial([1, 1, 0, 1]) ->13
+  - `2**3 + 2**2 + 0 + 2**0`
+
+step
+
+- if l[i] == 0
+  - += 0
+- elif l[i] == 1
+  - += 2\*\*(len-1-i)
+
+## 17 split
+
+def
+
+- "ab,cd,efg", ","
+  - 0
+    - 'ab,cd,efg'
+    - []
+  - 1
+    - 'cd,efd'
+    - ['ab']
+  - 2
+    - 'efg'
+    - ['ab','cd']
+
+## 18 join
+
+step
+
+- s += delimiter + l[i]
+
+## 19 repeatingPattern
+
+def
+
+- a == b\*k
+- k is int, k > 1
+  - min = 2
+  - max = len
+- if len is odd
+  - b is odd
+
+step
+
+- for k in (2, len+1)
+  - if l[:x] \* n == l: T
+    - abcd, l[1]
+    - abcde, l[2]
+    - int(len/2) - 1
+
+## 20 mostAnagrams(wordList)
+
+def
+
+- possibly-unsorted list of words (all lowercase)
+- first word alphabetically in the list that contains the most anagrams of itself in the list
+
+step
+
+- help_count_anag(word, list)
+  - return n
+- check each item in wordList w helper func
+  - slice itself to create base lsit
+- create list of count_anag
+  - [1,2,0,2,4,5]
+  - get index of 1st max
+  - get index item in wordList
 
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
