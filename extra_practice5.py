@@ -5,6 +5,7 @@
 import math, string, time
 from icecream import ic
 from hw3 import test_unexpected
+import operator
 
 #################################################
 # Helper functions
@@ -375,6 +376,42 @@ def repeatingPattern(l):
         elif l[:k] * int(foo) == l: return True
     return False
 
+
+# ============================================================================ #
+#
+def anagram_reset(s):
+    return "".join(sorted(list(s)))
+
+
+def mostAnagrams(l):
+    l_temp = l[:]
+    for i in range(len(l_temp)):
+        l_temp[i] = anagram_reset(l_temp[i])
+    l_temp.sort()
+
+    l_anag = sorted(lookAndSay(l_temp), reverse=True)
+    l_anag_max = l_anag[:]
+    # ic(l_anag)
+
+    for i in range(1, len(l_anag_max)):
+        if l_anag_max[i][0] < l_anag_max[0][0]:
+            l_anag_max = l_anag_max[:i]
+            break
+
+    # for i in range(len(l_anag_max)):
+    #     l_anag_max[i] = l_anag_max[i][1]
+    # ic(l_anag_max)
+    # ic(l)
+
+    for d in l:
+        if any(anagram_reset(d) in i for i in l_anag_max): return d
+
+
+# a = [('fox', 5), ('cat', 4), ('dog', 5)]
+# a = sorted(a, key=operator.itemgetter(1))
+# a = sorted(a, key=lambda x: x[1])
+# foo = max([i[0] for i in l_anag])
+# ic(a)
 
 # ============================================================================ #
 #
@@ -783,6 +820,22 @@ def test_repeatingPattern():
         assert output == expect
 
 
+def test_mostAnagrams():
+    parm = [
+        ['zoo', 'cat', 'hot', 'act', 'tho', 'cool'],
+        # ['cat','hot','act','tho','mach','cham','hamc'],
+    ]
+    soln = [
+        'cat',
+    ]
+    for i, (l) in enumerate(parm):
+        expect = soln[i]
+        output = mostAnagrams(l)
+    # ic(output)
+    test_unexpected(output, expect)
+    assert output == expect
+
+
 def test_map():
     parm = [
         (plus3, [2, 4, 7]),
@@ -826,6 +879,7 @@ def testAll():
     test_binaryListToDecimal()
     test_split()
     test_join()
+    test_mostAnagrams()
     test_map()
 
 

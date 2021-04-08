@@ -1751,17 +1751,46 @@ step
 
 - help_count_anag(word, list)
   - return n
-- check each item in wordList w helper func
-  - slice itself to create base lsit
-  - remove anag
-- create count list
-  - [(word, count_anag)]
-- get 1st max
+
+with var count_max
+
+- check 1st item
+  - count anag and replace
+    - del itself, count = 1
+    - rotate chars
+    - if new word in list
+      - del
+      - count += 1
+  - compare with max
+    - only save if count_new > count_max
+- repeat untill list == []
+
+with list
+
+- l_anag
+  - [('act',1),('bay',2),('cat',2)]
+  - could use lookAndSay(l)
+  - or
+    - l_anag = []
+    - while l != []
+      - if l[0] not in l_anag
+        - l_anag += [l[0], l.count(l[0])]
+        - while l[0] in l
+          - l.remove(l[0])
+- l_anag_max
+  - get count_max in l_anag
+  - create new list with count_max
+  - ['bay','cat']
+- if l[i] in l_anag_max
+  - return
 
 ### 21 map(f, a)
+
 def
-- map(plus3, [2,4,7]) 
+
+- map(plus3, [2,4,7])
   - returns [5,7,10]
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT
