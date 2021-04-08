@@ -329,6 +329,17 @@ def moveToBack(l1, l2):
     # ic(l1)
 
 
+# ============================================================================ #
+#
+def binaryListToDecimal(l):
+    n = 0
+    for i in range(len(l)):
+        if l[i] != 0:
+            n += 2**(len(l) - 1 - i)
+        # ic(n, len(l) - 1 - i)
+    return n
+
+
 #################################################
 # Test Functions
 #################################################
@@ -636,10 +647,28 @@ def test_moveToBack():
         test_unexpected(l1, expect)
         assert (l1 == expect)
 
+
     # l_hit = [3, 0], [2, 0]
     # moveToBack_hit(l_hit, 3)
     # moveToBack_hit(l_hit, 2)
     # ic(l_hit)
+def test_binaryListToDecimal():
+    parm = [
+        [1, 0],
+        [1, 0, 1, 1],
+        [1, 1, 0, 1],
+    ]
+    soln = [
+        2,
+        11,
+        13,
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = binaryListToDecimal(l)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert (output == expect)
 
 
 #################################################
@@ -665,6 +694,7 @@ def testAll():
     test_vectorSum()
     test_dotProduct()
     test_moveToBack()
+    test_binaryListToDecimal()
 
 
 def main():

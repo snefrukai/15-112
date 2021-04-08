@@ -1671,6 +1671,8 @@ step
 
 def
 
+- reading the list from left to right as a single binary number
+- list of 1s and 0s,
 - binaryListToDecmial([1, 0]) -> 2
   - `2**1 + 0`
 - binaryListToDecmial([1, 0, 1, 1]) ->11
