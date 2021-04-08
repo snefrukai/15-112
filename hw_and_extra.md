@@ -1571,6 +1571,17 @@ step
   - count += n
   - remove l[i] to l[i+n]
 
+### 9 nondestructiveRemoveRepeats
+
+def
+
+- nondestructively
+
+step
+
+- check if l[i] in l_new
+  - if not: +=
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

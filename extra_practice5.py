@@ -228,6 +228,29 @@ def inverseLookAndSay(l):
     return l_new
 
 
+# ============================================================================ #
+#
+def nondestructiveRemoveRepeats(l):
+    l_new = []
+    for i in range(len(l)):
+        if l[i] not in l_new: l_new += [l[i]]
+        # ic(i, l[i], l_new[-1])
+    return l_new
+
+
+def destructiveRemoveRepeats(l):
+    l_new = []
+    i = 0
+
+    while i < len(l):
+        if l[i] not in l_new:
+            l_new += [l[i]]
+            i += 1
+        else:
+            l.pop(i)
+        # ic(i, len(l))
+
+
 #################################################
 # Test Functions
 #################################################
@@ -364,7 +387,6 @@ def test_smallestDifference():
         [19, -12, 83, -10, 27],
         [0, 1],
         [0, 2, 99, 97, -1, -2],
-        # [0,1]
     ]
     soln = [
         -1,
@@ -372,7 +394,6 @@ def test_smallestDifference():
         2,
         1,
         1,
-        # False,
     ]
     for i, l in enumerate(parm):
         expect = soln[i]
@@ -390,7 +411,6 @@ def test_lookAndSay():
         [1, 1, 2, 3],
         [3, 3, 8, -10, -10, -10],
         [3, 3, 8, 3, 3, 3, 3],
-        # [0,1]
     ]
     soln = [
         [],
@@ -399,7 +419,6 @@ def test_lookAndSay():
         [(2, 1), (1, 2), (1, 3)],
         [(2, 3), (1, 8), (3, -10)],
         [(2, 3), (1, 8), (4, 3)],
-        # False,
     ]
     for i, l in enumerate(parm):
         expect = soln[i]
@@ -411,6 +430,31 @@ def test_lookAndSay():
     i = 4
     # ic(inverseLookAndSay(soln[i]))
     assert inverseLookAndSay(soln[i]) == parm[i]
+
+
+def test_nondestructiveRemoveRepeats():
+    parm = [
+        [1, 1, 1],
+        [1, 3, 5, 3, 3, 2, 1, 7, 5],
+    ]
+    soln = [
+        [1],
+        [1, 3, 5, 2, 7],
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = nondestructiveRemoveRepeats(l)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+    L = [1, 3, 5, 3, 3, 2, 1, 7, 5]
+    assert (nondestructiveRemoveRepeats(L) == [1, 3, 5, 2, 7])
+    assert (L == [1, 3, 5, 3, 3, 2, 1, 7, 5])  # nondestructive!
+
+    destructiveRemoveRepeats(L)
+    # assert (L == [1, 3, 5, 2, 7])  # destructive!
+    # ic(L)
 
 
 #################################################
@@ -430,6 +474,7 @@ def testAll():
     test_isSorted()
     test_smallestDifference()
     test_lookAndSay()
+    test_nondestructiveRemoveRepeats()
 
 
 def main():
