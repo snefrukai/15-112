@@ -271,6 +271,18 @@ def reverse(l):
         l.pop()
 
 
+# ============================================================================ #
+#
+def vectorSum(l1, l2):
+    l_new = []
+
+    for i in range(len(l1)):
+        l_new += [l1[i] + l2[i]]  #* non-dest
+        # ic(l_new)
+        # l1[i] = l1[i] + l2[i] #* dest
+    return l_new
+
+
 #################################################
 # Test Functions
 #################################################
@@ -506,13 +518,11 @@ def test_isPalindromicList():
 
 def test_reverse():
     parm = [
-        # [],
         [1, 2, 3],
         [1, 1, 3],
         [4, 3, 2, 1],
     ]
     soln = [
-        # False,
         [3, 2, 1],
         [3, 1, 1],
         [1, 2, 3, 4],
@@ -524,6 +534,27 @@ def test_reverse():
         assert l == expect
         # test_func(output, expect)
         # assert (output == expect)
+
+
+def test_vectorSum():
+    parm = [
+        ([2, 4], [20, 30]),
+        ([1, 2, 3], [1, 2, 3]),
+        # [1, 1, 3],
+        # [4, 3, 2, 1],
+    ]
+    soln = [
+        [22, 34],
+        [2, 4, 6],
+        # [3, 1, 1],
+        # [1, 2, 3, 4],
+    ]
+    for i, (l1, l2) in enumerate(parm):
+        expect = soln[i]
+        output = vectorSum(l1, l2)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
 
 
 #################################################
@@ -546,6 +577,7 @@ def testAll():
     test_nondestructiveRemoveRepeats()
     test_isPalindromicList()
     test_reverse()
+    test_vectorSum()
 
 
 def main():

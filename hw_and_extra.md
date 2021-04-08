@@ -1608,6 +1608,18 @@ step
   - insert l[-1]
   - pop l[-1]
 
+## 13 vectorSum
+
+def
+
+- two same-length lists of numbers
+- ([2,4],[20,30])
+  - returns new list [22, 34]
+
+step
+
+- l_new += [l1[0] + l2[0]]
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT
