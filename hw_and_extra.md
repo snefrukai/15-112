@@ -1582,6 +1582,24 @@ step
 - check if l[i] in l_new
   - if not: +=
 
+### 11 isPalindromicList
+
+def
+
+- takes a list
+
+step
+
+- check 1st and last item
+  - if not: F
+  - list
+    - l[i] == l[-1+i]
+    - len, i[max]
+    - 3, 1, a-b-c
+    - 2, 1, a-b
+    - 4, 2, ab-cd
+    - 5, 2, ab-cde
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

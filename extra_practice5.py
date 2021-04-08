@@ -251,6 +251,17 @@ def destructiveRemoveRepeats(l):
         # ic(i, len(l))
 
 
+# ============================================================================ #
+#
+
+
+def isPalindromicList(l):
+    if l == []: return False
+    for i in range(int(len(l) / 2)):
+        if l[i] != l[-1 - i]: return False
+    return True
+
+
 #################################################
 # Test Functions
 #################################################
@@ -457,6 +468,33 @@ def test_nondestructiveRemoveRepeats():
     # ic(L)
 
 
+def test_isPalindromicList():
+    parm = [
+        [],
+        [1, 2, 1],
+        [1, 2, 3, 2, 1],
+        [1, 2, 3, 3, 1],
+        ['a', 'b', 'a', 'b'],
+        [(1, 1), (1, 2), (1, 1)],
+        [(1, 1), (1, 2), (2, 1)],
+    ]
+    soln = [
+        False,
+        True,
+        True,
+        False,
+        False,
+        True,
+        False,
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = isPalindromicList(l)
+        # ic(output)
+        # test_func(output, expect)
+        # assert (output == expect)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -475,6 +513,7 @@ def testAll():
     test_smallestDifference()
     test_lookAndSay()
     test_nondestructiveRemoveRepeats()
+    test_isPalindromicList()
 
 
 def main():
