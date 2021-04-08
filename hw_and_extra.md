@@ -1608,7 +1608,7 @@ step
   - insert l[-1] at l[i]
   - pop l[-1]
 
-## 13 vectorSum
+### 13 vectorSum
 
 def
 
@@ -1620,7 +1620,7 @@ step
 
 - l_new += [l1[0] + l2[0]]
 
-## 14 dotProduct
+### 14 dotProduct
 
 def
 
@@ -1634,7 +1634,7 @@ step
 - use func 13
 - change lambda expression
 
-## 15 moveToBack
+### 15 moveToBack
 
 def
 
@@ -1667,7 +1667,7 @@ step
     - for b in l_hit
     - [3, 2]
 
-## 16 binaryListToDecimal
+### 16 binaryListToDecimal
 
 def
 
@@ -1687,7 +1687,7 @@ step
 - elif l[i] == 1
   - += 2\*\*(len-1-i)
 
-## 17 split(s, delimiter)
+### 17 split(s, delimiter)
 
 def
 
@@ -1708,7 +1708,7 @@ def
 - check deli posn
   - if not last: += s
 
-## 18 join(l, delimiter)
+### 18 join(l, delimiter)
 
 def
 
@@ -1719,7 +1719,7 @@ step
 
 - s += delimiter + l[i]
 
-## 19 repeatingPattern
+### 19 repeatingPattern
 
 def
 
@@ -1739,12 +1739,13 @@ step
     - min = 2
     - max = int(len/2)
 
-## 20 mostAnagrams(wordList)
+### 20 mostAnagrams(wordList)
 
 def
 
 - possibly-unsorted list of words (all lowercase)
 - first word alphabetically in the list that contains the most anagrams of itself in the list
+  - If there are ties, still return just the first word alphabetically.
 
 step
 
@@ -1752,11 +1753,15 @@ step
   - return n
 - check each item in wordList w helper func
   - slice itself to create base lsit
-- create list of count_anag
-  - [1,2,0,2,4,5]
-  - get index of 1st max
-  - get index item in wordList
+  - remove anag
+- create count list
+  - [(word, count_anag)]
+- get 1st max
 
+### 21 map(f, a)
+def
+- map(plus3, [2,4,7]) 
+  - returns [5,7,10]
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

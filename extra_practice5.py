@@ -376,6 +376,24 @@ def repeatingPattern(l):
     return False
 
 
+# ============================================================================ #
+#
+
+
+def mul2(x):
+    return x * 2
+
+
+def plus3(x):
+    return x + 3
+
+
+def map(f, l):
+    for i in range(len(l)):
+        l[i] = f(l[i])
+    return l
+
+
 #################################################
 # Test Functions
 #################################################
@@ -765,6 +783,23 @@ def test_repeatingPattern():
         assert output == expect
 
 
+def test_map():
+    parm = [
+        (plus3, [2, 4, 7]),
+        (mul2, [2, 4, 7]),
+    ]
+    soln = [
+        [5, 7, 10],
+        [4, 8, 14],
+    ]
+    for i, (f, l) in enumerate(parm):
+        expect = soln[i]
+        output = map(f, l)
+    # ic(output)
+    test_unexpected(output, expect)
+    assert output == expect
+
+
 #################################################
 # testAll and main
 #################################################
@@ -791,7 +826,7 @@ def testAll():
     test_binaryListToDecimal()
     test_split()
     test_join()
-    test_repeatingPattern()
+    test_map()
 
 
 def main():
