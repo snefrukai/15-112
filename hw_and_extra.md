@@ -1600,6 +1600,14 @@ step
     - 4, 2, ab-cd
     - 5, 2, ab-cde
 
+### 12 reverse
+
+step
+
+- for i in len(l)
+  - insert l[-1]
+  - pop l[-1]
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

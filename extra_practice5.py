@@ -262,6 +262,15 @@ def isPalindromicList(l):
     return True
 
 
+# ============================================================================ #
+#
+def reverse(l):
+    for i in range(len(l)):
+        # ic(i, l, l[-1])
+        l.insert(i, l[-1])
+        l.pop()
+
+
 #################################################
 # Test Functions
 #################################################
@@ -491,6 +500,28 @@ def test_isPalindromicList():
         expect = soln[i]
         output = isPalindromicList(l)
         # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+
+def test_reverse():
+    parm = [
+        # [],
+        [1, 2, 3],
+        [1, 1, 3],
+        [4, 3, 2, 1],
+    ]
+    soln = [
+        # False,
+        [3, 2, 1],
+        [3, 1, 1],
+        [1, 2, 3, 4],
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = reverse(l)
+        # ic(l)
+        assert l == expect
         # test_func(output, expect)
         # assert (output == expect)
 
@@ -514,6 +545,7 @@ def testAll():
     test_lookAndSay()
     test_nondestructiveRemoveRepeats()
     test_isPalindromicList()
+    test_reverse()
 
 
 def main():
