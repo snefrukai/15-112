@@ -192,9 +192,29 @@ def smallestDifference(l):
 
     for i in range(len(l) - 1):
         dif = abs(l[i] - l[i + 1])
-        l_dif += dif,
+        l_dif += [dif]
     # ic(l, l_dif)
     return min(l_dif)
+
+
+# ============================================================================ #
+#
+def lookAndSay(l):
+    if l == []: return []
+    l_new = []
+    i, count = 0, 1
+
+    for i in range(len(l) - 1):
+        if l[i] == l[i + 1]:
+            count += 1
+        elif l[i] != l[i + 1]:  # end of equal seq
+            l_new += [(count, l[i])]
+            count = 1
+        if i + 1 == len(l) - 1:  # end of list
+            l_new += [(count, l[i + 1])]
+        # ic(len(l), i, count, l[i], l[i + 1])
+
+    return l_new
 
 
 #################################################
@@ -351,6 +371,33 @@ def test_smallestDifference():
         assert (output == expect)
 
 
+def test_lookAndSay():
+    parm = [
+        [],
+        [1, 1, 1],
+        [1, 2, 2, 3],
+        [1, 1, 2, 3],
+        [3, 3, 8, -10, -10, -10],
+        [3, 3, 8, 3, 3, 3, 3],
+        # [0,1]
+    ]
+    soln = [
+        [],
+        [(3, 1)],
+        [(1, 1), (2, 2), (1, 3)],
+        [(2, 1), (1, 2), (1, 3)],
+        [(2, 3), (1, 8), (3, -10)],
+        [(2, 3), (1, 8), (4, 3)],
+        # False,
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = lookAndSay(l)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -367,6 +414,7 @@ def testAll():
     test_median()
     test_isSorted()
     test_smallestDifference()
+    test_lookAndSay()
 
 
 def main():

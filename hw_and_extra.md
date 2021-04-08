@@ -1551,11 +1551,25 @@ def
   - assert(smallestDifference([19,2,83,6,27]) == 4)
 
 step
+
 - sort
-- get difference 
+- get difference
   - change to abs
   - add to new list
 - get min of new list
+
+### 7 lookAndSay
+
+def
+
+- return [(count, number),...]
+  - lookAndSay([3,3,8,-10,-10,-10]) == [(2,3),(1,8),(3,-10)]
+
+step
+
+- if l[i] == l[i+1] == l[i+n]
+  - count += n
+  - remove l[i] to l[i+n]
 
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
