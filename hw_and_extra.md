@@ -1531,16 +1531,31 @@ def
 
 step
 
-- l[0] and l[len] 
+- l[0] and l[len]
   - ...+...+ ? l[1]+l[len-1]
   - has max and min?
-  - slice 
+  - slice
 - repaet
 
 ref
 
 - https://docs.python.org/3/howto/sorting.html
 - https://www.programiz.com/python-programming/methods/list/sort
+
+### 6 smallestDifference
+
+def
+
+- integers
+- smallest absolute difference between any two
+  - assert(smallestDifference([19,2,83,6,27]) == 4)
+
+step
+- sort
+- get difference 
+  - change to abs
+  - add to new list
+- get min of new list
 
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 

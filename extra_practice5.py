@@ -183,6 +183,20 @@ def isSorted(l):
     return True
 
 
+# ============================================================================ #
+#
+def smallestDifference(l):
+    if len(l) == 0: return -1
+    l_dif = []
+    l.sort()
+
+    for i in range(len(l) - 1):
+        dif = abs(l[i] - l[i + 1])
+        l_dif += dif,
+    # ic(l, l_dif)
+    return min(l_dif)
+
+
 #################################################
 # Test Functions
 #################################################
@@ -312,6 +326,31 @@ def test_isSorted():
         assert (output == expect)
 
 
+def test_smallestDifference():
+    parm = [
+        [],
+        [19, 2, 83, 6, 27],
+        [19, -12, 83, -10, 27],
+        [0, 1],
+        [0, 2, 99, 97, -1, -2],
+        # [0,1]
+    ]
+    soln = [
+        -1,
+        4,
+        2,
+        1,
+        1,
+        # False,
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = smallestDifference(l)
+        # ic(output)
+        test_func(output, expect)
+        assert (output == expect)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -327,6 +366,7 @@ def testAll():
     test_alternatingSum()
     test_median()
     test_isSorted()
+    test_smallestDifference()
 
 
 def main():
