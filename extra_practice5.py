@@ -217,6 +217,17 @@ def lookAndSay(l):
     return l_new
 
 
+def inverseLookAndSay(l):
+    if l == []: return []
+    l_new = []
+
+    for item in l:
+        l_new += [item[1]] * item[0]
+        # for i in range(item[0]):
+        #     l_new += [item[1]]
+    return l_new
+
+
 #################################################
 # Test Functions
 #################################################
@@ -396,6 +407,10 @@ def test_lookAndSay():
         # ic(output)
         test_func(output, expect)
         assert (output == expect)
+
+    i = 4
+    # ic(inverseLookAndSay(soln[i]))
+    assert inverseLookAndSay(soln[i]) == parm[i]
 
 
 #################################################
