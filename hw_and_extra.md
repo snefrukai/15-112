@@ -1791,6 +1791,20 @@ def
 - map(plus3, [2,4,7])
   - returns [5,7,10]
 
+### 22 firstNEvenFibonacciNumbers(n)
+
+def
+
+- takes a non-negative number n
+- returns a list of the first n even Fibonacci numbers in increasing order
+  - (4) returns [2, 8, 34, 144]
+- must run reasonably quickly (in O(n) time
+  - cannot repeatedly call nthEvenFibonacciNumber
+
+step
+
+-
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

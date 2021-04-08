@@ -431,6 +431,22 @@ def map(f, l):
     return l
 
 
+# ============================================================================ #
+#
+def firstNEvenFibonacciNumbers(n):
+    l = [0, 1]
+    l_even = []
+
+    i = 2
+    while len(l_even) < n:
+        foo = l[i - 2] + l[i - 1]
+        if foo % 2 == 0: l_even += [foo]
+        l += [foo]
+        i += 1
+    # ic(l, l_even)
+    return l_even
+
+
 #################################################
 # Test Functions
 #################################################
@@ -831,9 +847,9 @@ def test_mostAnagrams():
     for i, (l) in enumerate(parm):
         expect = soln[i]
         output = mostAnagrams(l)
-    # ic(output)
-    test_unexpected(output, expect)
-    assert output == expect
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
 
 
 def test_map():
@@ -848,9 +864,26 @@ def test_map():
     for i, (f, l) in enumerate(parm):
         expect = soln[i]
         output = map(f, l)
-    # ic(output)
-    test_unexpected(output, expect)
-    assert output == expect
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
+def test_firstNEvenFibonacciNumbers():
+    parm = [
+        4,
+        5,
+    ]
+    soln = [
+        [2, 8, 34, 144],
+        [2, 8, 34, 144, 610],
+    ]
+    for i, n in enumerate(parm):
+        expect = soln[i]
+        output = firstNEvenFibonacciNumbers(n)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
 
 
 #################################################
@@ -881,6 +914,7 @@ def testAll():
     test_join()
     test_mostAnagrams()
     test_map()
+    test_firstNEvenFibonacciNumbers()
 
 
 def main():
