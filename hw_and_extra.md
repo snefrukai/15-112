@@ -1700,16 +1700,20 @@ def
   - 1
     - 'cd,efd'
     - ['ab']
-  - 2
-    - 'efg'
-    - ['ab','cd']
-step
+  - 2 - 'efg' - ['ab','cd']
+    step
 - find index in s
   - l += s[:i]
   - slice s
 - check deli posn
   - if not last: += s
-## 18 join
+
+## 18 join(l, delimiter)
+
+def
+
+- join(["ab", "cd", "efg"], ",")
+  - returns "ab,cd,efg".
 
 step
 

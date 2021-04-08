@@ -356,6 +356,15 @@ def split(s, delimiter):
     return l
 
 
+def join(l, delimiter):
+    s = ''
+    for d in l:
+
+        s += delimiter + d
+    s = s.replace(delimiter, '', 1)
+    return s
+
+
 #################################################
 # Test Functions
 #################################################
@@ -706,7 +715,24 @@ def test_split():
         output = split(s, d)
         # ic(output)
         test_unexpected(output, expect)
-        assert (output == expect)
+        assert output == expect
+
+
+def test_join():
+    parm = [
+        (["ab", "cd", "efg"], ","),
+        (["ab ", "c d", "e g"], "-"),
+    ]
+    soln = [
+        "ab,cd,efg",
+        "ab -c d-e g",
+    ]
+    for i, (l, d) in enumerate(parm):
+        expect = soln[i]
+        output = join(l, d)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
 
 
 #################################################
@@ -734,6 +760,7 @@ def testAll():
     test_moveToBack()
     test_binaryListToDecimal()
     test_split()
+    test_join()
 
 
 def main():
