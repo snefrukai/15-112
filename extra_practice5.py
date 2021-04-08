@@ -166,6 +166,23 @@ def median(l):
     return n
 
 
+# ============================================================================ #
+#
+def isSorted(l):
+    order_asc = None
+    if l[0] != min(l) and l[0] != max(l): return False
+    elif l[0] == min(l): order_asc = True
+    elif l[0] == max(l): order_asc = False
+
+    while len(l) > 1:
+        l = l[1:]
+        if order_asc and l[0] != min(l): return False
+        elif not order_asc and l[0] != max(l): return False
+
+    # ic(l, order_asc)
+    return True
+
+
 #################################################
 # Test Functions
 #################################################
@@ -276,6 +293,25 @@ def test_median():
         assert (output == expect)
 
 
+def test_isSorted():
+    parm = [[1, 3, 2], [1, 2, 2], [5, 3, 4, 2], [2, 3, 4, 5],
+            [1, 2, 3, 3, 2, 1]]
+    soln = [
+        False,
+        True,
+        False,
+        True,
+        False,
+    ]
+    for i, l in enumerate(parm):
+        expect = soln[i]
+        output = isSorted(l)
+        # ic(output)
+        # ic(i)
+        test_func(output, expect)
+        assert (output == expect)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -290,6 +326,7 @@ def testAll():
 
     test_alternatingSum()
     test_median()
+    test_isSorted()
 
 
 def main():

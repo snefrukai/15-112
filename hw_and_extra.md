@@ -1515,6 +1515,33 @@ step
 - get middle
   - if len % 2 == 0
 
+### 5 isSorted(a)
+
+def
+
+- list of numbers
+- either smallest-first or largest-first
+- function must only consider each value in the list once
+  - may not sort the list
+- list
+  - 5,4,4,4
+  - 3,4,4,4
+  - 3,4,6,5
+  - 1,2,3,3,2,1
+
+step
+
+- l[0] and l[len] 
+  - ...+...+ ? l[1]+l[len-1]
+  - has max and min?
+  - slice 
+- repaet
+
+ref
+
+- https://docs.python.org/3/howto/sorting.html
+- https://www.programiz.com/python-programming/methods/list/sort
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT
