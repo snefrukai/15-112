@@ -567,15 +567,16 @@ def bowlingScore(l):
 
     while i + 1 < len(l):
         # ic(i, len(l), k, l[i])
-        if l[i] == 10:
-            n_score += l[i] + l[i + 1] + l[i + 2]
+        strike = l[i] == 10
+        spare = l[i] + l[i + 1] == 10
+
+        n_score += l[i] + l[i + 1]
+        if strike or spare:
+            n_score += l[i + 2]
+        if spare or not (strike or spare):
             i += 1
-        elif l[i] + l[i + 1] == 10:
-            n_score += l[i] + l[i + 1] + l[i + 2]
-            i += 2
-        else:
-            n_score += l[i] + l[i + 1]
-            i += 2
+
+        i += 1
         n_frame += 1
         if n_frame == 10: break
         # ic(n_score)
