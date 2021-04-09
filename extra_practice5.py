@@ -210,14 +210,14 @@ def lookAndSay(l):
     l_new = []
     i, count = 0, 1
 
-    for i in range(len(l) - 1):
-        if l[i] == l[i + 1]:
+    for i in range(1, len(l)):
+        if l[i] == l[i - 1]:
             count += 1
-        elif l[i] != l[i + 1]:  # end of equal seq
-            l_new += [(count, l[i])]
+        elif l[i] != l[i - 1]:  # end of equal seq
+            l_new += [(count, l[i - 1])]
             count = 1
-        if i + 1 == len(l) - 1:  # end of list
-            l_new += [(count, l[i + 1])]
+        if i == len(l) - 1:  # end of list
+            l_new += [(count, l[i])]
         # ic(len(l), i, count, l[i], l[i + 1])
 
     return l_new
@@ -379,32 +379,30 @@ def repeatingPattern(l):
 
 # ============================================================================ #
 #
-def anagram_reset(s):
+def s_sort_alpha(s):
     return "".join(sorted(list(s)))
+
+
+def l_first_hit(l, d, f):
+    if any(f(d) in i for i in l):
+        # ic(f(d), l, d)
+        # ic(f(d) in (2, 'act'))
+        return d
 
 
 def mostAnagrams(l):
     l_temp = l[:]
     for i in range(len(l_temp)):
-        l_temp[i] = anagram_reset(l_temp[i])
-    l_temp.sort()
+        l_temp[i] = s_sort_alpha(l_temp[i])
 
-    l_anag = sorted(lookAndSay(l_temp), reverse=True)
-    l_anag_max = l_anag[:]
-    # ic(l_anag)
-
-    for i in range(1, len(l_anag_max)):
-        if l_anag_max[i][0] < l_anag_max[0][0]:
-            l_anag_max = l_anag_max[:i]
-            break
-
-    # for i in range(len(l_anag_max)):
-    #     l_anag_max[i] = l_anag_max[i][1]
-    # ic(l_anag_max)
-    # ic(l)
+    l_anag = lookAndSay(sorted(l_temp))
+    l_anag_most = l_most_get(l_anag)
 
     for d in l:
-        if any(anagram_reset(d) in i for i in l_anag_max): return d
+        foo = l_first_hit(l_anag_most, d, lambda x: s_sort_alpha(x))
+        if foo != None: return foo
+    # if any(s_sort_alpha(d) in i for i in l_most_anag):
+    #     return d
 
 
 # a = [('fox', 5), ('cat', 4), ('dog', 5)]
@@ -445,6 +443,72 @@ def firstNEvenFibonacciNumbers(n):
         i += 1
     # ic(l, l_even)
     return l_even
+
+
+# ============================================================================ #
+#
+def l_most_get(l):
+    l_new = sorted(l, reverse=True)
+
+    count_max = l_new[0][0]
+    for i in range(1, len(l_new)):
+        if l_new[i][0] < count_max:
+            l_new = l_new[:i]
+            break
+    l_new.sort()
+    return l_new
+
+
+def mostCommonName(l):
+    if l == []: return None
+    l.sort()
+
+    l_name_most = l_most_get(lookAndSay(l))
+    for i in range(len(l_name_most)):
+        l_name_most[i] = l_name_most[i][1]
+    return l_name_most
+
+
+# ============================================================================ #
+#
+def histogram_format(val):
+    if val < 10: return '10-- '
+    elif val >= 90: return '90++ '
+    else:
+        foo = str(val // 10)
+        return foo + '0-' + foo + '9'
+
+
+def histogram(l):
+    l_check = [histogram_format(i * 10) for i in range(10)]
+    l_temp = l[:]
+    for i in range(len(l_temp)):
+        foo = l_temp[i]
+        l_temp[i] = histogram_format(foo)
+    l_temp.sort()
+    l_input_count = lookAndSay(l_temp)
+
+    l_input = []
+    l_input_range = []
+    for d in l_input_count:
+        l_input += d[1],
+        l_input_range += l_check.index(d[1]),
+    # ic(l_input_count)
+    # ic(l_input_range)
+
+    l_output = []
+    for i in range(min(l_input_range), max(l_input_range) + 1):
+        bar = ''
+        for d in l_input_count:
+            if d[1] == l_check[i]:
+                bar = ' ' + '*' * d[0]
+                break
+        l_output += [l_check[i] + ':' + bar]
+    # ic(l_output)
+    l_output = "\n".join(l_output)
+    # ic(len(l_output))
+
+    return l_output
 
 
 #################################################
@@ -839,10 +903,14 @@ def test_repeatingPattern():
 def test_mostAnagrams():
     parm = [
         ['zoo', 'cat', 'hot', 'act', 'tho', 'cool'],
+        ['cat', 'hot', 'tho', 'cool'],
+        ['hot', 'tho'],
         # ['cat','hot','act','tho','mach','cham','hamc'],
     ]
     soln = [
         'cat',
+        'hot',
+        'hot',
     ]
     for i, (l) in enumerate(parm):
         expect = soln[i]
@@ -886,7 +954,89 @@ def test_firstNEvenFibonacciNumbers():
         assert output == expect
 
 
+def test_mostCommonName():
+    parm = [
+        ['Jane', 'Aaron', 'Jane', 'Cindy', 'Aaron'],
+        ['Jane', 'Aaron', 'jane', 'Cindy', 'Aaron'],
+    ]
+    soln = [
+        ['Aaron', 'Jane'],
+        ['Aaron'],
+    ]
+    for i, n in enumerate(parm):
+        expect = soln[i]
+        output = mostCommonName(n)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
+def test_histogram():
+    parm = [
+        [73, 62, 91, 74, 100, 77],
+        [86, 5],
+        [97, 86, 5],
+        [73, 62, 91, 74, 100, 77, 5],
+    ]
+    soln = [
+        ('''\
+60-69: *
+70-79: ***
+80-89:
+90++ : **\
+'''),
+        ('''\
+10-- : *
+10-19:
+20-29:
+30-39:
+40-49:
+50-59:
+60-69:
+70-79:
+80-89: *\
+'''),
+        ('''\
+10-- : *
+10-19:
+20-29:
+30-39:
+40-49:
+50-59:
+60-69:
+70-79:
+80-89: *
+90++ : *\
+'''),
+        ('''\
+10-- : *
+10-19:
+20-29:
+30-39:
+40-49:
+50-59:
+60-69: *
+70-79: ***
+80-89:
+90++ : **\
+'''),
+    ]
+    for i, n in enumerate(parm):
+        expect = soln[i]
+        output = histogram(n)
+        # ic(output)
+        test_unexpected(output, expect)
+        # assert output == expect
+    l = [
+        '10-- : *', '10-19:', '20-29:', '30-39:', '40-49:', '50-59:', '60-69:',
+        '70-79:', '80-89: *', '90++ : *'
+    ]
+    l = "\n".join(l)
+    # print(l)
+
+
 #################################################
+
 # testAll and main
 #################################################
 
@@ -915,6 +1065,8 @@ def testAll():
     test_mostAnagrams()
     test_map()
     test_firstNEvenFibonacciNumbers()
+    test_mostCommonName()
+    test_histogram()
 
 
 def main():
