@@ -1921,6 +1921,74 @@ step
   - if slice out the mismatch
     - the leftover parts all in s
 
+### 26 bowlingScore(pinsPerThrowList)
+
+def
+
+- 10 frame
+  - 2 throw
+  - base score
+    - the sum of all the pins knocked down
+    - max 10
+  - additional score
+    - strike
+      - knocks down all 10 pins on the first throw of a frame
+      - the number of pins knocked down in the _next 2 throws_ are added to the score of that frame
+    - spare
+      - knocks down the rest of the 10 pins on the second throw in a frame
+      - the number of pins knocked down in the _next 1 throw_ are added to the score of that frame
+    - 10 + 10
+      - strike + strike\*2
+    - 10 + 9
+      - strike + strike + x
+    - 9 + (10-9)
+      - strike + spare
+  - if there is a spare or strike in the final frame
+    - the bowler gets one extra throw in that frame
+- takes a list of the number of pins knocked down on each throw and returns the score
+  - _throws skipped due to strikes_ are not listed
+  - best possible result is a list of 12 10's (all strikes)
+    - score 300 points
+    - 1 (10+10+10)
+    - 2 (10+10+10)
+    - ...
+    - 10 (10+10+10)
+- list
+  - [10,10,9,1,6,3,7,3]
+    - (10 + 10+9) + (10 + 9+1) + (9+1 + 6) + (6+3)
+  - the last frame
+    - [10,10,10]
+    - [10,9,1]
+    - [9,1,9]
+  - [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+
+step
+
+- frame[1]
+  - score = based + additional
+  - if strike
+    - f[i] == 10
+    - add 2 more
+  - elif spare
+    - f[i]+f[i+1] == 10
+    - add 1 more
+  - else
+    - f[i]+f[i+1] < 10
+- add sum
+
+rev
+
+- 看起来很复杂，写出来很简单
+  - 糊里糊涂就 pass test 了……
+- 要注意的是 index
+  - 一个 i 计数 index
+  - 一个 k 计数 frame
+
+ref
+
+- https://www.bowlinggenius.com/
+- https://www.wikihow.com/Score-Bowling
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

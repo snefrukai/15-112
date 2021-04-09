@@ -560,6 +560,28 @@ def nearestWords(l, s):
     else: return l_new
 
 
+# ============================================================================ #
+#
+def bowlingScore(l):
+    n_score, i, n_frame = 0, 0, 0
+
+    while i + 1 < len(l):
+        # ic(i, len(l), k, l[i])
+        if l[i] == 10:
+            n_score += l[i] + l[i + 1] + l[i + 2]
+            i += 1
+        elif l[i] + l[i + 1] == 10:
+            n_score += l[i] + l[i + 1] + l[i + 2]
+            i += 2
+        else:
+            n_score += l[i] + l[i + 1]
+            i += 2
+        n_frame += 1
+        if n_frame == 10: break
+        # ic(n_score)
+    return n_score
+
+
 #################################################
 # Test Functions
 #################################################
@@ -1150,6 +1172,37 @@ def test_nearestWords():
         assert output == expect
 
 
+def test_bowlingScore():
+    parm = [
+        [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+        [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9, 1],
+        [10, 10, 10, 10, 10, 10, 10, 10, 10, 9, 1, 10],
+        [10, 10, 10, 10, 10, 10, 10, 10, 10, 9, 1, 5],
+        [1, 9, 2, 8, 3, 7, 4, 6, 5, 5, 6, 4, 7, 3, 8, 2, 9, 1, 5, 5, 6],
+        [1, 9, 2, 8, 3, 7, 4, 6, 5, 5, 6, 4, 7, 3, 8, 2, 9, 1, 10, 10, 6],
+        [1, 9, 2, 8, 3, 7, 4, 6, 5, 5, 6, 4, 7, 3, 8, 2, 9, 1, 4, 4],
+        [1, 2, 2, 2, 3, 2, 4, 2, 5, 2, 6, 2, 7, 2, 8, 0, 9, 0, 1, 0],
+        [10, 2, 1, 3, 7, 10, 5, 5, 10, 7, 1, 8, 2, 9, 1, 1, 9, 5],
+    ]
+    soln = [
+        300,
+        289,
+        279,
+        274,
+        155,
+        170,
+        146,
+        60,
+        147,
+    ]
+    for i, (l) in enumerate(parm):
+        expect = soln[i]
+        output = bowlingScore(l)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
 #################################################
 
 # testAll and main
@@ -1183,6 +1236,7 @@ def testAll():
     test_mostCommonName()
     test_histogram()
     test_nearestWords()
+    test_bowlingScore()
 
 
 def main():
