@@ -511,6 +511,55 @@ def histogram(l):
     return l_output
 
 
+# ============================================================================ #
+#
+def nearestWords_match_pop(s_long, s_short):
+    for c in s_long:
+        if c not in s_short:
+            s_long = s_long.replace(c, '')
+            break
+    return s_long
+
+
+def nearestWords_match(word, s):
+    if word == s: print("!: word and s should not be euqal")
+
+    elif len(word) - 1 == len(s):  # add
+        if s in word: return True
+        word = nearestWords_match_pop(word, s)
+        if word == s: return True
+
+    elif len(word) == len(s):  # change
+        count_mismatch = 0
+        for i in range(len(word)):
+            if word[i] != s[i]: count_mismatch += 1
+        if count_mismatch == 1: return True
+
+    elif len(word) + 1 == len(s):  # del
+        if word in s: return True
+        for i in range(len(s)):
+            if s[i] != word[i]:
+                i_mismatch = i
+                break
+        s = s[:i_mismatch] + s[i_mismatch + 1:]
+        if word == s: return True
+        # ic(s_sub)
+
+    return False
+
+
+def nearestWords(l, s):
+    if s in l: return s
+    l_new = []
+
+    for word in l:
+        if nearestWords_match(word, s):
+            l_new += [word]
+        # ic(s, d)
+    if l_new == []: return None
+    else: return l_new
+
+
 #################################################
 # Test Functions
 #################################################
@@ -1035,6 +1084,72 @@ def test_histogram():
     # print(l)
 
 
+def test_nearestWords_match():
+    parm = [
+        ('cat', 'at'),
+        ('hat', 'ht'),
+        ('hat', 'xt'),  # add 
+        ('cat', 'yat'),
+        ('cat', 'cyt'),
+        ('cat', 'yct'),  # change
+        ('hat', 'haty'),
+        ('hat', 'htat'),
+        ('hat', 'yhat'),
+        ('hat', 'hayt'),
+        ('hat', 'htay'),  # del
+    ]
+    soln = [
+        True,
+        True,
+        False,  # add
+        True,
+        True,
+        False,  # change
+        True,
+        True,
+        True,
+        True,
+        False,
+    ]
+    for i, (s, s1) in enumerate(parm):
+        expect = soln[i]
+        output = nearestWords_match(s, s1)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
+def test_nearestWords():
+    test_nearestWords_match()
+
+    parm = [
+        (['cat', 'hat'], 'at'),
+        (['cat', 'hat'], 'ct'),  # add
+        (['cat', 'hat'], 'bat'),
+        (['cat', 'hat'], 'cab'),  # change
+        (['cat', 'hat'], 'htat'),
+        (['hat', 'cat'], 'hcat'),  # del
+        (['cat', 'hat'], 'ab'),
+        (['hat', 'cat'], 'cat'),
+    ]
+    soln = [
+        ['cat', 'hat'],
+        ['cat'],  # add
+        ['cat', 'hat'],
+        ['cat'],  # change
+        ['hat'],
+        ['hat', 'cat'],  # del
+        None,
+        'cat'
+    ]
+    for i, (l, s) in enumerate(parm):
+        expect = soln[i]
+        output = nearestWords(l, s)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
 #################################################
 
 # testAll and main
@@ -1067,6 +1182,7 @@ def testAll():
     test_firstNEvenFibonacciNumbers()
     test_mostCommonName()
     test_histogram()
+    test_nearestWords()
 
 
 def main():

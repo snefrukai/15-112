@@ -1889,6 +1889,13 @@ def
       - ['cat', 'hat'], 'ct'
         - ['cat']
         - m2
+    - changing a letter
+      - ['cat', 'hat'], 'bat'
+        - m2
+        - ['cat', 'hat']
+      - (['cat', 'hat'], 'cab')
+        - m2
+        - ['cat']
     - deleting a letter
       - ['cat', 'hat'], 'htat'
         - ['hat']
@@ -1896,15 +1903,23 @@ def
       - ['cat', 'hat'], 'hcat'
         - ['cat','hat']
         - match 3
-    - or changing a letter
-      - ['cat', 'hat'], 'bat'
-        - m2
-        - ['cat', 'hat']
-      - ['cat', 'hat'], 'cab'
-        - m2
-        - ['cat']
     - -> only 1 mismactch
 - If no such words exist, returns None.
+
+step
+
+- scenario: add
+  - if s1 in s
+  - if c of s not in s1
+    - pop
+    - rest equal
+- scenario: change
+  - len == len1
+  - count_mismatch == 1
+- scenario: del
+  - len == len1 - 1
+  - if slice out the mismatch
+    - the leftover parts all in s
 
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
