@@ -2125,3 +2125,12 @@ def
   - [1,3,-1,4,1]
   - [1,3,-1,4,3]
   - [1,3,-1,4,4]
+
+## [hw6](https://www.cs.cmu.edu/~112/notes/hw6a.html)
+
+### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
+
+info
+
+- collaborative
+- encourage you to finish hw6a before starting hw6b
