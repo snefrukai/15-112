@@ -1989,6 +1989,21 @@ ref
 - https://www.bowlinggenius.com/
 - https://www.wikihow.com/Score-Bowling
 
+27 polynomialToString(p)
+
+def
+
+- returns a string representation of that polynomial
+  - Include a space before/after each "+" or "-" sign
+  - Do not include 0 coefficients (unless the entire polynomial equals 0)
+- [2,-3,0,4]
+  - "2n^3 - 3n^2 + 4"
+    - 2,3
+    - -3,2
+    - 0,1
+    - 4,0
+  - l[i]n^(len-1-i)
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT

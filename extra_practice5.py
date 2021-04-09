@@ -583,6 +583,25 @@ def bowlingScore(l):
     return n_score
 
 
+# ============================================================================ #
+#
+def polynomialToString(l):
+    s = ''
+    for i in range(len(l)):
+        sign = ''
+        if l[i] == 0: continue
+        elif l[i] > 0 and i > 0: sign = ' + '
+        elif l[i] < 0: sign = ' - '
+
+        if i == len(l) - 1: exponentation = ''
+        else: exponentation = 'n^' + str(len(l) - 1 - i)
+
+        s += sign + str(abs(l[i])) + exponentation
+
+    if s[:3] == ' + ': s = s[3:]
+    return s
+
+
 #################################################
 # Test Functions
 #################################################
@@ -1204,6 +1223,31 @@ def test_bowlingScore():
         assert output == expect
 
 
+def test_polynomialToString():
+    parm = [
+        [2, -3, 0, 4],
+        [2, -3, 0, 0],
+        [0, -3, 0, 4],
+        [5, 2, -3, 0, 4],
+        [0, 2, -3, 0, 4],
+        [0, 0, -3, 0, 0],
+    ]
+    soln = [
+        "2n^3 - 3n^2 + 4",
+        "2n^3 - 3n^2",
+        " - 3n^2 + 4",
+        "5n^4 + 2n^3 - 3n^2 + 4",
+        "2n^3 - 3n^2 + 4",
+        " - 3n^2",
+    ]
+    for i, (l) in enumerate(parm):
+        expect = soln[i]
+        output = polynomialToString(l)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
 #################################################
 
 # testAll and main
@@ -1238,6 +1282,7 @@ def testAll():
     test_histogram()
     test_nearestWords()
     test_bowlingScore()
+    test_polynomialToString()
 
 
 def main():
