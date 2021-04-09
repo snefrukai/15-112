@@ -1805,6 +1805,107 @@ step
 
 -
 
+### 23 mostCommonName
+
+def
+
+- case sensitively, so 'jane' and 'Jane' are different names
+- in order sorted() uses
+
+### 24 histogram(a)
+
+def
+
+- histogram([73, 62, 91, 74, 100, 77])
+
+```
+    60-69: *
+    70-79: ***
+    80-89:
+    90++ : **
+```
+
+step
+
+v2
+
+- change format
+  - ['70-79', '60-69']
+- count
+  - sort
+  - use helper func lookAndSay
+- draw
+
+v1
+
+- set list of range
+  - [(0,'60-69')]
+- loop with counter
+  - if in range: count += 1
+- draw
+  - if count == 0: skip
+  - if item >= 90 or <= 10: format
+
+#### rev
+
+- [97, 5] 的范围时会出现奇怪的 string symbol
+
+```
+s = '10-- : *
+            '
+             '10-19:
+            '
+             '20-29:
+            '
+             '30-39:
+            '
+             '40-49:
+            '
+             '50-59:
+            '
+             '60-69:
+            '
+             '70-79:
+            '
+             '80-89: *
+            '
+             '90++ : *'
+```
+
+- 干，以为的 symbol bug 只是自己忘了改 test case
+
+### 25 nearestWords(wordList, word)
+
+def
+
+- only contain lowercase letters
+- If the word is in the wordlist, return that word.
+- Otherwise, returns a list of all the words (in order) in the wordlist
+  - that can be obtained by making _a single small edit_ on the given word
+    - either by adding a letter
+      - ['cat', 'hat'], 'at'
+        - ['cat', 'hat']
+        - m2
+      - ['cat', 'hat'], 'ct'
+        - ['cat']
+        - m2
+    - deleting a letter
+      - ['cat', 'hat'], 'htat'
+        - ['hat']
+        - match 3
+      - ['cat', 'hat'], 'hcat'
+        - ['cat','hat']
+        - match 3
+    - or changing a letter
+      - ['cat', 'hat'], 'bat'
+        - m2
+        - ['cat', 'hat']
+      - ['cat', 'hat'], 'cab'
+        - m2
+        - ['cat']
+    - -> only 1 mismactch
+- If no such words exist, returns None.
+
 ## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
 
 ### CT
