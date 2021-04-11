@@ -2134,3 +2134,11 @@ info
 
 - collaborative
 - encourage you to finish hw6a before starting hw6b
+
+## [Midterm #1](https://www.cs.cmu.edu/~112/notes/midterm1.html)
+
+info
+
+- 80 minutes TOTAL
+  - recommend <= 30 minutes on part 1
+  - once in part 2, may not return to part 1
