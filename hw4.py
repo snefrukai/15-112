@@ -157,10 +157,11 @@ def timerFired(app):
     if not app.stop:
         time.sleep(1)
         foo = int(time.time() - app.time_start)
-        if app.bonus_mode:
-            app.elapsed = str(foo // 60) + 'min ' + str(foo % 60) + 's'
-        elif not app.bonus_mode:
-            app.elapsed = str(foo) + 's'
+        if app.bonus_mode: 
+            foo = str(foo // 60) + 'min ' + str(foo % 60)
+        else: 
+            foo = str(foo)
+        app.elapsed = foo + 's'
 
 
 def sizeChanged(app):
@@ -196,12 +197,9 @@ def drawTitle(app, canvas):
 
 
 def drawDisplayWord(app, canvas):
-    if app.stop:
-        fill = '#62F07E'
-        width = 1
-    else:
-        fill = ''
-        width = 0
+    # bg rectangle if all guess right
+    fill = '#62F07E' if app.stop else ''
+    width = 1 if app.stop else 0
     width_rec = len(app.word) * (app.width // 20) * .76  #? 开始乱起来和挖坑了
     canvas.create_rectangle(app.cx - width_rec / 2,
                             app.y_dist * 1.2,
@@ -210,17 +208,13 @@ def drawDisplayWord(app, canvas):
                             fill=fill,
                             width=width)
 
-    if app.display_answer: text = app.word
-    elif not app.display_answer: text = app.guess
+    # show answer
+    text = app.word if app.display_answer else app.guess
     canvas.create_text(app.cx, app.y_dist * 1.5, text=text, font=app.font_1)
 
 
 def bonus_drawCount(app, canvas):  # bonus
-    if app.bonus_mode:
-        text = f'round {app.rnd}\n wins {app.win_count}'
-    else:
-        text = ''
-
+    text = f'round {app.rnd}\n wins {app.win_count}' if app.bonus_mode else ''
     canvas.create_text(
         app.width * 1 / 8,
         app.y_dist * 1.5,
@@ -241,15 +235,10 @@ def drawGuesses_row(app, canvas, r, rows, row, y):
     for i in range(chars_per_line):
         x = dist * i + dist / 2
         text = app.choices[26 + chars_per_line * (row - 1) + i]
-        if text in app.guess:
-            fill = 'lightGreen'
-            width = 1
-        elif text in app.guess_wrong:
-            fill = 'pink'
-            width = 1
-        else:
-            fill = ''
-            width = 0
+        if text in app.guess: fill = 'lightGreen'
+        elif text in app.guess_wrong: fill = 'pink'
+        else: fill = ''
+        width = 1 if text in app.guess or text in app.guess_wrong else 0
         canvas.create_oval(x - r, y, x + r, y + r * 2, fill=fill, width=width)
         canvas.create_text(x, y + r, text=text, font=app.font_5)
 

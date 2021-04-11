@@ -39,7 +39,7 @@ def locker_problem(n):
 
     for i in range(len(l)):
         root = l[i]**0.5
-        if root == int(root): l_new += (l[i], )
+        if root == int(root): l_new += [l[i]]
 
     return l_new
 
@@ -197,8 +197,7 @@ def smallestDifference(l):
     l.sort()
 
     for i in range(len(l) - 1):
-        dif = abs(l[i] - l[i + 1])
-        l_dif += [dif]
+        l_dif += [abs(l[i] - l[i + 1])]
     # ic(l, l_dif)
     return min(l_dif)
 
@@ -372,8 +371,8 @@ def repeatingPattern(l):
     for k in range(2, int(len(l) / 2) + 1):
         foo = len(l) / k
         # ic(k, foo, l[:k])
-        if foo != int(foo): continue
-        elif l[:k] * int(foo) == l: return True
+        # if foo != int(foo): continue
+        if l[:k] * int(foo) == l: return True
     return False
 
 
@@ -384,10 +383,9 @@ def s_sort_alpha(s):
 
 
 def l_first_hit(l, d, f):
-    if any(f(d) in i for i in l):
-        # ic(f(d), l, d)
-        # ic(f(d) in (2, 'act'))
-        return d
+    if any(f(d) in i for i in l): return d
+    # ic(f(d), l, d)
+    # ic(f(d) in (2, 'act'))
 
 
 def mostAnagrams(l):
@@ -517,8 +515,8 @@ def nearestWords_match_pop(s_long, s_short):
     for c in s_long:
         if c not in s_short:
             s_long = s_long.replace(c, '')
-            break
-    return s_long
+            # break
+            return s_long
 
 
 def nearestWords_match(word, s):
@@ -539,10 +537,8 @@ def nearestWords_match(word, s):
         if word in s: return True
         for i in range(len(s)):
             if s[i] != word[i]:
-                i_mismatch = i
+                if word == s[:i] + s[i + 1:]: return True
                 break
-        s = s[:i_mismatch] + s[i_mismatch + 1:]
-        if word == s: return True
         # ic(s_sub)
 
     return False
