@@ -430,8 +430,12 @@ def areaOfPolygon(L):
     return n_area
 
 
-def evalPolynomial(coeffs, x):
-    return 42
+def evalPolynomial(l, x):
+    n = 0
+    for i in range(len(l)):
+        if l[i] == 0: continue
+        n += l[i] * x**(len(l) - 1 - i)
+    return n
 
 
 def multiplyPolynomials(p1, p2):
@@ -554,13 +558,15 @@ def _verifyEvalPolynomialIsNondestructive():
 def testEvalPolynomial():
     print("Testing evalPolynomial()...", end="")
     assert (_verifyEvalPolynomialIsNondestructive())
+    # ic(evalPolynomial([2, -3, 0, 4], 4))
+    # ic(evalPolynomial([2, 3, 0, 4], 4))
     # f(x) = 2x^3 + 3x^2 + 4, f(4) = 180
     assert (evalPolynomial([2, 3, 0, 4], 4) == 180)
-    # f(x) = 6, f(42) = 6
+    # # f(x) = 6, f(42) = 6
     assert (evalPolynomial([6], 42) == 6)
-    # f(x) = 6x^2 -2x - 20, f(-1) = -12
+    # # f(x) = 6x^2 -2x - 20, f(-1) = -12
     assert (evalPolynomial([6, -2, -20], -1) == -12)
-    # f(x) = 6x^5-8x^3-8x, f(2) = 112, f(1) = -10, f(0) = 0
+    # # f(x) = 6x^5-8x^3-8x, f(2) = 112, f(1) = -10, f(0) = 0
     assert (evalPolynomial([6, 0, -8, 0, -8, 0], 2) == 112)
     assert (evalPolynomial([6, 0, -8, 0, -8, 0], 1) == -10)
     assert (evalPolynomial([6, 0, -8, 0, -8, 0], 0) == 0)
@@ -793,7 +799,7 @@ def testAll():
     testDestructiveRemoveEvens()
     testNondestructiveRemoveEvens()
     testAreaOfPolygon()
-    # testEvalPolynomial()
+    testEvalPolynomial()
     # testMultiplyPolynomials()
     # testSolvesCryptarithm()
     # testBestScrabbleScore()
