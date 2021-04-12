@@ -2147,26 +2147,63 @@ step
 rev
 
 - 就这？……
-- for d 也不能用，背后是按照index来走的
+- for d 也不能用，背后是按照 index 来走的
 
 ### nondestructiveRemoveEvens
+
 def
+
 - nondestructive
 - works the same as the previous function
 - need to build up a new list from scratch
 
 step
+
 - if not event
   - add to new list
 
 ### areaOfPolygon
-def 
+
+def
+
 - in the last term, the expression wraps around back to the first vertex again
 
 step
+
 - for i
   - mode when the last i
   - len-1 and i%i
+
+### multiplyPolynomial
+
+def
+
+- ([2,0,3], [4,5]) represents the problem (2x\*\*2 + 3)(4x + 5)
+  - (2x**2 + 3)(4x + 5) = 8x**3 + 10x\*\*2 + 12x + 15
+  - returns [8, 10, 12, 15]
+- ([2, -4], [3, 5])
+  - [2,-4]
+  - [3,5]
+  - [6, -2, -20]
+
+step
+
+- form new lists
+  - [0]\*n
+- add lists
+  - ([2,0,3], [4,5])
+    - [8,0,12,0]
+    - [0,10,0,15]
+  - ([1,2,3], [1,2,3])
+    - [1,2,3,0,0]
+    - [0,2,4,6,0]
+    - [0,0,3,6,9]
+  - l[0] += p2[0] \* p1[0]
+  - l[1] += p2[0] \* p1[1]
+  - ...
+  - l[1] += p2[1] \* p1[0]
+  - l[2] += p2[1] \* p1[1]
+
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
 info

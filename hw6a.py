@@ -439,7 +439,11 @@ def evalPolynomial(l, x):
 
 
 def multiplyPolynomials(p1, p2):
-    return 42
+    l = [0] * (len(p1) + len(p2) - 1)
+    for k in range(len(p2)):
+        for i in range(len(p1)):
+            l[i + k] += p2[k] * p1[i]
+    return l
 
 
 def solvesCryptarithm(puzzle, solution):
@@ -583,12 +587,15 @@ def _verifyMultiplyPolynomialsIsNondestructive():
 
 def testMultiplyPolynomials():
     print("Testing multiplyPolynomials()...", end="")
-    _verifyMultiplyPolynomialsIsNondestructive()
-    # (2)*(3) == 6
+    # _verifyMultiplyPolynomialsIsNondestructive()
+    # ic(multiplyPolynomials([1, 2, 3], [1, 2, 3]))
+    # ic(multiplyPolynomials([2, -4], [3, 5]))
+    # ic(multiplyPolynomials([2, 0, 3], [4, 5]))
+    # # (2)*(3) == 6
     assert (multiplyPolynomials([2], [3]) == [6])
-    # (2x-4)*(3x+5) == 6x^2 -2x - 20
+    # # (2x-4)*(3x+5) == 6x^2 -2x - 20
     assert (multiplyPolynomials([2, -4], [3, 5]) == [6, -2, -20])
-    # (2x^2-4)*(3x^3+2x) == (6x^5-8x^3-8x)
+    # # (2x^2-4)*(3x^3+2x) == (6x^5-8x^3-8x)
     assert (multiplyPolynomials([2, 0, -4],
                                 [3, 0, 2, 0]) == [6, 0, -8, 0, -8, 0])
     print("Passed!")
@@ -800,7 +807,7 @@ def testAll():
     testNondestructiveRemoveEvens()
     testAreaOfPolygon()
     testEvalPolynomial()
-    # testMultiplyPolynomials()
+    testMultiplyPolynomials()
     # testSolvesCryptarithm()
     # testBestScrabbleScore()
 
