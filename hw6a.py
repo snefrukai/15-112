@@ -414,6 +414,10 @@ def nondestructiveRemoveEvens(L):
     return l_not_even
 
 
+# ============================================================================ #
+#
+
+
 def areaOfPolygon(L):
     # n_area = 0 #* no new list
     # for i in range(len(L)):
@@ -430,6 +434,10 @@ def areaOfPolygon(L):
     return n_area
 
 
+# ============================================================================ #
+#
+
+
 def evalPolynomial(l, x):
     n = 0
     for i in range(len(l)):
@@ -438,12 +446,20 @@ def evalPolynomial(l, x):
     return n
 
 
+# ============================================================================ #
+#
+
+
 def multiplyPolynomials(p1, p2):
     l = [0] * (len(p1) + len(p2) - 1)
     for k in range(len(p2)):
         for i in range(len(p1)):
             l[i + k] += p2[k] * p1[i]
     return l
+
+
+# ============================================================================ #
+#
 
 
 def solvesCryptarithm_part(s, nth):
@@ -462,10 +478,8 @@ def solvesCryptarithm_part(s, nth):
 
     s = s.replace('+', '')  #* list
     s = s.replace('=', '')
-    l = s.split("  ")
-    s_new = l[nth - 1]
-
-    return s_new
+    n = s.split("  ")[nth - 1]
+    return n
 
 
 def solvesCryptarithm_val(s, solution):
@@ -491,8 +505,48 @@ def solvesCryptarithm(puzzle, solution):
     return bool
 
 
+# ============================================================================ #
+#
+
+
+def bestScrabbleScore_hit(dictionary, hand):
+    l = []
+    for word in dictionary:
+        s_temp = ''.join(sorted(word))
+        hit = True
+        # ic(s_temp)
+        for i in range(len(s_temp)):
+            if i > 0 and s_temp[i] == s_temp[i - 1]: continue
+            elif s_temp.count(s_temp[i]) > hand.count(s_temp[i]):
+                hit = False
+                break
+        if hit: l += [word]
+    return l
+
+
+def bestScrabbleScore_score(letterScores, word):
+    n = 0
+    for c in word:
+        n += letterScores[string.ascii_lowercase.find(c)]
+    return n
+
+
 def bestScrabbleScore(dictionary, letterScores, hand):
-    return 42
+    l_score, l_result = [], []
+
+    l_hit = bestScrabbleScore_hit(dictionary, hand)
+    if l_hit == []: return None
+
+    for d in l_hit:
+        l_score += [bestScrabbleScore_score(letterScores, d)]
+    for i in range(len(l_score)):
+        if l_score[i] == max(l_score):
+            l_result += [l_hit[i]]
+    # ic(l_score, l_result)
+
+    if len(l_result) == 1: l_result = "".join(l_result)  # list to str
+    l_result = (l_result, max(l_score))
+    return l_result
 
 
 #################################################
@@ -677,7 +731,8 @@ def _verifyBestScrabbleScoresIsNondestructive():
 
 def testBestScrabbleScore():
     print("Testing bestScrabbleScore()...", end="")
-    _verifyBestScrabbleScoresIsNondestructive()
+
+    # _verifyBestScrabbleScoresIsNondestructive()
 
     def dictionary1():
         return ["a", "b", "c"]
@@ -690,6 +745,15 @@ def testBestScrabbleScore():
 
     def letterScores2():
         return [1 + (i % 5) for i in range(26)]
+
+    # ic(bestScrabbleScore_hit(dictionary2(), list("xyzy")))
+    # ic(bestScrabbleScore_val(letterScores2(), 'yy')) # 10
+    # ic(bestScrabbleScore_val(letterScores2(), 'zxy'))  # 10
+    # ic(bestScrabbleScore_val(letterScores2(), 'yx'))  # 9
+    # ic(bestScrabbleScore(dictionary2(), letterScores2(),
+    #                      list("xyzy")))  # (["xyz", "zxy", "yy"], 10)
+    # ic(bestScrabbleScore(dictionary2(), letterScores2(),
+    #                      list("xyq")))  # ("yx", 9))
 
     assert (bestScrabbleScore(dictionary1(), letterScores1(),
                               list("b")) == ("b", 1))
@@ -856,7 +920,7 @@ def testAll():
     testEvalPolynomial()
     testMultiplyPolynomials()
     testSolvesCryptarithm()
-    # testBestScrabbleScore()
+    testBestScrabbleScore()
 
     # bonus
     # testRunSimpleProgram()

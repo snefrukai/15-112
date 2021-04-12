@@ -2228,6 +2228,34 @@ info
 - collaborative
 - encourage you to finish hw6a before starting hw6b
 
+## 7 bestScrabbleScore(dictionary, letterScores, hand)
+
+def
+
+- takes 3 lists -- dictionary (a list of lowercase words), letterScores (a list of 26 integers), and hand (a list of lowercase characters)
+  - finds the highest-scoring word in the dictionary that can be formed by some arrangement of some set of letters in the hand
+    - some or all, any order
+- try to think of at least two helper functions you could use before writing any code at all
+- do not try to generate all the possible ways to arrange the hand
+  - takes a word and a hand, and tells whether or not that word could be constructed using that hand
+- ["xyz", "zxy", "zzy", "yy", "yx", "wow"]
+  - ['xyz', 'zxy', 'yy', 'yx'] # l_hit
+  - [10,10,10,9]
+  - (['xyz', 'zxy', 'yy'], 10)
+
+step
+
+- get list_anagram of hand
+  - check each word in dict with hand, w helper?
+- loop list_anagram
+  - check score w helper
+- result of highest score
+  - 1 in tuple
+    - (s_word, n_score)
+  - multi in tuple
+    - ([s_word], n_score)
+  - None
+
 ## [Midterm #1](https://www.cs.cmu.edu/~112/notes/midterm1.html)
 
 info
