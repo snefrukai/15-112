@@ -64,6 +64,20 @@ def readFile(path):
         return f.read()
 
 
+def appStarted(app):
+    # app.cx = app.width / 2
+    # app.y_dist = app.height / 4
+
+    app.word_list = readFile('common-words.txt')
+    app.choices = string.ascii_letters
+
+    app.rnd = 0
+    app.win_count = 0
+
+    restart(app)
+    sizeChanged(app)
+
+
 def restart(app):
     app.word = random.choice(app.word_list.splitlines())
     # app.word = 'occur'
@@ -84,23 +98,9 @@ def restart(app):
     app.bonus_mode = False
     app.display_answer = False
     app.stop = False
-    app.elapsed = '0s'
+    app.elapsed = 0
     app.rnd += 1
     app.time_start = time.time()
-
-
-def appStarted(app):
-    # app.cx = app.width / 2
-    # app.y_dist = app.height / 4
-
-    app.word_list = readFile('common-words.txt')
-    app.choices = string.ascii_letters
-
-    app.rnd = 0
-    app.win_count = 0
-
-    restart(app)
-    sizeChanged(app)
 
 
 # ============================================================================ #
@@ -108,60 +108,67 @@ def appStarted(app):
 # ============================================================================ #
 
 
+def bonusMode(app):
+    app.bonus_mode = not app.bonus_mode
+    if app.bonus_mode:
+        print('''[1] you've entered the bonus mode:
+- tracks how many rounds played and won
+- changed time format to minutes and seconds
+        ''')
+    else:
+        print('''[0] you've changed back to the standard mode
+            ''')
+
+
 def mousePressed(app, event):
     if app.stop: restart(app)
     else: app.display_answer = not app.display_answer
 
 
+def input_check(app, key):
+    app.guess_count += 1
+    s_temp = app.word
+
+    if key not in app.choices_temp:
+        app.info = 'You already guessed ' + key + '. Guess again.'
+    elif key in s_temp:
+        while s_temp.find(key) != -1:
+            i = s_temp.find(key)
+            app.guess = app.guess[:i] + key + app.guess[i + 1:]
+            s_temp = s_temp.replace(key, '_', 1)
+        app.info = 'Good job! Keep guessing...'
+        if app.guess == app.word:
+            app.stop = True
+            app.win_count += 1
+            app.info = 'You got it! (press the mouse to restart)'
+    else:
+        app.guess_wrong += key
+
+    app.choices_temp = app.choices_temp.replace(key, '')
+
+
 def keyPressed(app, event):
     app.input = event.key.upper()
-    c = app.input
+    key = app.input
 
-    if c == 'F5': restart(app)
-    elif not app.stop and c in app.choices:
-        app.guess_wrong += c
-        app.guess_count += 1
-        s_temp = app.word
-
-        if c not in app.choices_temp:
-            app.info = 'You already guessed ' + c + '. Guess again.'
-        elif c in s_temp:
-            while s_temp.find(c) != -1:
-                i = s_temp.find(c)
-                app.guess = app.guess[:i] + c + app.guess[i + 1:]
-                s_temp = s_temp.replace(c, '_', 1)
-            app.info = 'Good job! Keep guessing...'
-            if app.guess == app.word:
-                app.stop = True
-                app.win_count += 1
-                app.info = 'You got it! (press the mouse to restart)'
-
-        app.choices_temp = app.choices_temp.replace(c, '')
-    elif c == '!':
-        app.bonus_mode = not app.bonus_mode
-        if app.bonus_mode:
-            # app.elapsed = app.elapsed_2
-            print('''[1] you've entered the bonus mode:
-- tracks how many rounds played and won
-- changed time format to minutes and seconds
-        ''')
-        else:
-            # app.elapsed = app.elapsed_2
-            print('''[0] you've changed back to the standard mode
-            ''')
+    if key == 'F5':
+        restart(app)
+    elif not app.stop and key in app.choices:  # valid input
+        input_check(app, key)
+    elif key == '!':
+        bonusMode(app)
     else:
-        app.info = f'{c} is not a letter!'
+        app.info = f'{key} is not a letter!'
 
 
 def timerFired(app):
     if not app.stop:
         time.sleep(1)
         foo = int(time.time() - app.time_start)
-        if app.bonus_mode: 
-            foo = str(foo // 60) + 'min ' + str(foo % 60)
-        else: 
-            foo = str(foo)
-        app.elapsed = foo + 's'
+        if app.bonus_mode:
+            app.elapsed = str(foo // 60) + 'min ' + str(foo % 60)
+        else:
+            app.elapsed = foo
 
 
 def sizeChanged(app):
@@ -265,7 +272,7 @@ def drawGuessCount(app, canvas):
 def drawElapsedTime(app, canvas):
     canvas.create_text(app.width * 2 / 3,
                        app.y_dist * 3.25,
-                       text=f'Time: {app.elapsed}',
+                       text=f'Time: {app.elapsed}s',
                        font=app.font_3)
 
 
