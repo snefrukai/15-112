@@ -215,6 +215,55 @@ def rc1(s):
 
 
 print(rc1('FEDC'))
+
+# ============================================================================ #
+# Quiz5 Version A
+# ============================================================================ #
+from cmu_112_graphics import *
+
+# def appStarted(app):
+#     appReset(app)
+
+# def appReset(app):
+#     app.cx = app.width / 2
+#     app.cy = app.height / 2
+#     app.r = 50
+#     app.step = 5
+#     app.gameOver = False
+#     app.gamePause = False
+
+# def keyPressed(app, event):
+#     if not app.gameOver:
+#         if event.key == 'p': app.gamePause = not app.gamePause
+#         elif event.key == 's' and not app.gamePause:
+#             if app.step > 0: app.step += 2
+#             elif app.step < 0: app.step -= 2
+
+# def mousePressed(app, event):
+#     foo = ((event.x - app.cx)**2 + (event.y - app.cy)**2)**0.5 <= app.r
+#     if not app.gameOver and not app.gamePause:
+#         if foo: app.r = app.r / 2
+#         else: app.gameOver = True
+
+# def timerFired(app):
+#     if not app.gameOver and not app.gamePause:
+#         if (app.cx > app.width and app.cy > app.height) or (app.cx < 0
+#                                                             and app.cy < 0):
+#             app.step = -app.step
+#         app.cx += app.step
+#         app.cy += app.step
+
+# def redrawAll(app, canvas):
+#     canvas.create_oval(app.cx - app.r,
+#                        app.cy - app.r,
+#                        app.cx + app.r,
+#                        app.cy + app.r,
+#                        fill='red')
+#     if app.gameOver:
+#         canvas.create_text(app.width / 2, app.height / 2, text='Game Over')
+
+# runApp(width=400, height=400)
+
 # ============================================================================ #
 # test
 # ============================================================================ #

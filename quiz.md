@@ -344,3 +344,28 @@ rev
 - 17min
   - not RC1
   - not bonus
+
+## [Quiz5 Version A](https://www.cs.cmu.edu/~112/notes/quiz5a.html)
+
+info
+- 20min
+- may not use LISTS (except implicitly in loops), LIST INDEXING, SETS, DICTIONARIES, or RECURSION
+
+Free Response: Animation [100 points]
+- canvas is square, so app.width == app.height
+- red dot of radius 50
+- moves back-and-forth diagonal
+  - from the top-left to the bottom-right
+  - constant speed, by 5 at each step
+  - start in the middle of the screen, moving towards the bottom-right
+  - change direction each time its center moves off the canvas
+- p
+  - pause
+- s
+  - increase speed by 2
+- click
+  - inside
+    - halved
+  - outside
+    - end
+
