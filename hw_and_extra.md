@@ -2128,6 +2128,37 @@ def
 
 ## [hw6](https://www.cs.cmu.edu/~112/notes/hw6a.html)
 
+info
+
+- covers week5 material. Still, since it is technically hw6, the linter refers to week6.
+
+### destructiveRemoveEvens
+
+def
+
+- possibly-empty list
+  - contains only integers
+- destructively removes all the even integers
+
+step
+
+- .remove
+
+rev
+
+- 就这？……
+- for d 也不能用，背后是按照index来走的
+
+### nondestructiveRemoveEvens
+def
+- nondestructive
+- works the same as the previous function
+- need to build up a new list from scratch
+
+step
+- if not event
+  - add to new list
+
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
 info

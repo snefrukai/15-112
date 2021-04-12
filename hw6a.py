@@ -7,6 +7,7 @@
 
 import cs112_s21_week6_linter
 import math, copy, string
+from icecream import ic
 
 #################################################
 # Helper functions
@@ -390,11 +391,27 @@ from cmu_112_graphics import *
 
 
 def destructiveRemoveEvens(L):
-    return 42
+    # l_even = []
+    # for d in L:
+    #     if d % 2 == 0: l_even += [d]
+    # for d in l_even:
+    #     L.remove(d)
+    # ic(L, l_even)
+
+    i = 0
+    while i < len(L):
+        if L[i] % 2 == 0:
+            L.remove(L[i])
+        else:
+            i += 1
+    # ic(L)
 
 
 def nondestructiveRemoveEvens(L):
-    return 42
+    l_not_even = []
+    for d in L:
+        if d % 2 != 0: l_not_even += [d]
+    return l_not_even
 
 
 def areaOfPolygon(L):
@@ -760,8 +777,8 @@ def testBonusCombinatoricsProblems():
 
 def testAll():
     # comment out the tests you do not wish to run!
-    # testDestructiveRemoveEvens()
-    # testNondestructiveRemoveEvens()
+    testDestructiveRemoveEvens()
+    testNondestructiveRemoveEvens()
     # testAreaOfPolygon()
     # testEvalPolynomial()
     # testMultiplyPolynomials()
