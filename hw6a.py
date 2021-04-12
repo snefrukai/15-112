@@ -446,8 +446,49 @@ def multiplyPolynomials(p1, p2):
     return l
 
 
+def solvesCryptarithm_part(s, nth):
+    # s_new = '' #* old school str
+    # k = 0
+    # while k < nth:
+    #     if '+' not in s and '=' not in 's':
+    #         s_new = s
+    #     for i in range(len(s)):
+    #         if s[i] == '+' or s[i] == '=':
+    #             s_new = s[:i]
+    #             s = s[i + 1:]
+    #             break
+    #     k += 1
+    # s_new = s_new.strip()
+
+    s = s.replace('+', '')  #* list
+    s = s.replace('=', '')
+    l = s.split("  ")
+    s_new = l[nth - 1]
+
+    return s_new
+
+
+def solvesCryptarithm_val(s, solution):
+    s_temp = ''
+    for c in s:
+        s_temp += str(solution.find(c))
+    n = int(s_temp)
+    return n
+
+
 def solvesCryptarithm(puzzle, solution):
-    return 42
+    p1 = solvesCryptarithm_part(puzzle, 1)
+    p2 = solvesCryptarithm_part(puzzle, 2)
+    p3 = solvesCryptarithm_part(puzzle, 3)
+
+    n1 = solvesCryptarithm_val(p1, solution)
+    n2 = solvesCryptarithm_val(p2, solution)
+    n3 = solvesCryptarithm_val(p3, solution)
+
+    # ic(p1, p2, p3)
+    # ic(n1, n2, n3)
+    bool = n1 + n2 == n3
+    return bool
 
 
 def bestScrabbleScore(dictionary, letterScores, hand):
@@ -603,6 +644,12 @@ def testMultiplyPolynomials():
 
 def testSolvesCryptarithm():
     print("Testing solvesCryptarithm()...", end="")
+    # ic(solvesCryptarithm_part("SEND + MORE = MONEY", 1))
+    # ic(solvesCryptarithm_part("SEND + MORE = MONEY", 2))
+    # ic(solvesCryptarithm_part("SEND + MORE = MONEY", 3))
+    # ic(solvesCryptarithm_val("SEND", "OMY--ENDRS"))
+    # ic(solvesCryptarithm("SEND + MORE = MONEY", "OMY--ENDRS"))
+
     assert (solvesCryptarithm("SEND + MORE = MONEY", "OMY--ENDRS") == True)
     # from http://www.cryptarithms.com/default.asp?pg=1
     assert (solvesCryptarithm("NUMBER + NUMBER = PUZZLE",
@@ -808,7 +855,7 @@ def testAll():
     testAreaOfPolygon()
     testEvalPolynomial()
     testMultiplyPolynomials()
-    # testSolvesCryptarithm()
+    testSolvesCryptarithm()
     # testBestScrabbleScore()
 
     # bonus

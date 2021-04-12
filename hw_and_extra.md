@@ -2132,7 +2132,7 @@ info
 
 - covers week5 material. Still, since it is technically hw6, the linter refers to week6.
 
-### destructiveRemoveEvens
+### 1 destructiveRemoveEvens
 
 def
 
@@ -2149,7 +2149,7 @@ rev
 - 就这？……
 - for d 也不能用，背后是按照 index 来走的
 
-### nondestructiveRemoveEvens
+### 2 nondestructiveRemoveEvens
 
 def
 
@@ -2162,7 +2162,7 @@ step
 - if not event
   - add to new list
 
-### areaOfPolygon
+### 3 areaOfPolygon
 
 def
 
@@ -2174,7 +2174,7 @@ step
   - mode when the last i
   - len-1 and i%i
 
-### multiplyPolynomial
+### 5 multiplyPolynomial
 
 def
 
@@ -2203,6 +2203,23 @@ step
   - ...
   - l[1] += p2[1] \* p1[0]
   - l[2] += p2[1] \* p1[1]
+
+### 6 solvesCryptarithm(puzzle, solution)
+
+def
+
+- takes two strings, a puzzle (such as "SEND + MORE = MONEY") and a proposed solution (such as "OMY--ENDRS")
+  - assign 0 to "O", 1 to "M", 2 to "Y", 5 to "E", 6 to "N", 7 to "D", 8 to "R", and 9 to "S"
+  - _9 5 6 7 + 1 0 8 5 = 1 0 6 5 2_
+- return True if substituting the digits from the solution back into the puzzle results in a mathematically correct addition problem
+- do not have to check whether a letter occurs more than once in the proposed solution
+- do have to verify that all the letters in the puzzle occur somewhere in the solution
+
+step
+
+- get each part
+- change to number
+  - according to index in solution
 
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
