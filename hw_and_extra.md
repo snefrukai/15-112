@@ -2159,6 +2159,14 @@ step
 - if not event
   - add to new list
 
+### areaOfPolygon
+def 
+- in the last term, the expression wraps around back to the first vertex again
+
+step
+- for i
+  - mode when the last i
+  - len-1 and i%i
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
 info

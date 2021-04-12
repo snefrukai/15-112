@@ -391,7 +391,7 @@ from cmu_112_graphics import *
 
 
 def destructiveRemoveEvens(L):
-    # l_even = []
+    # l_even = [] #* new list of evens
     # for d in L:
     #     if d % 2 == 0: l_even += [d]
     # for d in l_even:
@@ -415,7 +415,19 @@ def nondestructiveRemoveEvens(L):
 
 
 def areaOfPolygon(L):
-    return 42
+    # n_area = 0 #* no new list
+    # for i in range(len(L)):
+    #     i_next = (i + 1) % len(L)
+    #     n_area += L[i][0] * L[i_next][1] - L[i][1] * L[i_next][0]
+    # n_area = abs(n_area / 2)
+    # return n_area
+
+    l_area = []  #* new list
+    for i in range(len(L)):
+        i_next = (i + 1) % len(L)
+        l_area += L[i][0] * L[i_next][1] - L[i][1] * L[i_next][0],
+    n_area = abs(sum(l_area) / 2)
+    return n_area
 
 
 def evalPolynomial(coeffs, x):
@@ -518,7 +530,8 @@ def _verifyAreaOfPolygonIsNondestructive():
 
 def testAreaOfPolygon():
     print("Testing areaOfPolygon()...", end="")
-    assert (_verifyAreaOfPolygonIsNondestructive())
+    # assert (_verifyAreaOfPolygonIsNondestructive())
+    # ic(areaOfPolygon([(4, 10), (9, 7), (11, 2), (2, 2)]))
     assert (almostEqual(areaOfPolygon([(4, 10), (9, 7), (11, 2), (2, 2)]),
                         45.5))
     assert (almostEqual(areaOfPolygon([(9, 7), (11, 2), (2, 2), (4, 10)]),
@@ -779,7 +792,7 @@ def testAll():
     # comment out the tests you do not wish to run!
     testDestructiveRemoveEvens()
     testNondestructiveRemoveEvens()
-    # testAreaOfPolygon()
+    testAreaOfPolygon()
     # testEvalPolynomial()
     # testMultiplyPolynomials()
     # testSolvesCryptarithm()
