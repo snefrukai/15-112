@@ -30,49 +30,362 @@ def roundHalfUp(d):  #helper-fn
 
 
 # ============================================================================ #
-# Part 2: Case Studies
+#* Part 2: Case Studies
 # ============================================================================ #
 
 # ============================================================================ #
-# Example: Grids
+#* Example: Grids
+
 from cmu_112_graphics import *
 
+# def appStarted(app):  # set margin, row, col, selection
+#     app.margin = 50
+#     app.cols = 8
+#     app.rows = 4
+#     app.selection = (-1, -1)
 
-def appStarted(app):  # set margin, row, col, selection
-    app.margin = 50
-    app.cols = 8
-    app.rows = 4
-    app.selection = (-1, -1)
+#     app.grid_w = int((app.width - app.margin * 2) / app.cols)
+#     app.grid_h = int((app.height - app.margin * 2) / app.rows)
 
-    app.grid_w = int((app.width - app.margin * 2) / app.cols)
-    app.grid_h = int((app.height - app.margin * 2) / app.rows)
+# def mousePressed(app, event):  # select this (row, col) unless it is selected
+#     select_row = int((event.y - app.margin) / app.grid_h)
+#     select_col = int((event.x - app.margin) / app.grid_w)
+#     app.selection = (select_row, select_col)
+#     print(app.selection)
 
-
-def mousePressed(app, event):  # select this (row, col) unless it is selected
-    select_row = int((event.y - app.margin) / app.grid_h)
-    select_col = int((event.x - app.margin) / app.grid_w)
-    app.selection = (select_row, select_col)
-    print(app.selection)
-
-
-def redrawAll(app, canvas):  # draw grid of cells
-    for row in range(app.rows):
-        for col in range(app.cols):
-            x0 = app.margin + app.grid_w * col
-            y0 = app.margin + +app.grid_h * row
-            x1 = x0 + app.grid_w
-            y1 = y0 + app.grid_h
-            fill = "orange" if app.selection == (row, col) else "cyan"
-            canvas.create_rectangle(x0, y0, x1, y1, fill=fill)
-
+# def redrawAll(app, canvas):  # draw grid of cells
+#     for row in range(app.rows):
+#         for col in range(app.cols):
+#             x0 = app.margin + app.grid_w * col
+#             y0 = app.margin + +app.grid_h * row
+#             x1 = x0 + app.grid_w
+#             y1 = y0 + app.grid_h
+#             fill = "orange" if app.selection == (row, col) else "cyan"
+#             canvas.create_rectangle(x0, y0, x1, y1, fill=fill)
 
 # runApp(width=400, height=400)
 
 # ============================================================================ #
-# Optional Example: Pong!
+#* Optional Example: Pong!
+
+# 112_pong.py
+
+# This is a simplified version of Pong, one of the earliest
+# arcade games.  We have kept it simple for learning purposes.
+
+# def appStarted(app):
+#     # This is a Controller
+#     app.waitingForKeyPress = True
+#     resetApp(app)
+
+# def resetApp(app):
+#     # This is a helper function for Controllers
+#     # This initializes most of our model (stored in app.xyz)
+#     # This is called when they start the app, and also after
+#     # the game is over when we restart the app.
+#     app.timerDelay = 50  # milliseconds
+#     app.dotsLeft = 2
+#     app.score = 0
+#     app.paddleX0 = 20
+#     app.paddleX1 = 40
+#     app.paddleY0 = 20
+#     app.paddleY1 = 80
+#     app.margin = 5
+#     app.paddleSpeed = 10
+#     app.dotR = 15
+#     app.gameOver = False
+#     app.paused = False
+#     resetDot(app)
+
+# def resetDot(app):
+#     # This is a helper function for Controllers
+#     # Get the dot ready for the next round.  Move the dot to
+#     # the center of the screen and give it an initial velocity.
+#     app.dotCx = app.width // 2
+#     app.dotCy = app.height // 2
+#     app.dotDx = -10
+#     app.dotDy = -3
+
+# def movePaddle(app, direction):
+#     # This is a helper function for Controllers
+#     # Move the paddle up while keeping it inside the play area
+#     if direction == 'Up':
+#         dy = min(app.paddleSpeed, app.paddleY0 - app.margin)
+#         dy = -dy
+#     elif direction == 'Down':
+#         dy = min(app.paddleSpeed, app.height - app.margin - app.paddleY1)
+#     app.paddleY0 += dy
+#     app.paddleY1 += dy
+
+# def keyPressed(app, event):
+#     # This is a Controller
+#     if app.gameOver:
+#         resetApp(app)
+#     elif app.waitingForKeyPress:
+#         app.waitingForKeyPress = False
+#         app.dotsLeft -= 1
+#     elif (event.key == 'Down' or event.key == 'Up'):
+#         movePaddle(app, event.key)
+#     elif (event.key == 'p'):
+#         app.paused = not app.paused
+#     elif (event.key == 's') and app.paused:
+#         doStep(app)
+
+# def timerFired(app):
+#     # This is a Controller
+#     if (not app.paused): doStep(app)
+
+# def doStep(app):
+#     # This is a helper function for Controllers
+#     # The dot should move only when we are not waiting for
+#     # a key press or in the game-over state
+#     if not app.waitingForKeyPress and not app.gameOver:
+#         moveDot(app)
+
+# def dotWentOffLeftSide(app):
+#     # This is a helper function for Controllers
+#     # Called when the dot went off the left side of the screen,
+#     # so the round is over.  If there are no dots left, then
+#     # the game is over.
+#     if app.dotsLeft == 0:
+#         app.gameOver = True
+#     else:
+#         app.waitingForKeyPress = True
+#         resetDot(app)
+
+# def dotIntersectsPaddle(app):
+#     # This is a helper function for Controllers
+#     # Check if the dot intersects the paddle.  To keep this
+#     # simple here, we will only test that the center of the dot
+#     # is inside the paddle.  We could be more precise here
+#     # (that's an interesting exercise!).
+#     return ((app.paddleX0 <= app.dotCx <= app.paddleX1)
+#             and (app.paddleY0 <= app.dotCy <= app.paddleY1))
+
+# def moveDot(app):
+#     # This is a helper function for Controllers
+#     # Move the dot by the current velocity (dotDx and dotDy).
+#     # Then handle all the special cases:
+#     #  * bounce the dot if it went off the top, right, or bottom
+#     #  * bounce the dot if it went off the paddle
+#     #  * lose the round (or the game) if it went off the left side
+#     app.dotCx += app.dotDx
+#     app.dotCy += app.dotDy
+#     if (app.dotCy + app.dotR >= app.height):
+#         # The dot went off the bottom!
+#         app.dotCy = app.height - app.dotR
+#         app.dotDy = -app.dotDy
+#     elif (app.dotCy - app.dotR <= 0):
+#         # The dot went off the top!
+#         app.dotCy = app.dotR
+#         app.dotDy = -app.dotDy
+#     if (app.dotCx + app.dotR >= app.width):
+#         # The dot went off the right!
+#         app.dotCx = app.width - app.dotR
+#         app.dotDx = -app.dotDx
+#     elif dotIntersectsPaddle(app):
+#         # The dot hit the paddle!
+#         app.score += 1  # hurray!
+#         app.dotDx = -app.dotDx
+#         app.dotCx = app.paddleX1
+#         dToMiddleY = app.dotCy - (app.paddleY0 + app.paddleY1) / 2
+#         dampeningFactor = 3  # smaller = more extreme bounces
+#         app.dotDy = dToMiddleY / dampeningFactor
+#     elif (app.dotCx - app.dotR <= 0):
+#         # The dot went off the left side
+#         dotWentOffLeftSide(app)
+
+# def drawAppInfo(app, canvas):
+#     # This is a helper function for the View
+#     # This draws the title, the score, and the dots left
+#     font = 'Arial 18 bold'
+#     title = '112 Pong!'
+#     canvas.create_text(app.width / 2, 20, text=title, font=font)
+#     canvas.create_text(app.width - 70,
+#                        20,
+#                        text=f'Score: {app.score}',
+#                        font=font)
+#     canvas.create_text(app.width - 70,
+#                        app.height - 20,
+#                        text=f'Dots Left: {app.dotsLeft}',
+#                        font=font)
+
+# def drawPaddle(app, canvas):
+#     # This is a helper function for the View
+#     canvas.create_rectangle(app.paddleX0,
+#                             app.paddleY0,
+#                             app.paddleX1,
+#                             app.paddleY1,
+#                             fill='black')
+
+# def drawDot(app, canvas):
+#     # This is a helper function for the View
+#     cx, cy, r = app.dotCx, app.dotCy, app.dotR
+#     canvas.create_oval(cx - r, cy - r, cx + r, cy + r, fill='black')
+
+# def drawGameOver(app, canvas):
+#     # This is a helper function for the View
+#     canvas.create_text(app.width / 2,
+#                        app.height / 2,
+#                        text='Game Over!',
+#                        font='Arial 18 bold')
+# canvas.create_text(app.width / 2,
+#                        app.height / 2 + 50,
+#                        text='Press any key to restart',
+#                        font='Arial 16 bold')
+
+# def drawPressAnyKey(app, canvas):
+#     # This is a helper function for the View
+#     canvas.create_text(app.width / 2,
+#                        app.height / 2,
+#                        text='Press any key to start!',
+#                        font='Arial 18 bold')
+
+# def redrawAll(app, canvas):
+#     # This is the View
+#     drawAppInfo(app, canvas)
+#     drawPaddle(app, canvas)
+#     if app.gameOver: drawGameOver(app, canvas)
+#     elif app.waitingForKeyPress: drawPressAnyKey(app, canvas)
+#     else: drawDot(app, canvas)
+
+# runApp(width=400, height=300)
+
+# ============================================================================ #
+#* Example: Snake
+
+# import random
+
+# def appStarted(app):
+#     app.rows = 10
+#     app.cols = 10
+#     app.margin = 5  # margin around grid
+#     initSnakeAndFood(app)
+#     app.waitingForFirstKeyPress = True
+
+# def initSnakeAndFood(app):
+#     app.timerDelay = 250
+#     app.snake = [(0, 0)]
+#     app.direction = (0, +1)  # (drow, dcol)
+#     placeFood(app)
+#     app.gameOver = False
+
+# # getCellBounds from grid-demo.py
+# def getCellBounds(app, row, col):
+#     # aka 'modelToView'
+#     # returns (x0, y0, x1, y1) corners/bounding box of given cell in grid
+#     gridWidth = app.width - 2 * app.margin
+#     gridHeight = app.height - 2 * app.margin
+#     x0 = app.margin + gridWidth * col / app.cols
+#     x1 = app.margin + gridWidth * (col + 1) / app.cols
+#     y0 = app.margin + gridHeight * row / app.rows
+#     y1 = app.margin + gridHeight * (row + 1) / app.rows
+#     return (x0, y0, x1, y1)
+
+# def direction_change(app, key):
+#     up, down = (-1, 0), (1, 0)
+#     left, right = (0, -1), (0, 1)
+
+#     #! need to restrain direction of 1 for 1 step
+#     #! delay of app.timerDelay
+#     if (key == 'Up' and app.direction != down):  #* stored as hash table?
+#         app.direction = up
+#     elif (key == 'Down' and app.direction != up):
+#         app.direction = down
+#     elif (key == 'Left' and app.direction != right):
+#         app.direction = left
+#     elif (key == 'Right' and app.direction != left):
+#         app.direction = right
+
+# def keyPressed(app, event):
+#     if (app.waitingForFirstKeyPress):
+#         app.waitingForFirstKeyPress = False
+#     elif (event.key == 'r'):
+#         initSnakeAndFood(app)
+#     elif app.gameOver:
+#         return
+#     elif (event.key in ['Up', 'Down', 'Left', 'Right']):
+#         direction_change(app, event.key)
+#     # elif (event.key == 's'):
+#     # this was only here for debugging, before we turned on the timer
+#     # takeStep(app)
+
+# def timerFired(app):
+#     if app.gameOver or app.waitingForFirstKeyPress: return
+#     takeStep(app)
+
+# def takeStep(app):
+#     (drow, dcol) = app.direction
+#     (headRow, headCol) = app.snake[0]
+#     (newRow, newCol) = (headRow + drow, headCol + dcol)
+#     if ((newRow < 0) or (newRow >= app.rows) or (newCol < 0)
+#             or (newCol >= app.cols) \
+#             or ((newRow, newCol) in app.snake[:-1])): #* can go to poped tail
+#         app.gameOver = True
+#     else:
+#         app.snake.insert(0, (newRow, newCol))
+#         if (app.foodPosition == (newRow, newCol)):
+#             placeFood(app)
+#             app.timerDelay -= 10  #* add speed
+#         else:
+#             # didn't eat, so remove old tail (slither forward)
+#             app.snake.pop()
+
+# def placeFood(app):
+#     # Keep trying random positions until we find one that is not in
+#     # the snake. Note: there are more sophisticated ways to do this.
+#     while True:
+#         row = random.randint(0, app.rows - 1)
+#         col = random.randint(0, app.cols - 1)
+#         if (row, col) not in app.snake:
+#             app.foodPosition = (row, col)
+#             return
+
+# def drawBoard(app, canvas):
+#     for row in range(app.rows):
+#         for col in range(app.cols):
+#             (x0, y0, x1, y1) = getCellBounds(app, row, col)
+#             canvas.create_rectangle(x0, y0, x1, y1, fill='white')
+
+# def drawSnake(app, canvas):
+#     for (row, col) in app.snake:
+#         (x0, y0, x1, y1) = getCellBounds(app, row, col)
+#         fill = 'red' if (row, col) == app.snake[0] else 'blue'
+#         canvas.create_oval(x0, y0, x1, y1, fill=fill)
+
+# def drawFood(app, canvas):
+#     if (app.foodPosition != None):
+#         (row, col) = app.foodPosition
+#         (x0, y0, x1, y1) = getCellBounds(app, row, col)
+#         canvas.create_oval(x0, y0, x1, y1, fill='green')
+
+# def drawGameOver(app, canvas):
+#     if (app.gameOver):
+#         canvas.create_text(app.width / 2,
+#                            app.height / 2,
+#                            text='Game over!',
+#                            font='Arial 26 bold')
+#         canvas.create_text(app.width / 2,
+#                            app.height / 2 + 40,
+#                            text='Press r to restart!',
+#                            font='Arial 26 bold')
+
+# def redrawAll(app, canvas):
+#     if (app.waitingForFirstKeyPress):
+#         canvas.create_text(app.width / 2,
+#                            app.height / 2,
+#                            text='Press any key to start!',
+#                            font='Arial 26 bold')
+#     else:
+#         drawBoard(app, canvas)
+#         drawSnake(app, canvas)
+#         drawFood(app, canvas)
+#         drawGameOver(app, canvas)
+
+# runApp(width=400, height=400)
 
 #################################################
-# hw6-standard functions
+#* hw6-standard functions
 #################################################
 
 
