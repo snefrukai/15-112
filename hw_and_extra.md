@@ -2217,16 +2217,7 @@ def
 
 step
 
-- get each part
-- change to number
-  - according to index in solution
-
-### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
-
-info
-
-- collaborative
-- encourage you to finish hw6a before starting hw6b
+- get each part - change to number - according to index in solution
 
 ## 7 bestScrabbleScore(dictionary, letterScores, hand)
 
@@ -2256,6 +2247,47 @@ step
     - ([s_word], n_score)
   - None
 
+### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
+
+info
+
+- collaborative
+- encourage you to finish hw6a before starting hw6b
+
+step
+
+- show msg default
+- if click is in clickable area
+  - if click is at ends
+    - if saved index is null
+      - skip
+    - elif not null
+      - if saved index is valid
+        - move
+        - change msg
+        - _check win_
+          - if win
+            - pause
+            - change msg
+      - elif not valid
+        - show msg
+        - change msg
+  - elif not at ends
+    - get index of click in len of 3
+    - show selection bg
+    - if indexs includes each ends
+      - change msg
+      - change selection bg
+
+view
+
+- draw board
+- draw selection
+- draw player
+
+rev
+- 多个bool构成的if
+  - 完整写出各个bool的情况，避免位置顺序可能的省略？
 ## [Midterm #1](https://www.cs.cmu.edu/~112/notes/midterm1.html)
 
 info

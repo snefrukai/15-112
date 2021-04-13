@@ -148,8 +148,7 @@ def input_check(app, key):
 
 
 def keyPressed(app, event):
-    app.input = event.key.upper()
-    key = app.input
+    key = event.key.upper()
 
     if key == 'F5':
         restart(app)
