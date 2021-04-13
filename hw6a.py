@@ -7,6 +7,7 @@
 
 import cs112_s21_week6_linter
 import math, copy, string
+import operator
 from icecream import ic
 
 #################################################
@@ -536,14 +537,13 @@ def bestScrabbleScore(dictionary, letterScores, hand):
 
     l_hit = bestScrabbleScore_hit(dictionary, hand)
     if l_hit == []: return None
-
     for d in l_hit:
         l_score += [bestScrabbleScore_score(letterScores, d)]
+
     for i in range(len(l_score)):
         if l_score[i] == max(l_score):
             l_result += [l_hit[i]]
     # ic(l_score, l_result)
-
     if len(l_result) == 1: l_result = "".join(l_result)  # list to str
     l_result = (l_result, max(l_score))
     return l_result
@@ -554,8 +554,78 @@ def bestScrabbleScore(dictionary, letterScores, hand):
 #################################################
 
 
+def runSimpleProgram_int_from_list(l_arg, l_var, val):
+    if val[0].isdigit(): return int(val)
+    else:
+        i = int(val[1:])
+        if val[0] == 'A': return l_arg[i]
+        elif val[0] == 'L': return l_var[i]
+
+
+def runSimpleProgram_type_var(l_arg, l_var, l):
+    i = int(l[0][1:])
+    if len(l) == 2: l_var[i] = int(l[-1])  # easy to forgot format
+    else:  # l[1] in ['+', '-']
+        n1 = runSimpleProgram_int_from_list(l_arg, l_var, l[-2])
+        n2 = runSimpleProgram_int_from_list(l_arg, l_var, l[-1])
+        n2 = n2 if l[1] == '+' else -n2
+        # ic(n1, n2)
+        l_var[i] = n1 + n2
+    return l_var
+
+
+def runSimpleProgram_type_jump(l_arg, l_var, l):
+    if l[0] == 'JMP': bool = True
+    else:  # conditional jump, 尽可能穷尽还是充分即可？
+        n = runSimpleProgram_int_from_list(l_arg, l_var, l[1])
+        op = l[0][-1]
+        if op == '+': bool = True if n > 0 else False
+        elif op == '0': bool = True if n == 0 else False
+    return bool, l[-1]
+
+
 def runSimpleProgram(program, args):
-    return 42
+    l_var_len = 0
+    l_program = program.split("\n")
+    for i in range(len(l_program)):
+        l_program[i] = l_program[i].strip()
+        if l_program[i][0] != '!':  # split sub list
+            l_program[i] = l_program[i].strip().split(" ")
+            for d in l_program[i]:  # get max i of l_var
+                if d[0] == 'L': l_var_len = max(int(d[1:]), l_var_len)
+    l_var = [0] * (l_var_len + 1)
+    # ic(l_program)
+
+    l_arg = [0] * len(args)
+    for i in range(len(args)):
+        l_arg[i] = args[i]
+    # ic(l_arg)
+
+    k = 0
+    jump_bool = False
+    jump_to = ''
+    while k != len(l_program):
+        d = l_program[k]
+        k += 1
+        # ic(d, jump_bool, jump_to)
+        if d[0] == '!':
+            continue
+        elif jump_bool:
+            if jump_to not in d[0]: continue
+            else: jump_bool = False
+        elif d[0][0] == 'L':
+            l_var = runSimpleProgram_type_var(l_arg, l_var, d)
+        elif d[0][:3] == 'JMP':
+            jump_bool, jump_to = runSimpleProgram_type_jump(l_arg, l_var, d)
+            if jump_bool: k = 0  # reset to find target
+        elif d[0][:3] == 'RTN':
+            return runSimpleProgram_int_from_list(l_arg, l_var, d[-1])
+    # ic(d)
+    # ic(l_var)
+
+
+# ============================================================================ #
+#
 
 
 def allSublists(L):
@@ -779,14 +849,52 @@ def testBestScrabbleScore():
     print("Passed!")
 
 
+def test_runSimpleProgram_int_from_list(l_arg, l_var):
+    assert (runSimpleProgram_int_from_list(l_arg, l_var, 'A0') == 5)
+    assert (runSimpleProgram_int_from_list(l_arg, [0, 2, 0, 0], 'L1') == 2)
+    assert (runSimpleProgram_int_from_list(l_arg, [0, 2, 0, 0], '6') == 6)
+
+
+def test_runSimpleProgram_type_var(l_arg, l_var):
+    # L10 - A0 A1
+    assert (runSimpleProgram_type_var(
+        l_arg, [0] * 11, ['L10', '+', 'A0', 'A1']) == [0] * 10 + [11])
+    assert (runSimpleProgram_type_var(
+        l_arg, [0] * 5, ['L0', '-', 'A0', 'A1']) == [-1] + [0] * 4)
+    assert (runSimpleProgram_type_var(
+        l_arg, [0] * 5, ['L2', '-', 'A0', 'A1']) == [0] * 2 + [-1] + [0] * 2)
+    # L1 0
+    assert (runSimpleProgram_type_var(l_arg, [0] * 3, ['L1', 3]) == [0, 3, 0])
+    # L0 + L0 1
+    assert (runSimpleProgram_type_var(l_arg, [0] * 3,
+                                      ['L0', '+', 'L0', '2']) == [2, 0, 0])
+
+
+def test_runSimpleProgram_type_jump(l_arg, l_var):
+    assert (runSimpleProgram_type_jump(l_arg, [1, 1, 0],
+                                       ['JMP', 'loop']) == (True, 'loop'))
+    assert (runSimpleProgram_type_jump(l_arg, [1, 2, 3],
+                                       ['JMP+', 'L0', 'a0']) == (True, 'a0'))
+    assert (runSimpleProgram_type_jump(l_arg, [0, 2, 3],
+                                       ['JMP+', 'L0', 'a0']) == (False, 'a0'))
+
+
 def testRunSimpleProgram():
     print("Testing runSimpleProgram()...", end="")
+    l_var = [0] * 10
+    l_arg = [5, 6, 0, 0]
+    test_runSimpleProgram_int_from_list(l_arg, l_var)
+    test_runSimpleProgram_type_var(l_arg, l_var)
+    test_runSimpleProgram_type_jump(l_arg, l_var)
+
     largest = """! largest: Returns max(A0, A1)
-                   L0 - A0 A1
-                   JMP+ L0 a0
+                   L10 - A0 A1
+                   JMP+ L10 a0
                    RTN A1
                    a0:
+                   ! test comment
                    RTN A0"""
+    # ic(runSimpleProgram(largest, [6, 5]))
     assert (runSimpleProgram(largest, [5, 6]) == 6)
     assert (runSimpleProgram(largest, [6, 5]) == 6)
 
@@ -802,6 +910,7 @@ def testRunSimpleProgram():
                 JMP loop
                 done:
                 RTN L1"""
+    # ic(runSimpleProgram(sumToN, [5]))
     assert (runSimpleProgram(sumToN, [5]) == 1 + 2 + 3 + 4 + 5)
     assert (runSimpleProgram(sumToN, [10]) == 10 * 11 // 2)
     print("Passed!")
@@ -923,7 +1032,7 @@ def testAll():
     testBestScrabbleScore()
 
     # bonus
-    # testRunSimpleProgram()
+    testRunSimpleProgram()
     # testBonusCombinatoricsProblems()
     pass
 

@@ -2245,7 +2245,55 @@ step
     - (s_word, n_score)
   - multi in tuple
     - ([s_word], n_score)
-  - None
+  - N
+
+### 8 Bonus / Optional: runSimpleProgram(program, args)
+
+def
+
+- write a so-called interpreter
+  - keep track of the local variables
+  - move line-by-line through the program
+  - simulating the execution of the line
+- useful to keep track of the current line number
+- infinite runs until hit a RTN statement
+- may solve this how you wish
+  - we used strip, split, and splitlines in sample solution
+- build your function incrementally
+  - starting with the simplest test cases you can think up
+  - add more test cases as you implement more of the language
+
+legal expressions
+
+- [Non-negative Integer]
+- A[N]
+- L[N]
+- [operator] [operand1] [operand2]
+
+legal statements
+
+- ! comment
+- L[N] [expr]
+- [label]:
+- JMP [label]
+- JMP+ [expr] [label]
+- JMP0 [expr] [label]
+- RTN [expr]
+
+helper
+- translate
+  - str to val in l_arg or l_var
+- get type of line
+
+step
+- split str
+  - sublist in list
+  - exclude comment
+  - ['c', l1, l2, 'c', l3]
+- *scan max index of l_var
+- if local var
+  - 
+
 
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
@@ -2286,8 +2334,10 @@ view
 - draw player
 
 rev
-- 多个bool构成的if
-  - 完整写出各个bool的情况，避免位置顺序可能的省略？
+
+- 多个 bool 构成的 if
+  - 完整写出各个 bool 的情况，避免位置顺序可能的省略？
+
 ## [Midterm #1](https://www.cs.cmu.edu/~112/notes/midterm1.html)
 
 info
