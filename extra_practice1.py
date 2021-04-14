@@ -154,54 +154,41 @@ def isEvenPositiveInt(x):
         return False
 
 
-def nthFibonacciNumber(n):
-    Phi = (1 + math.sqrt(5)) / 2
+def nthFibonacciNumber(nth):
+    Phi = (1 + 5**0.5) / 2  # Binet's Fibonacci Number Formula
     #Binet = ((1+math.sqrt(5))**n-(1-math.sqrt(5))**n)/(2**n*math.sqrt(5))
-    n += 1
-    Binet = (Phi**n - (-Phi)**-n) / math.sqrt(5)
-    Binet = math.floor(Binet)
+    nth += 1
+    Binet = int((Phi**nth - (-Phi)**-nth) / 5**0.5)
     return Binet
 
 
 def isPerfectSquare(n):
-    if type(n) != int or n < 0:
-        return False
-    foo = math.sqrt(n)
-    #bar = int(foo)-foo
-    bar = math.ceil(foo) - math.floor(foo)
-    if bar == 0:
-        return True
-    else:
-        return False
+    if type(n) != int or n < 0: return False
+    root = n**0.5
+    return root == int(root)
+    # return math.ceil(root) - math.floor(root) == 0
 
 
 def nearestOdd(n):
-    foo = math.floor(n)
-    bar = math.ceil(n)
-    #print(n, end=": ")
-    if n % 2 == 0:
-        n = n - 1
-    if foo % 2 != 0:
-        n = foo
-    if bar % 2 != 0:
-        n = bar
+    floor = math.floor(n)  # 3.5, 4.5
+    ceil = math.ceil(n)
+    if n % 2 == 0: n -= 1
+    elif floor % 2 != 0: n = floor
+    elif ceil % 2 != 0: n = ceil
     #print(foo, bar)
     return n
 
 
-def getKthDigit(n, k):
+def getKthDigit(n, kth):
     n = abs(n)
-    return n // 10**k % 10
+    return (abs(n) // 10**kth) % 10
 
 
 def setKthDigit(n, k, d):
-    negative = n < 0
-    n = abs(n)
-    rem = getKthDigit(n, k) * 10**k
-    foo = d * 10**k + n - rem
-    if negative:
-        foo = -foo
-    return foo
+    n_temp = abs(n)
+    rem = getKthDigit(n_temp, k) * 10**k
+    n_new = d * 10**k + n_temp - rem
+    return n_new if n >= 0 else -n_new
 
 
 #################################################
