@@ -2219,7 +2219,7 @@ step
 
 - get each part - change to number - according to index in solution
 
-## 7 bestScrabbleScore(dictionary, letterScores, hand)
+### 7 bestScrabbleScore(dictionary, letterScores, hand)
 
 def
 
@@ -2281,19 +2281,63 @@ legal statements
 - RTN [expr]
 
 helper
+
 - translate
   - str to val in l_arg or l_var
 - get type of line
 
 step
+
 - split str
   - sublist in list
   - exclude comment
   - ['c', l1, l2, 'c', l3]
-- *scan max index of l_var
+- \*scan max index of l_var
 - if local var
-  - 
 
+### 9 Bonus / Optional: Solving Puzzles with Combinatoric Generatorsd
+
+#### allSublists
+
+def
+
+- example
+  - we are constructing an enormous list of values
+  - Python must build the whole list before we can use any of it
+- generator
+  - yield
+    - Python stops running the function at that point,
+    - uses the yielded value,
+    - then starts the function right where it left off to get the next yielded value
+  - never creates the list, it just creates one value of the list at a time
+- numb of sublists
+  - [], [3], [3, 5], [5]
+    - 2 + 2\*1
+  - [], [6], [6, 7], [6, 7, 8], [6, 8], [7], [7, 8], [8]
+    - 2 + 3*1 + 3*1
+- allSublists(L)
+  - L = [3,5]
+    - []
+      - k = 0 (0)
+    - [5]
+      - _[0,5]_
+        - how to return len of 2
+      - k = 1 (1)
+    - [3]
+      - [3,0]
+      - k = 10 (2)
+    - [3,5]
+      - k = 11 (3)
+
+step
+
+- for d in k(as binary):
+  - if d == 1 - add to l_result
+    rev
+- debug 了半天
+  - 大逻辑没错，format 错了
+  - l_temp.insert(0, L[-1 - kth])
+    - l_temp += L[kth]
 
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
@@ -2337,11 +2381,3 @@ rev
 
 - 多个 bool 构成的 if
   - 完整写出各个 bool 的情况，避免位置顺序可能的省略？
-
-## [Midterm #1](https://www.cs.cmu.edu/~112/notes/midterm1.html)
-
-info
-
-- 80 minutes TOTAL
-  - recommend <= 30 minutes on part 1
-  - once in part 2, may not return to part 1

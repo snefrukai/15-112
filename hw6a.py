@@ -699,8 +699,46 @@ def runSimpleProgram(program, args):
 #
 
 
+def getKthBinaryDigit_2(N, n, kth):
+    l_bin = [0] * N
+    for i in range(len(l_bin)):  # format n into binary
+        expo_of_2 = 2**(len(l_bin) - 1 - i)
+        if n >= expo_of_2:
+            l_bin[i] = 1
+            n -= expo_of_2
+    if kth < len(l_bin): return l_bin[kth]
+
+
+def getKthBinaryDigit(n, kth):
+    N = 1
+    while 2**N <= n:
+        N += 1
+    l_bin = [0] * N
+
+    for i in range(len(l_bin)):  # format n into binary
+        expo_of_2 = 2**(len(l_bin) - 1 - i)
+        # ic(n, expo_of_2)
+        if n >= expo_of_2:
+            l_bin[i] = 1
+            n -= expo_of_2
+    # ic(l_bin)
+    if kth < len(l_bin): return l_bin[len(l_bin) - 1 - kth]
+
+
 def allSublists(L):
-    return 42
+    # l_temp = [0] * N
+    N = len(L)
+    k = 0
+    while k <= 2**N - 1:
+        l_temp = []
+        for kth in range(N):
+            if getKthBinaryDigit(k, kth) == 1:
+                l_temp.insert(0, L[-1 - kth])  # from right to left
+                # l_temp += [L[kth]]
+                # l_temp[kth] = 1
+        # ic(k, l_temp)
+        k += 1
+        yield l_temp
 
 
 def solveSubsetSum(L):
@@ -987,8 +1025,32 @@ def testRunSimpleProgram():
     print("Passed!")
 
 
+# ============================================================================ #
+#
+
+
+def test_getKthBinaryDigit_2():
+    assert (getKthBinaryDigit_2(4, 13, 1)) == 1  # 1101, [5,6,7,8]
+    assert (getKthBinaryDigit_2(4, 13, 2)) == 0
+    assert (getKthBinaryDigit_2(5, 16, 0)) == 1  # 10000
+    assert (getKthBinaryDigit_2(5, 16, 1)) == 0
+
+
+def test_getKthBinaryDigit():
+    assert (getKthBinaryDigit(0, 0)) == 0  # 0
+    assert (getKthBinaryDigit(1, 0)) == 1  # 1
+    assert (getKthBinaryDigit(2, 0)) == 0  # 10
+    assert (getKthBinaryDigit(2, 1)) == 1  # 10
+    assert (getKthBinaryDigit(2, 2)) == None  # 10
+
+
 def testAllSublists():
     print('  Testing allSublists()...', end='')
+
+    test_getKthBinaryDigit_2()
+    test_getKthBinaryDigit()
+
+    # ic(allSublists([3, 5]))
 
     def f():
         yield 42
@@ -1079,11 +1141,12 @@ COLT + GOAT = ORCA
 
 def testBonusCombinatoricsProblems():
     print('Testing bonus combinatorics problems...')
+
     testAllSublists()
-    testSolveSubsetSum()
-    testHeapsAlgorithmForPermutations()
-    testSolveCryptarithmWithMaxDigit()
-    testGetAllSingletonCryptarithmsWithMaxDigit()
+    # testSolveSubsetSum()
+    # testHeapsAlgorithmForPermutations()
+    # testSolveCryptarithmWithMaxDigit()
+    # testGetAllSingletonCryptarithmsWithMaxDigit()
     print('Passed!')
 
 
@@ -1104,7 +1167,7 @@ def testAll():
 
     # bonus
     testRunSimpleProgram()
-    # testBonusCombinatoricsProblems()
+    testBonusCombinatoricsProblems()
     pass
 
 
