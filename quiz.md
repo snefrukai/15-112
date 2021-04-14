@@ -348,10 +348,12 @@ rev
 ## [Quiz5 Version A](https://www.cs.cmu.edu/~112/notes/quiz5a.html)
 
 info
+
 - 20min
 - may not use LISTS (except implicitly in loops), LIST INDEXING, SETS, DICTIONARIES, or RECURSION
 
 Free Response: Animation [100 points]
+
 - canvas is square, so app.width == app.height
 - red dot of radius 50
 - moves back-and-forth diagonal
@@ -369,3 +371,187 @@ Free Response: Animation [100 points]
   - outside
     - end
 
+## [Midterm #1](https://www.cs.cmu.edu/~112/notes/midterm1.html)
+
+[info](https://www.cs.cmu.edu/~112/notes/midterm1-frontmatter.html)
+
+- **80 minutes** TOTAL
+  - recommend <= 30 minutes on part 1
+  - once in part 2, may not return to part 1
+
+### [Version A](https://www.cs.cmu.edu/~112/notes/midterm1a.html)
+
+#### p1
+
+CT1
+
+- idk ord
+- so ord('A') == 65
+- s = 'about baccarat wins!'
+- r, n = '', 0
+- for t in s.upper().split(' ') #
+  - 'ABOUT'
+    - n = 0+1 =1
+    - c = char(65+1) = 'B'
+    - r = ''+'B1' = 'B1'
+  - 'BACCARAT'
+    - n = 1+1 =2
+    - c = 'C'
+    - r = 'B1'+'C2'
+  - 'WINS!'
+    - n = 3
+    - c = 'D'
+    - r = 'B1C2'+'D0'
+
+print
+
+- 'B1C2D0'
+
+CT2
+
+- L = [2,3,3,2,5,3]
+  - len = 6
+- M = []
+- i, j
+  - ~~0, 0
+    - L[0] == L[0]
+    - M = [0]~~
+  - 1, 0
+    - L[1] != L[0]
+  - ~~1, 1
+    - L[1] = L[1]
+    - apend 10\*1+1
+    - M = [0,11]~~
+  - 2, 0
+    - L[2] != L[0]
+  - 2, 1
+    - L[2] == L[1]
+    - apend 10\*2+1
+    - M = [21]
+  - ~~2, 2
+    - L[2] == L[2]
+    - apend 10\*2+2
+    - M = [0,11,21,22]~~
+  - 3, 0
+    - L[3] == L[0]
+    - _ap 10\*3+0_
+    - M = [2,31]
+  - 3, 2
+    - l[3] != L[2]
+  - 4, 0
+    - L4 != L0
+  - 4, 1
+  - ...
+  - L[4] != any
+  - 5, 1
+  - l5 == l1
+    - _ap 10\*5+1_
+  - l5 == l2
+    - _ap 10\*5+2_
+- M = [21,30,51,52]
+- return [30,51,52,21]
+
+CT3
+
+- L = [3,1,2]
+- M = sorted(L) = [1,2,3] # nondes
+- N = L # alias
+- M.append(L.pop(0))
+  - L = [1,2]
+  - N = [1,2]
+  - M = ~~[1,2,3,1,2]~~ [1,2,3,3] # 加一位的运算怎么都错了
+- N.append(M.pop(0))
+  - M = ~~[2,3,1,2]~~ [2,3,3]
+  - N = L = ~~[1,2,2,3,1,2] ~~ [1,2,1]
+  - N = N[:2] = [1,2]
+
+print
+
+- ~~[1,2,2,3,1,2]~~ [1,2,1]
+- ~~[2,3,1,2]~~ [2,3,3]
+- [1,2]
+
+CT4
+
+- b = A(x=0, s='')
+- for a in M
+  - A(x=3,s='a')
+    - b.x = 0+3 = 3
+  - A(x=1,s='bc')
+    - b.s = ''+'bc'[0] = 'b'
+  - A(x=4,s='de')
+    - b.x = 3+4 = 7
+  - A(x=2,s='f')
+  - b.s = 'b'+'d' = 'bf'
+
+print
+
+- [b.x, b.s]
+- [7,'bf']
+
+SA1
+
+- M = L
+
+SA2
+
+- L.append adds one value and L.extend adds a list of values
+
+SA3
+
+- M is equal to L, only with the value 5 nondestructively inserted at index 3 (so L is unchanged).
+- len(L)>3
+- M = ~~L[:].insert(3, 5)~~
+  - rtn None
+- M = L[:3] + [5] + L[3:]
+
+SA4
+
+- refers to a singleton (length 1) tuple containing just the value 42
+- T = (42,)
+- or T = 42,
+
+SA5
+
+- contains the list of the squares of the values in L, which you may assume is a list of integers
+- M = [i**2 for i in L]
+
+SA6
+indicate if they are part of the Model, the View, or a Controller
+
+- timerFired(app)
+  - C
+- takeStep(app)
+  - C
+- drawGameOver(app)
+  - V
+- app.foodPosition
+  - M
+- placeFood(app)
+  - C
+
+#### p2
+
+Free Response: nthSortOfSquarish(n)
+
+def
+
+- cannot use strings
+- lists are ok
+- isPerfectSquare(n), isSortOfSquarish(n), and nthSortOfSquarish(n)
+  - isSortOfSquarish(n) you might want to make a list containing the individual digits in n
+
+#### p3
+
+BonusCT1
+
+- eval(str(list(range(n)))[1:-1].replace(', ' , '-(')+(n-1)\*')')
+- WTF...
+
+#### rev
+
+- 80min at FR2, w/o line func
+  - which takes 17 more mins
+- 薄弱点
+  - CT's tracing
+  - FR's complicated trigger

@@ -1,7 +1,10 @@
 import math
 from icecream import ic
+from cmu_112_graphics import *
+import time
+
 # ============================================================================ #
-# quiz 1
+#* quiz1
 # ============================================================================ #
 
 
@@ -77,7 +80,7 @@ def ct3(x):
 #1 / 0
 
 # ============================================================================ #
-# quiz2
+#* quiz2
 # ============================================================================ #
 
 
@@ -160,7 +163,7 @@ def nthSnarfPrime(n):
 
 
 # ============================================================================ #
-# quiz 3
+#* quiz3
 # ============================================================================ #
 def averageGrade(student, gradebook):
     student = student.lower()
@@ -217,9 +220,10 @@ def rc1(s):
 print(rc1('FEDC'))
 
 # ============================================================================ #
-# Quiz5 Version A
+#* Quiz5 Version A
 # ============================================================================ #
-from cmu_112_graphics import *
+
+# from cmu_112_graphics import *
 
 # def appStarted(app):
 #     appReset(app)
@@ -265,7 +269,100 @@ from cmu_112_graphics import *
 # runApp(width=400, height=400)
 
 # ============================================================================ #
-# test
+# *midterm1a
+# ============================================================================ #
+
+
+def isPerfectSquare(n):
+    foo = n**0.5
+    return foo == int(foo)
+
+
+def contain_zero(n):
+    # while n > 0:
+    #     if n % 10 == 0: return True
+    #     n = n // 10
+
+    # ic(n, n % 10 == 0)
+    if n < 10: return False # recur test
+    elif n % 10 == 0: return True
+    else: return contain_zero(n // 10)
+
+
+def isSortOfSquarish(n):
+    if n <= 0 or isPerfectSquare(n) or contain_zero(n): return False
+
+    l = []
+    while n > 0:
+        l += [n % 10]
+        n //= 10
+    l = sorted(l)
+
+    n_temp = 0
+    for i in range(len(l)):
+        n_temp += l[i] * 10**(len(l) - 1 - i)
+    # ic(n_temp)
+
+    if isPerfectSquare(n_temp): return True
+    else: return False
+
+
+def nthSortOfSquarish(nth):
+    l = []
+    n = 0
+    while len(l) - 1 < nth:
+        if isSortOfSquarish(n): l += [n]
+        n += 1
+    # ic(l)
+    return l[nth]
+
+
+# ============================================================================ #
+# Free Response: animation
+
+# def appStarted(app):
+#     appReset(app)
+
+# def appReset(app):
+#     app.l_dot = []
+#     app.time_start = time.time()
+#     app.line_i = None
+
+# def nearestDot(app, cx, cy):
+#     l_dist = []
+#     if len(app.l_dot) > 1:
+#         for (x, y) in app.l_dot:
+#             l_dist += [((cx - x)**2 + (cy - y)**2)**0.5]
+#         l_dist = l_dist[:-1]
+#         app.line_i = l_dist.index(min(l_dist))
+#         # ic(app.l_dot, app.line_i)
+
+# def mousePressed(app, event):
+#     app.cx = event.x
+#     app.cy = event.y
+#     app.l_dot += [(event.x, event.y)]
+#     nearestDot(app, event.x, event.y)
+
+# def timerFired(app):
+#     # print(time.time() - app.time_start)
+#     if time.time() - app.time_start > 5: appReset(app)
+
+# def keyPressed(app, event):
+#     if event.key == 'r': appReset(app)
+
+# def redrawAll(app, canvas):
+#     r = 20
+#     for (x, y) in app.l_dot:
+#         canvas.create_oval(x - r, y - r, x + r, y + r, fill='green')
+
+#     if app.line_i != None:
+#         line = app.l_dot[app.line_i]
+#         canvas.create_line(app.cx, app.cy, line[0], line[1], width=1)
+
+# runApp(width=500, height=500)
+
+# ============================================================================ #
+#* test
 # ============================================================================ #
 
 
@@ -307,6 +404,10 @@ def test_alternatesEvenOdd():
     assert (alternatesEvenOdd(692) == True)
 
 
+# ============================================================================ #
+#
+
+
 def test_snarf_prime_digit():
     # print('test_snarf_prime_digit ', end='')
     # print(snarf_prime_digit(984))
@@ -336,6 +437,10 @@ def testNthSnarfPrime():
     # print('Passed!')
 
 
+# ============================================================================ #
+#
+
+
 def tes_averageGrade():
     gradebook = '''\
 dan,80,78,--
@@ -351,19 +456,71 @@ sue,--,--,--'''
     assert (averageGrade('DAN', gradebook) == 79)
 
 
+# ============================================================================ #
+# midterm1a
+
+
+def testIsPerfectSquare():
+    # print('Testing isPerfectSquare(n))...', end='')
+    assert (isPerfectSquare(4) == True)
+    assert (isPerfectSquare(9) == True)
+    assert (isPerfectSquare(10) == False)
+    assert (isPerfectSquare(225) == True)
+    assert (isPerfectSquare(1225) == True)
+    assert (isPerfectSquare(1226) == False)
+    # print('Passed')
+
+
+def testIsSortOfSquarish():
+    # print('Testing isSortOfSquarish(n))...', end='')
+    # ic(contain_zero(1204))
+    assert contain_zero(12034) == True
+    # ic(isSortOfSquarish(414))  # 144
+
+    assert (isSortOfSquarish(52) == True)
+    assert (isSortOfSquarish(16) == False)
+    assert (isSortOfSquarish(502) == False)
+    assert (isSortOfSquarish(414) == True)
+    assert (isSortOfSquarish(5221) == True)
+    assert (isSortOfSquarish(6221) == False)
+    assert (isSortOfSquarish(-52) == False)
+    # print('Passed')
+
+
+def testNthSortOfSquarish():
+    # print('Testing nthSortOfSquarish()...', end='')
+    # ic(nthSortOfSquarish(8))
+    assert (nthSortOfSquarish(0) == 52)
+    assert (nthSortOfSquarish(1) == 61)
+    assert (nthSortOfSquarish(2) == 63)
+    assert (nthSortOfSquarish(3) == 94)
+    assert (nthSortOfSquarish(4) == 252)
+    assert (nthSortOfSquarish(8) == 522)
+    # print('Passed')
+
+
+# ============================================================================ #
+#
+
+
 def test_all():
-    # quiz 1
+    # quiz1
     test_integerSquareRoot()
     test_alternatesEvenOdd()
 
-    # quiz 2
+    # quiz2
     test_snarf_prime_digit()
     test_isPrime()
     testNthSnarfPrime()
     # print(rc1(1202))
 
-    # quiz 3
+    # quiz3
     tes_averageGrade()
+
+    # midterm1a
+    testIsPerfectSquare()
+    testIsSortOfSquarish()
+    testNthSortOfSquarish()
 
 
 test_all()
