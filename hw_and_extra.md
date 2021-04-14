@@ -2302,42 +2302,168 @@ step
 def
 
 - example
-  - we are constructing an enormous list of values
-  - Python must build the whole list before we can use any of it
-- generator
-  - yield
-    - Python stops running the function at that point,
-    - uses the yielded value,
-    - then starts the function right where it left off to get the next yielded value
+  - Python must build the whole enormous list before we can use any of it
+- generator, yield
+  - Python stops running the function at that point,
+  - uses the yielded value,
   - never creates the list, it just creates one value of the list at a time
 - numb of sublists
   - [], [3], [3, 5], [5]
     - 2 + 2\*1
   - [], [6], [6, 7], [6, 7, 8], [6, 8], [7], [7, 8], [8]
     - 2 + 3*1 + 3*1
-- allSublists(L)
-  - L = [3,5]
-    - []
-      - k = 0 (0)
-    - [5]
-      - _[0,5]_
-        - how to return len of 2
-      - k = 1 (1)
-    - [3]
-      - [3,0]
-      - k = 10 (2)
-    - [3,5]
-      - k = 11 (3)
+- allSublists(L) # [3,5]
+  - []
+    - k = 0 (0)
+  - [5]
+    - _[0,5]_
+      - how to return len of 2
+    - k = 1 (1)
+  - [3]
+    - [3,0]
+    - k = 10 (2)
+  - [3,5]
+    - k = 11 (3)
 
 step
 
 - for d in k(as binary):
   - if d == 1 - add to l_result
-    rev
+
+rev
+
 - debug 了半天
   - 大逻辑没错，format 错了
   - l_temp.insert(0, L[-1 - kth])
     - l_temp += L[kth]
+
+#### heapsAlgorithmForPermutations
+
+def
+
+- the iterative (non-recursive) form of [Heap's Algorithm](https://en.wikipedia.org/wiki/Heap%27s_algorithm)
+- n = 3
+- c = [0,0,0]
+- A = [3,1,2]
+-
+- i = 0
+  - c[0] == 0
+  - i = 0+1
+- i = 1
+  - c[1] == 0, < i
+    - i is _odd_
+    - swap A[c[1]],A[1]
+    - _output [1,3,2]_ # round1
+    - c[1] = 0+1
+    - _c = [0,1,0]_ # pass c[1]
+    - i = 0
+-
+- i = 0
+  - c[0] == 0
+  - i = 0+1
+- i = 1
+  - c[1] == 1 # pass
+  - c[1] = 0
+  - _c = [0,0,0]_
+  - i = 1+1
+- i = 2
+  - c[2] == 0, < i
+  - i is _even_
+  - swap A[0],A[2]
+  - _output [2,3,1]_ # round2
+  - c[2] = 0+1
+  - _c = [0,0,1]_
+  - i = 0
+-
+- i = 0
+  - c[0] == 0
+  - i = 0+1
+- i = 1
+  - c[1] == 0, < i
+  - i is _odd_
+  - swap A[c[1]],A[1]
+  - _output [3,2,1]_ # round2
+  - c[1] = 0+1
+  - _c = [0,1,1]_
+  - i = 0
+-
+- i = 0
+  - c[0] == 0
+  - i = 0+1
+- i = 1
+  - c[1] == 1
+  - c[1] = 0
+  - _c = [0,0,1]_
+  - i = 1+1
+- i = 2
+  - c[2] == 1, < i
+  - i is _even_
+  - swap A[0],A[2]
+  - _output [1,2,3]_
+  - c[2] = 1+1
+  - _c = [0,0,2]_
+  - i = 0
+-
+- i = 0
+  - c[0] == 0
+- i = 1
+  - c[1] == 0, < i
+  - i is _ood_
+  - swap A[c[1]],A[1]
+  - _output [2,1,3]_
+  - c[1] = 0+1
+  - _c = [0,1,2]_
+  - i = 0
+-
+- i = 0
+  - c[0] == 0
+- i = 1
+  - c[1] == 1
+  - c[1] = 0
+  - _c = [0,0,2]_
+- i = 2
+  - c[2] == 2
+  - c[2] = 0
+  - _c = [0,0,0]_
+  - i = 2+1
+- i = 3, end while
+
+result
+
+```
+A = [3,1,2]
+ic| c: [0, 0, 0]
+ic| A: [1, 3, 2]
+ic| c: [0, 1, 0]
+ic| c: [0, 1, 0]
+ic| c: [0, 0, 0]
+ic| A: [2, 3, 1]
+ic| c: [0, 0, 1]
+ic| c: [0, 0, 1]
+ic| A: [3, 2, 1]
+ic| c: [0, 1, 1]
+ic| c: [0, 1, 1]
+ic| c: [0, 0, 1]
+ic| A: [1, 2, 3]
+ic| c: [0, 0, 2]
+ic| c: [0, 0, 2]
+ic| A: [2, 1, 3]
+ic| c: [0, 1, 2]
+ic| c: [0, 1, 2]
+ic| c: [0, 0, 2]
+ic| c: [0, 0, 0]
+```
+
+rev
+
+- well，看懂 pseudo 的逻辑后把它翻译出来倒不难
+  - 但还是没清楚原理。超出了目前的理解能力
+
+ref
+
+- http://ruslanledesma.com/2016/06/17/why-does-heap-work.html
+- https://www.geeksforgeeks.org/heaps-algorithm-for-generating-permutations/
+- https://stackoverflow.com/questions/31425531/heaps-algorithm-for-permutations
 
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
