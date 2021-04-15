@@ -2465,6 +2465,21 @@ ref
 - https://www.geeksforgeeks.org/heaps-algorithm-for-generating-permutations/
 - https://stackoverflow.com/questions/31425531/heaps-algorithm-for-permutations
 
+#### Solving cryptarithms
+
+def
+
+- find the solution that solves a cryptarithm
+  - SEND + MORE = MONEY
+- unique letters in the 3 words
+  - SENDMORY
+- len of 10 with dashes, indexing to [0,9]
+  - SENDMORY--
+- generate every possible permutation of the string
+  - check each one in turn to see if it does in fact solve the puzzle
+  - if, rtn it
+  - elif none, rtn None
+
 ### [hw6b](https://www.cs.cmu.edu/~112/notes/hw6b.html)
 
 info

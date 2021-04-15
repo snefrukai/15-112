@@ -557,6 +557,7 @@ def solvesCryptarithm_part(s, nth):
 def solvesCryptarithm_val(s, solution):
     s_temp = ''
     for c in s:
+        if c not in solution: return False
         s_temp += str(solution.find(c))
     n = int(s_temp)
     return n
@@ -571,6 +572,7 @@ def solvesCryptarithm(puzzle, solution):
     n2 = solvesCryptarithm_val(p2, solution)
     n3 = solvesCryptarithm_val(p3, solution)
 
+    if False in [n1, n2, n3]: return False
     # ic(p1, p2, p3)
     # ic(n1, n2, n3)
     bool = n1 + n2 == n3
@@ -604,20 +606,19 @@ def bestScrabbleScore_score(letterScores, word):
 
 
 def bestScrabbleScore(dictionary, letterScores, hand):
-    l_score, l_result = [], []
+    l_score, l = [], []
 
     l_hit = bestScrabbleScore_hit(dictionary, hand)
     if l_hit == []: return None
     for d in l_hit:
         l_score += [bestScrabbleScore_score(letterScores, d)]
-
     for i in range(len(l_score)):
         if l_score[i] == max(l_score):
-            l_result += [l_hit[i]]
+            l += [l_hit[i]]
     # ic(l_score, l_result)
-    if len(l_result) == 1: l_result = "".join(l_result)  # list to str
-    l_result = (l_result, max(l_score))
-    return l_result
+    if len(l) == 1: l = "".join(l)  # list to str
+    l = (l, max(l_score))
+    return l
 
 
 #################################################
@@ -756,28 +757,60 @@ def heapsAlgorithmForPermutations(L):
     c = [0] * n
     A = L
     yield copy.copy(A)
-
     i = 0
     while i < n:
         if c[i] < i:
             k = 0 if i % 2 == 0 else c[i]
             A[k], A[i] = A[i], A[k]
             yield copy.copy(A)
-            ic(A)
+            # ic(A)
             c[i] += 1
             i = 0
         else:
             c[i] = 0
             i += 1
-        ic(c)
+        # ic(c)
+
+
+def solveCryptarithm_get_test_obj(puzzle, maxDigit):
+    l = puzzle.split(' ')
+    s = ''
+    for v in l:
+        for i in range(len(v)):
+            c = v[i]
+            if c.isalpha() and c not in s:
+                s += c
+    if (maxDigit + 1) - len(s) > 0:
+        s += '-' * ((maxDigit + 1) - len(s))
+    else:
+        s = s[:maxDigit + 1]
+    # ic(s_temp)
+    return s
 
 
 def formatCryptarithmSolution(puzzle, solution):
-    return 42
+    s = puzzle + '\n'
+    for c in puzzle:
+        s += str(solution.find(c)) if c in solution else c  # format 2nd line
+    return s
 
 
 def solveCryptarithmWithMaxDigit(puzzle, maxDigit):
-    return 42
+    l_obj = list(solveCryptarithm_get_test_obj(puzzle, maxDigit))
+    l_permutation = heapsAlgorithmForPermutations(l_obj)
+    # ic(next(l_soln))
+
+    s_hit = ''
+    for l in l_permutation:
+        s_test = "".join(l)
+        # s_test += '-' * (10 - (maxDigit + 1))
+        # ic(s_test)
+        if solvesCryptarithm(puzzle, s_test):
+            s_hit = s_test
+            break
+
+    if s_hit == '': return None
+    else: return formatCryptarithmSolution(puzzle, s_hit)
 
 
 def countCryptarithmsWithMaxDigit(puzzle, maxDigit):
@@ -903,9 +936,11 @@ def testSolvesCryptarithm():
     # ic(solvesCryptarithm_part("SEND + MORE = MONEY", 2))
     # ic(solvesCryptarithm_part("SEND + MORE = MONEY", 3))
     # ic(solvesCryptarithm_val("SEND", "OMY--ENDRS"))
+    # ic(solvesCryptarithm_val("SEND", "OMY--"))
     # ic(solvesCryptarithm("SEND + MORE = MONEY", "OMY--ENDRS"))
 
     assert (solvesCryptarithm("SEND + MORE = MONEY", "OMY--ENDRS") == True)
+    assert (solvesCryptarithm("RAM + RAT = ANT", "MRATN-----") == True)
     # from http://www.cryptarithms.com/default.asp?pg=1
     assert (solvesCryptarithm("NUMBER + NUMBER = PUZZLE",
                               "UMNZP-BLER") == True)
@@ -1107,13 +1142,14 @@ def testHeapsAlgorithmForPermutations():
 
     # ic((heapsAlgorithmForPermutations([3, 1, 2])))
     # ic((heapsAlgorithmForPermutations([1, 2])))
+    # ic((heapsAlgorithmForPermutations(['A', 'B', '-'])))
 
     def f():
         yield 42
 
     assert (type(heapsAlgorithmForPermutations([1])) == type(f()))  # gen
-    # assert (sorted(heapsAlgorithmForPermutations([1])) == [[1]])
-    # assert (sorted(heapsAlgorithmForPermutations([1, 2])) == [[1, 2], [2, 1]])
+    assert (sorted(heapsAlgorithmForPermutations([1])) == [[1]])
+    assert (sorted(heapsAlgorithmForPermutations([1, 2])) == [[1, 2], [2, 1]])
     assert (sorted(heapsAlgorithmForPermutations([3, 1, 2])) == [[1, 2, 3],
                                                                  [1, 3, 2],
                                                                  [2, 1, 3],
@@ -1125,6 +1161,9 @@ def testHeapsAlgorithmForPermutations():
 
 def testSolveCryptarithmWithMaxDigit():
     print('  Testing solveCryptarithmWithMaxDigit()...', end='')
+    # assert (formatCryptarithmSolution('RAM + RAT = ANT'))
+    # ic(solveCryptarithmWithMaxDigit('RAM + RAT = ANT', 4))
+
     assert (solveCryptarithmWithMaxDigit('RAM + RAT = ANT', 4) == '''\
 RAM + RAT = ANT
 120 + 123 = 243''')
@@ -1173,7 +1212,7 @@ def testBonusCombinatoricsProblems():
     testAllSublists()
     testSolveSubsetSum()
     testHeapsAlgorithmForPermutations()
-    # testSolveCryptarithmWithMaxDigit()
+    testSolveCryptarithmWithMaxDigit()
     # testGetAllSingletonCryptarithmsWithMaxDigit()
     print('Passed!')
 
