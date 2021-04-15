@@ -780,11 +780,9 @@ def solveCryptarithm_get_test_obj(puzzle, maxDigit):
             c = v[i]
             if c.isalpha() and c not in s:
                 s += c
-    if (maxDigit + 1) - len(s) > 0:
-        s += '-' * ((maxDigit + 1) - len(s))
-    else:
-        s = s[:maxDigit + 1]
-    # ic(s_temp)
+    foo = (maxDigit + 1) - len(s)
+    if foo > 0: s += '-' * foo
+    else: s = s[:maxDigit + 1]
     return s
 
 
@@ -798,27 +796,51 @@ def formatCryptarithmSolution(puzzle, solution):
 def solveCryptarithmWithMaxDigit(puzzle, maxDigit):
     l_obj = list(solveCryptarithm_get_test_obj(puzzle, maxDigit))
     l_permutation = heapsAlgorithmForPermutations(l_obj)
-    # ic(next(l_soln))
 
-    s_hit = ''
     for l in l_permutation:
         s_test = "".join(l)
-        # s_test += '-' * (10 - (maxDigit + 1))
         # ic(s_test)
         if solvesCryptarithm(puzzle, s_test):
-            s_hit = s_test
-            break
-
-    if s_hit == '': return None
-    else: return formatCryptarithmSolution(puzzle, s_hit)
+            return formatCryptarithmSolution(puzzle, s_test)
+    return None
 
 
 def countCryptarithmsWithMaxDigit(puzzle, maxDigit):
-    return 42
+    l_obj = list(solveCryptarithm_get_test_obj(puzzle, maxDigit))
+    l_permutation = heapsAlgorithmForPermutations(l_obj)
+
+    count = 0
+    s_hit = ''
+    for l in l_permutation:
+        s_test = "".join(l)
+        if solvesCryptarithm(puzzle, s_test):
+            count += 1
+            s_hit += formatCryptarithmSolution(puzzle, s_test)
+    return count, s_hit
+
+
+def get_puzzle(l_left, s_right):
+    l_left.sort()
+    s = l_left[0] + ' + ' + l_left[1] + ' = ' + s_right
+    return s
 
 
 def getAllSingletonCryptarithmsWithMaxDigit(words, maxDigit):
-    return 42
+    l = []
+
+    for i in range(len(words)):
+        l_temp = words[:]
+        l_temp.pop(i)
+        l_sub_all = allSublists(l_temp)  # generator
+        for l_sub in l_sub_all:
+            if len(l_sub) == 2:
+                s_puzzle = get_puzzle(l_sub, words[i])
+                count, s_hit = countCryptarithmsWithMaxDigit(
+                    s_puzzle, maxDigit)
+                if count == 1: l += [s_hit]
+    l.sort()
+    s = "\n".join(l)
+    return s
 
 
 #################################################
@@ -1161,7 +1183,6 @@ def testHeapsAlgorithmForPermutations():
 
 def testSolveCryptarithmWithMaxDigit():
     print('  Testing solveCryptarithmWithMaxDigit()...', end='')
-    # assert (formatCryptarithmSolution('RAM + RAT = ANT'))
     # ic(solveCryptarithmWithMaxDigit('RAM + RAT = ANT', 4))
 
     assert (solveCryptarithmWithMaxDigit('RAM + RAT = ANT', 4) == '''\
@@ -1177,6 +1198,13 @@ ANT + CAT = EEL
 def testGetAllSingletonCryptarithmsWithMaxDigit():
     print('  Testing getAllSingletonCryptarithmsWithMaxDigit()...', end='')
     words = ['EEL', 'RAM', 'CAT', 'BEE', 'FLY', 'HEN', 'RAT', 'DOG', 'ANT']
+
+    # assert (countCryptarithmsWithMaxDigit('ANT + CAT = EEL', 4) == 0)  # 0
+    # ic(countCryptarithmsWithMaxDigit('ANT + CAT = EEL', 5))  # 1
+    assert (get_puzzle(['RAT', 'ANT'], 'EEL') == 'ANT + RAT = EEL')
+    # ic(getAllSingletonCryptarithmsWithMaxDigit(words, 4))
+    # ic(getAllSingletonCryptarithmsWithMaxDigit(words, 5))
+
     assert (getAllSingletonCryptarithmsWithMaxDigit(words, 3) == '')
     assert (getAllSingletonCryptarithmsWithMaxDigit(words, 4) == '''\
 RAM + RAT = ANT
@@ -1213,7 +1241,7 @@ def testBonusCombinatoricsProblems():
     testSolveSubsetSum()
     testHeapsAlgorithmForPermutations()
     testSolveCryptarithmWithMaxDigit()
-    # testGetAllSingletonCryptarithmsWithMaxDigit()
+    testGetAllSingletonCryptarithmsWithMaxDigit()
     print('Passed!')
 
 
