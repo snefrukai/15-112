@@ -2532,6 +2532,10 @@ rev
 
 ## [hw8](https://www.cs.cmu.edu/~112/notes/hw8.html)
 
+info
+
+- not use recursion
+
 ### case study
 
 #### wordSearch1
@@ -2577,5 +2581,27 @@ step
 - repeat until
   - no room for new move
   - if win
+
+### 1 isRectangular(L)
+
+def
+
+- takes a possibly-2d (or possibly not) list L
+- returns True if the list
+  - is in fact 2d
+  - and if it is also rectangular
+    - so each row has the same number of elements.
+- return False otherwise
+
+step
+
+- check len
+  - if not > 1
+- loop through each val
+  - check type
+  - if i > 0
+    - check length w last val
+  - check sub val
+- return True
 
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)

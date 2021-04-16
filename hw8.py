@@ -48,7 +48,7 @@ def list_2d_edit(l, n):
 
 
 # ============================================================================ #
-# case study
+#* case study
 # ============================================================================ #
 
 # ============================================================================ #
@@ -186,8 +186,15 @@ def printBoard(board):
 #################################################
 
 
-def isRectangular(L):
-    return 42
+def isRectangular(l):
+    if not len(l) > 1: return False
+    for i in range(len(l)):
+        if not isinstance(l[i], list): return False
+        if i > 0 and len(l[i]) != len(l[i - 1]): return False
+        for val in l[i]:
+            if isinstance(val, list): return False
+
+    return True
 
 
 def makeMagicSquare(n):
@@ -244,11 +251,11 @@ def test_playConnect4():
 
 def testIsRectangular():
     print('Testing isRectangular()...', end='')
+    assert (isRectangular([[], []]) == True)
+    assert (isRectangular([]) == False)
     assert (isRectangular([[1, 2], [3, 4]]) == True)
     assert (isRectangular([[1, 2], [3, 4, 5]]) == False)
     assert (isRectangular([[1], [2]]) == True)
-    assert (isRectangular([[], []]) == True)
-    assert (isRectangular([]) == False)
     assert (isRectangular(["this", "is", "silly"]) == False)
     assert (isRectangular([["this"], "is", "silly"]) == False)
     assert (isRectangular([["this"], ["is"], ["fine"]]) == True)
@@ -256,6 +263,7 @@ def testIsRectangular():
     assert (isRectangular([[1, 2], [3], [4]]) == False)
     assert (isRectangular([12, [3], [4]]) == False)
     assert (isRectangular(["abc", [1, 2, 3]]) == False)
+    assert (isRectangular([[1, 1], [2, [5, 5]], [3, 3]]) == False)  # 3d lsit
     print('Passed!')
 
 
@@ -295,10 +303,10 @@ def testAll():
     # case study
     testWordSearch()
     # test_playConnect4()
-    playConnect4()
+    # playConnect4()
 
     # hw8
-    # testIsRectangular()
+    testIsRectangular()
     # testMakeMagicSquare()
 
 
