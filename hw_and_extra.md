@@ -2522,3 +2522,5 @@ rev
 
 - 多个 bool 构成的 if
   - 完整写出各个 bool 的情况，避免位置顺序可能的省略？
+
+## [hw8](https://www.cs.cmu.edu/~112/notes/hw8.html)

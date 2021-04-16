@@ -1,5 +1,5 @@
 # cmu_112_graphics.py
-# version 0.8.8
+# version 0.9.0
 
 # Pre-release for CMU 15-112-s21
 
@@ -11,8 +11,8 @@ if ((sys.version_info[0] != 3) or (sys.version_info[1] < 6)):
 # Track version and file update timestamp
 import datetime
 MAJOR_VERSION = 0
-MINOR_VERSION = 8.8 # version 0.8.8
-LAST_UPDATED  = datetime.date(year=2021, month=2, day=25)
+MINOR_VERSION = 9.0 # version 0.9.0
+LAST_UPDATED  = datetime.date(year=2021, month=4, day=12)
 
 # Pending changes:
 #   * Fix Windows-only bug: Position popup dialog box over app window (already works fine on Macs)
@@ -23,6 +23,10 @@ LAST_UPDATED  = datetime.date(year=2021, month=2, day=25)
 
 # Deferred changes:
 #   * replace/augment tkinter canvas with PIL/Pillow imageDraw (perhaps with our own fn names)
+
+# Changes in v0.9.0
+#  * added simpler top-level modes implementation that does not include mode objects
+#  * added ImageDraw and ImageFont to PIL imports
 
 # Changes in v0.8.8
 #   * added __repr__ methods so:
@@ -161,7 +165,7 @@ def failedImport(importName, installName=None):
     print('**********************************************************')
     print()
 
-try: from PIL import Image, ImageTk
+try: from PIL import Image, ImageTk, ImageDraw, ImageFont
 except ModuleNotFoundError: failedImport('PIL', 'pillow')
 
 if sys.platform.startswith('linux'):
@@ -663,9 +667,12 @@ class TopLevelApp(App):
         TopLevelApp._apps[fnPrefix] = app
         app._fnPrefix = fnPrefix
         app._callersGlobals = inspect.stack()[1][0].f_globals
+        app.mode = None
         super().__init__(**kwargs)
 
     def _callFn(app, fn, *args):
+        if (app.mode != None) and (app.mode != ''):
+            fn = app.mode + '_' + fn
         fn = app._fnPrefix + fn
         if (fn in app._callersGlobals): app._callersGlobals[fn](*args)
 
@@ -685,7 +692,42 @@ class TopLevelApp(App):
 # ModalApp + Mode:
 ####################################
 
-# Support for Modes is removed for now
+'''
+# For now, only include modes in top-level apps (see above).
+class Mode(object):
+    def __repr__(self): return f'<{self.__class__.__name__} object>'
+
+class ModalApp(App):
+    def __init__(app, *args, **kwargs):
+        app._mode = None
+        super().__init__(*args, **kwargs)
+
+    def setMode(app, mode):
+        if (not isinstance(mode, Mode)):
+            raise Exception('mode must be an instance of Mode')
+        app._mode = mode
+
+    def _callFn(app, fn, *args):
+        if (app._mode == None):
+            raise Exception('ModalApp must have a mode (use app.setMode())')
+        mode = app._mode
+        # method = getattr(mode, fn, None)
+        method = mode.__class__.__dict__.get(fn) # get method as fn
+        if (method != None):
+            method(*args)
+
+    def redrawAll(app, canvas): app._callFn('redrawAll', app, canvas)
+    #def appStarted(app): app._callFn('appStarted', app)
+    #def appStopped(app): app._callFn('appStopped', app)
+    def keyPressed(app, event): app._callFn('keyPressed', app, event)
+    def keyReleased(app, event): app._callFn('keyReleased', app, event)
+    def mousePressed(app, event): app._callFn('mousePressed', app, event)
+    def mouseReleased(app, event): app._callFn('mouseReleased', app, event)
+    def mouseMoved(app, event): app._callFn('mouseMoved', app, event)
+    def mouseDragged(app, event): app._callFn('mouseDragged', app, event)
+    def timerFired(app): app._callFn('timerFired', app)
+    def sizeChanged(app): app._callFn('sizeChanged', app)
+'''
 
 ####################################
 # runApp()
