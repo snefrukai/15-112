@@ -51,9 +51,10 @@ def list_2d_edit(l, n):
 # case study
 # ============================================================================ #
 
-
 # ============================================================================ #
-# wordSearch1
+# wordSearch
+
+
 def wordSearch(l_board, s_word):
     rows, cols = len(l_board), len(l_board[0])
     for i_row in range(rows):
@@ -105,10 +106,77 @@ def wordSearch_dir_hit(l_board, s_word, row_start, col_start, l_dir):
 
 
 # ============================================================================ #
-# wordSearch2
-
-# ============================================================================ #
 # connect4
+# A simple game of connect4 with a text interface
+# based on the wordSearch code written in class.
+
+
+def playConnect4():
+    rows, cols = 6, 7
+    count_move = 0
+    board = [['-'] * cols for row in range(rows)]
+    printBoard(board)
+
+    while (count_move < rows * cols):
+        player = 'X' if count_move % 2 == 0 else 'O'
+        moveCol = getMoveCol(board, player)
+        moveRow = getMoveRow(board, moveCol)
+        board[moveRow][moveCol] = player
+        printBoard(board)
+        if checkForWin(board, player):
+            print(f'*** Player {player} Wins!!! ***')
+            return
+        count_move += 1
+
+    print('*** Tie Game!!! ***')
+
+
+def getMoveCol(board, player):
+    cols = len(board[0])
+    while True:
+        response = input(f"Enter player {player}'s move (column number): ")
+        try:
+            moveCol = int(response) - 1  # int('26.6'), ValueError
+            if moveCol not in range(cols):
+                print(f'Columns must be between 1 and {cols}.')
+            elif board[0][moveCol] != '-':
+                print('That column is full!')
+            else:
+                return moveCol
+        except:
+            print('Columns must be integer values!')
+    print('Please try again.')
+
+
+def getMoveRow(board, moveCol):
+    # find first open row from bottom
+    for row in range(len(board) - 1, -1, -1):
+        if board[row][moveCol] == '-': return row
+
+    # should never get here!
+    assert False
+
+
+def checkForWin(board, player):
+    s_win = player * 4
+    return wordSearch(board, s_win) != None
+
+
+def printBoard(board):
+    rows, cols = len(board), len(board[0])
+    width = 5
+
+    # first print the column headers
+    for i in range(cols):
+        print(str(i + 1).center(width), end='')
+    print()
+
+    # then print the board
+    for i_row in range(rows):
+        for i_col in range(cols):
+            print(board[i_row][i_col].center(width), end='')
+        print()
+
 
 # ============================================================================ #
 # othello
@@ -165,6 +233,11 @@ def testWordSearch():
     assert (wordSearch(board, "cow")) == None
 
 
+def test_playConnect4():
+    # playConnect4()
+    getMoveCol('-', 'X')
+
+
 # ============================================================================ #
 # hw8
 
@@ -212,11 +285,17 @@ def testMakeMagicSquare():
     print('Passed!')
 
 
+# ============================================================================ #
+#
+
+
 def testAll():
     test_list_2d_edit()
 
     # case study
     testWordSearch()
+    # test_playConnect4()
+    playConnect4()
 
     # hw8
     # testIsRectangular()

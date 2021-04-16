@@ -2557,4 +2557,25 @@ step
     - startRow = n, startCol = 0
     - board at [n][2], [n-1][1], [n-2][0]
 
+#### connect4saasd
+
+step
+
+- basic
+  - save move count
+  - save player count
+- input col numb
+  - check input valid
+  - check col valid
+    - in range
+    - not full
+- print board
+- make move in col
+- print board
+- check win
+  - if True: end
+- repeat until
+  - no room for new move
+  - if win
+
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)
