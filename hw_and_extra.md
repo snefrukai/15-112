@@ -2535,8 +2535,9 @@ rev
 info
 
 - not use recursion
+- 有些难度,考虑先做下 ep
 
-### case study
+### [case study](https://www.cs.cmu.edu/~112/notes/2d-list-case-studies.html)
 
 #### wordSearch1
 
@@ -2643,3 +2644,32 @@ step
   - (-1), (2+1)
 
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)
+
+info
+
+- not use recursion
+- may assume 2d lists are rectangular unless explicitly stated otherwise
+
+### 1 hasNoPrimes(L)
+
+def
+
+- returns True if L does not contain any primes
+
+### 2 hasDuplicates(L)
+
+def
+
+- returns True if L contains any duplicate values
+  - (that is, if any two values in L are equal to each other)
+
+### 3 isLatinSquare(board)
+
+def
+
+- returns True if it is a [Latin square](https://en.wikipedia.org/wiki/Latin_square)
+- n × n array filled with n different symbols
+  - each occurring exactly once in each row and exactly once in each column
+  - [A,B,C]
+  - [C,A,B]
+  - [B,C,A]
