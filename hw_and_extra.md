@@ -2604,4 +2604,42 @@ step
   - check sub val
 - return True
 
+### makeMagicSquare
+
+def
+
+- takes a positive odd integer n
+  - return None if not
+- returns an nxn magic square by
+  - following De La Loubere's [Method](https://en.wikipedia.org/wiki/Siamese_method)
+
+step
+
+- test
+  - n = 3
+  - row = col = 3
+- 1
+  - _0,1_
+  - 0, 1
+- 2
+  - _2,2_
+  - (-1), 2
+- 3
+  - _1,0_
+  - (-2), 3%3
+- 4
+  - 0,1
+    - (-3), (0+1)
+    - encountered
+  - _2,0_
+- 5
+  - _1,1_
+  - (-2), (0+1)
+- 6
+  - _0,2_
+  - (-3), (1+1)
+- 7
+  - 2,0
+  - (-1), (2+1)
+
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)

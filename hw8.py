@@ -198,7 +198,23 @@ def isRectangular(l):
 
 
 def makeMagicSquare(n):
-    return 42
+    if n % 2 == 0 or n < 0: return None
+    pesudo = '/'
+    l = [[pesudo] * n for i in range(n)]
+
+    row, col = 0, int(n / 2)
+    for i in range(1, n * n + 1):
+        if i > 1:
+            row_temp, col_temp = row, col
+            row = (row - 1) % n
+            col = (col + 1) % n
+            # ic(i, row, col)
+            if l[row][col] != pesudo:
+                row = row_temp + 1  #? why this not out of range
+                col = col_temp
+        l[row][col] = i
+        # ic(l)
+    return l
 
 
 def playTetris():
@@ -269,6 +285,8 @@ def testIsRectangular():
 
 def testMakeMagicSquare():
     print('Testing makeMagicSquare()...', end='')
+    # ic(makeMagicSquare(1))
+
     L1 = [[1]]
     L3 = [[8, 1, 6], [3, 5, 7], [4, 9, 2]]
     L5 = [[17, 24, 1, 8, 15], [23, 5, 7, 14, 16], [4, 6, 13, 20, 22],
@@ -307,7 +325,7 @@ def testAll():
 
     # hw8
     testIsRectangular()
-    # testMakeMagicSquare()
+    testMakeMagicSquare()
 
 
 #################################################
