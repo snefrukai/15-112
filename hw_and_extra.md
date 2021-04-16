@@ -1,8 +1,15 @@
 # homework and extra practice
 
+info
+
+- hw: homework
+- ep: extra practice
+- ct: code tracing
+- roc: reasoning over code
+
 ## hw1
 
-## [extra_practice1](https://www.cs.cmu.edu/~112/notes/extra-practice1.html)
+## [ep1](https://www.cs.cmu.edu/~112/notes/ep1.html)
 
 - dist
   - ez
@@ -56,7 +63,7 @@
   - getKthDigit 不用 index 怎么做？！
     - 全部罗列？
 
-## [extra-practice1-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice1-ct-and-roc.html)
+## [ep1-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep1-ct-and-roc.html)
 
 ### rev
 
@@ -403,7 +410,7 @@ You want to make sure the Markdown render will not touch your special characters
 
 ```
 
-## [extra_practice2.py](https://www.cs.cmu.edu/~112/notes/extra-practice2.html)
+## [ep2.py](https://www.cs.cmu.edu/~112/notes/ep2.html)
 
 - digit_count
   - loop
@@ -978,7 +985,7 @@ step
   - check next
 - remove trailing lines in pattern
 
-## [extra-practice3](https://www.cs.cmu.edu/~112/notes/extra-practice3.html)
+## [ep3](https://www.cs.cmu.edu/~112/notes/ep3.html)
 
 ### 1. vowelCount(s)
 
@@ -1258,7 +1265,7 @@ step
 - replace white
   - '-'
 
-## [extra-practice3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice3-ct-and-roc.html)
+## [ep3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep3-ct-and-roc.html)
 
 ### Code Tracing (CT)
 
@@ -1397,7 +1404,7 @@ rev
 
 - how to place underscore directly under chars?
 
-## extra-practice4
+## ep4
 
 we encourage you to write short animations that use the mouse, keyboard, and timer. Here are some ideas to get you started:
 
@@ -1459,7 +1466,7 @@ ref
 - https://en.wikipedia.org/wiki/Wheel_factorization
   - factor is coprime with basis in prime{2,3,5,7}
 
-## [extra-practice5](https://www.cs.cmu.edu/~112/notes/extra-practice5.html)
+## [ep5](https://www.cs.cmu.edu/~112/notes/ep5.html)
 
 ### 2 Short Answer Practice Problems
 
@@ -2004,7 +2011,7 @@ def
     - 4,0
   - l[i]n^(len-1-i)
 
-## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
+## [ep5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep5-ct-and-roc.html)
 
 ### CT
 
@@ -2524,3 +2531,30 @@ rev
   - 完整写出各个 bool 的情况，避免位置顺序可能的省略？
 
 ## [hw8](https://www.cs.cmu.edu/~112/notes/hw8.html)
+
+### case study
+
+#### wordSearch1
+
+step
+
+- search word from each position in the board
+  - each row
+    - each col
+  - board[0][0]
+- search word from each direction at a position
+  - direction 'right'
+    - startRow = n, startCol = 0
+    - board at [n][0], [n][1], [n][2]
+    - i = 0,1,2 in word
+    - drow = 0, dcol = 1
+  - 'left'
+    - board at [n][2], [n][1], [n][0]
+    - startRow = n, startCol = 2
+    - drow = 0, dcol = -1
+  - 'up-left'
+    - drow = -1, dcol = -1
+    - startRow = n, startCol = 0
+    - board at [n][2], [n-1][1], [n-2][0]
+
+## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)

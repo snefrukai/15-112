@@ -10,6 +10,7 @@
 
 import cs112_s21_week8_linter
 import math, copy, random
+from icecream import ic
 
 from cmu_112_graphics import *
 
@@ -46,6 +47,72 @@ def list_2d_edit(l, n):
     return l
 
 
+# ============================================================================ #
+# case study
+# ============================================================================ #
+
+
+# ============================================================================ #
+# wordSearch1
+def wordSearch(l_board, s_word):
+    rows, cols = len(l_board), len(l_board[0])
+    for i_row in range(rows):
+        for i_col in range(cols):
+            s_hit_dir = wordSearch_dir(l_board, s_word, i_row, i_col)
+            if s_hit_dir != None:
+                return (s_word, (i_row, i_col), s_hit_dir)
+
+
+def wordSearch_dir(l_board, s_word, row_start, col_start):
+    # l_dir_row = l_dir_col = [-1, 0, 1]
+    l_dir_names = [
+        "up-left", "up", "up-right",\
+        "left", "right",\
+        "down-left", "down", "down-right",
+    ]
+    l_dir = [ (-1, -1), (-1, 0), (-1, +1),\
+             ( 0, -1),          ( 0, +1),\
+             (+1, -1), (+1, 0), (+1, +1) ]
+
+    for i in range(len(l_dir)):
+        hit = wordSearch_dir_hit(l_board, s_word, row_start, col_start,
+                                 l_dir[i])
+        if hit: return l_dir_names[i]
+
+    # l_dir_names = [
+    #     ["up-left", "up", "up-right"],
+    #     ["left", "", "right"],
+    #     ["down-left", "down", "down-right"],
+    # ]
+    # for i in range(len(l_dir_row)):
+    #     for k in range(len(l_dir_col)):
+    #         if (l_dir_row[i], l_dir_col[k]) != (0, 0):
+    #             # ic(dir_row[i], dir_col[k], dir_names[i][k])
+    #             hit = wordSearch_dir_hit(l_board, s_word, row_start,\
+    #  col_start,  l_dir_row[i], l_dir_col[k])
+    #             if hit: return l_dir_names[i][k]
+
+
+def wordSearch_dir_hit(l_board, s_word, row_start, col_start, l_dir):
+    for i in range(len(s_word)):
+        row = row_start + i * l_dir[0]
+        col = col_start + i * l_dir[1]
+        # ic(row, col)
+        in_range = 0 <= row < len(l_board) and 0 <= col < len(l_board[0])
+        if not in_range or l_board[row][col] != s_word[i]:
+            return False
+    return True
+
+
+# ============================================================================ #
+# wordSearch2
+
+# ============================================================================ #
+# connect4
+
+# ============================================================================ #
+# othello
+
 #################################################
 #* hw8
 #################################################
@@ -71,6 +138,35 @@ def playTetris():
 def test_list_2d_edit():
     l = [[2, 3, 5], [1, 4, 7]]
     # print(list_2d_edit(l, 1))
+
+
+# ============================================================================ #
+# case study
+
+
+def test_wordSearch_dir(board):
+    assert (wordSearch_dir(board, 'dog', 0, 0) == 'right')
+    assert (wordSearch_dir(board, 'cat', 1, 2) == 'left')
+    # ic(wordSearch_dir(board, 'dog', 0, 0))
+
+
+def testWordSearch():
+    board = [
+        ['d', 'o', 'g'],
+        ['t', 'a', 'c'],
+        ['o', 'a', 't'],
+        ['u', 'r', 'k'],
+    ]
+    test_wordSearch_dir(board)
+
+    assert (wordSearch(board, "dog")) == ('dog', (0, 0), 'right')
+    assert (wordSearch(board, "cat")) == ('cat', (1, 2), 'left')
+    assert (wordSearch(board, "tad")) == ('tad', (2, 2), 'up-left')
+    assert (wordSearch(board, "cow")) == None
+
+
+# ============================================================================ #
+# hw8
 
 
 def testIsRectangular():
@@ -119,6 +215,10 @@ def testMakeMagicSquare():
 def testAll():
     test_list_2d_edit()
 
+    # case study
+    testWordSearch()
+
+    # hw8
     # testIsRectangular()
     # testMakeMagicSquare()
 
