@@ -4,8 +4,12 @@ info
 
 - hw: homework
 - ep: extra practice
+  - optional
+  - help you prepare for the upcoming quizzes, midterms, and final exam
 - ct: code tracing
+  - What will each of these print?
 - roc: reasoning over code
+  - Find values for the parameters so the functons return True
 
 ## hw1
 
@@ -63,7 +67,7 @@ info
   - getKthDigit 不用 index 怎么做？！
     - 全部罗列？
 
-## [ep1-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep1-ct-and-roc.html)
+### [ep1-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep1-ct-and-roc.html)
 
 ### rev
 
@@ -410,7 +414,7 @@ You want to make sure the Markdown render will not touch your special characters
 
 ```
 
-## [ep2.py](https://www.cs.cmu.edu/~112/notes/ep2.html)
+## [ep2](https://www.cs.cmu.edu/~112/notes/ep2.html)
 
 - digit_count
   - loop
@@ -1265,7 +1269,7 @@ step
 - replace white
   - '-'
 
-## [ep3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep3-ct-and-roc.html)
+### [ep3-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep3-ct-and-roc.html)
 
 ### Code Tracing (CT)
 
@@ -2015,9 +2019,9 @@ def
     - 4,0
   - l[i]n^(len-1-i)
 
-## [ep5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep5-ct-and-roc.html)
+### [ep5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/ep5-ct-and-roc.html)
 
-### CT
+#### CT
 
 1
 
@@ -2081,7 +2085,7 @@ def
   - ~~[4,3,4],[9,3]~~
   - [4,3], [6,3]
 
-### ROC
+#### ROC
 
 1
 
@@ -2785,3 +2789,49 @@ step
     - [-1,2], [1,2]
     - if any(): T
     - abs in [[2,1], [1,2]]
+
+### ct-and-roc
+
+#### CT1
+
+- L = [[1],[2,5]] # p1=[1], p2=[2,5]
+- a = L
+- b = copy.copy(L) # shallow, copy ref
+  - _b = [p1,p2]_
+- c = copy.deepcopy(L)
+  - _c = [[1],[2,5]]_
+- b[1][1] = c[0][0] # 1
+  - _p1=[1], p2=[2,1]_
+  - b and L=a change
+  - _b = [[1],[2,1]]_
+  - _a = L = [[1],[2,1]]_
+- c[1].append(b[1][0]) # 2
+  - _c = [[1],[2,5,2]]_
+- a[0] = b[1]
+  - change ref
+  - _a=[p2,p2]=L=[[2,1],[2,1]]_
+  - b's ref not change
+  - obj of p not change
+  - ~~a = [[2,1],[2,1]] = L = b~~
+- a[0][0] += b.pop()[0] # [2,1][0]=2
+  - _b=[[1]]_ # p1
+  - _a=L=[[4,1],[4,1]]_ # p2 change
+- rtn a,b,c
+
+print
+
+- [[4, 1], [4, 1]] # a
+  [[1]] # b
+  [[1], [2, 5, 2]] # c
+  [[4, 1], [4, 1]] # L=a
+
+rev
+
+- if a[0][0] += b.pop()[0] not pop
+- a[0][0] += b[0][0]
+  - a=[p2,p2]=L=[[2,1],[2,1]]
+  - b=[[1],[2,1]]
+- then
+  - p2=[3,1]
+  - a=L=[p2,p2]=[[3,1],[3,1]]
+  - b=[p1,p2]=[[1],[3,1]]
