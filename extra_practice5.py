@@ -4,12 +4,24 @@
 
 import math, string, time
 from icecream import ic
-from hw3 import test_unexpected
 import operator
+
+import cs112_s21_week8_linter
+from hw3 import test_unexpected
 
 #################################################
 # Helper functions
 #################################################
+
+import decimal
+
+
+def roundHalfUp(d):
+    # Round to nearest with ties going away from zero.
+    rounding = decimal.ROUND_HALF_UP
+    # See other rounding options here:
+    # https://docs.python.org/3/library/decimal.html#rounding-modes
+    return int(decimal.Decimal(d).to_integral_value(rounding=rounding))
 
 
 # ============================================================================ #
@@ -286,25 +298,33 @@ def reverse(l):
 
 
 def l_op_two(l1, l2, f):
-    l_new = []
-    l_len = min(len(l1), len(l2))
-    for i in range(l_len):
-        l_new += [f(l1[i], l2[i])]
+    n_len = min(len(l1), len(l2))
+    l = []
+    for i in range(n_len):
+        l += [f(l1[i], l2[i])]
         #     l_new += [l1[i] + l2[i]]  #* non-dest
         #     # l1[i] = l1[i] + l2[i] #* dest
         # return l1 + l2
         # ic(l_new)
-    return l_new
+    return l
 
 
 def vectorSum(l1, l2):
     # l = l_op_two(l1, l2, lambda l1, l2: l1 + l2)
-    l = l_op_two(l1, l2, lambda *args: sum(args))
+    # l = l_op_two(l1, l2, lambda *args: sum(args))
+    n_len = len(l1)
+    l = []
+    for i in range(n_len):
+        l += [l1[i] + l2[i]]
     return l
 
 
 def dotProduct(l1, l2):
-    l = l_op_two(l1, l2, lambda l1, l2: l1 * l2)
+    # l = l_op_two(l1, l2, lambda l1, l2: l1 * l2)
+    n_len = min(len(l1), len(l2))
+    l = []
+    for i in range(n_len):
+        l += [l1[i] * l2[i]]
     return sum(l)
 
 
@@ -386,7 +406,9 @@ def s_sort_alpha(s):
 
 
 def l_first_hit(l, d, f):
-    if any(f(d) in i for i in l): return d
+    # if any(f(d) in i for i in l): return d
+    # if any(s_sort_alpha(d) in i for i in l): return d
+    if any(f in i for i in l): return d
     # ic(f(d), l, d)
     # ic(f(d) in (2, 'act'))
 
@@ -400,10 +422,12 @@ def mostAnagrams(l):
     l_anag_most = l_most_get(l_anag)
 
     for d in l:
-        foo = l_first_hit(l_anag_most, d, lambda x: s_sort_alpha(x))
-        if foo != None: return foo
-    # if any(s_sort_alpha(d) in i for i in l_most_anag):
-    #     return d
+        # foo = l_first_hit(l_anag_most, d, lambda x: s_sort_alpha(x))
+        # foo = l_first_hit(l_anag_most, d)
+        # foo = l_first_hit(l_anag_most, d, s_sort_alpha(d))
+        # if foo != None: return foo
+        if any(s_sort_alpha(d) in s for s in l_anag_most):
+            return d
 
 
 # a = [('fox', 5), ('cat', 4), ('dog', 5)]
@@ -665,7 +689,7 @@ def test_time(func_name, parag):
     times = 10
     for i in range(times):
         func_name(parag)
-    dist = round((time.time() - time0) * 1000 / times, 2)
+    dist = roundHalfUp((time.time() - time0) * 1000 / times, 2)
     print(f"Timing in {times} times, n =", parag, ":", dist, "ms")
 
 
@@ -876,9 +900,11 @@ def test_dotProduct():
     parm = [
         ([1, 2, 3], [4, 5, 6]),
         ([2, 2, 3], [4, 5, 6]),
+        ([2, 2, 3], [4, 5, 6, 7]),
     ]
     soln = [
         32,
+        36,
         36,
     ]
     for i, (l1, l2) in enumerate(parm):
@@ -1286,7 +1312,7 @@ def testAll():
 
 
 def main():
-    # cs112_s21_week3_linter.lint()
+    cs112_s21_week8_linter.lint()
     testAll()
 
 

@@ -5,6 +5,7 @@
 import math, copy, random
 # import decimal
 # from cmu_112_graphics import *
+from hw3 import test_unexpected
 from icecream import ic
 
 # ============================================================================ #
@@ -31,7 +32,7 @@ def test_name():
 
 def testAll():
     print('Tesing all...')
-    
+
     test_name()
 
     print('All passed')

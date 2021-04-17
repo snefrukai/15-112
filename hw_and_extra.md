@@ -1468,6 +1468,10 @@ ref
 
 ## [ep5](https://www.cs.cmu.edu/~112/notes/ep5.html)
 
+info
+
+- not use 2d lists, sets, dicts, or recursion this week.
+
 ### 2 Short Answer Practice Problems
 
 1. D
@@ -2723,3 +2727,30 @@ step
     - if count(val in l[0]) in board == n
 - loop each val in l[n] in rows and cols
   - if count(val) > 1: F
+
+### 4 matrixMultiply(m1, m2)
+
+def
+
+- takes two 2d lists
+  - (that we will consider to be matrices)
+  - The number of columns of the 1st matrix must equal the number of rows of the 2nd matrix
+- returns a new 2d list
+  - that is the result of multiplying the two matrices
+  - Return None if the two matrices cannot be multiplied for any reason.
+- matrix product
+  - `m*n * n*p = m*p`
+  - has the number of rows of the 1st matrix
+  - has the number of columns of the 2nd matrix
+- https://www.mathsisfun.com/algebra/matrix-multiplying.html
+
+step
+
+- check n1 == n2
+- const list of cols in m2
+- loop each row in m1
+  - loop each row in l_cols_2
+    - get sum of dot multi
+      - m1[k] and l_cols_2[i]
+    - add to sublist
+  - add to 2d list
