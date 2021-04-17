@@ -48,20 +48,17 @@ def isLatinSquare(l):
 #
 
 
-def matrixMultiply(m1, m2):
+def matrixMultiply(l1, l2):
     # m*n * n*p = m*p
-    n1 = len(m1[0])  # if isinstance(m1[0], list) else len(m1)  # col of m1
-    n2 = len(m2)  # if isinstance(m2[0], list) else 1  # row of m2
+    n1 = len(l1[0])  # if isinstance(m1[0], list) else len(m1)  # col of m1
+    n2 = len(l2)  # if isinstance(m2[0], list) else 1  # row of m2
     if n1 != n2: return None
 
-    l_cols_2 = make_2d_list_cols(m2)
-    # ic(l_col_2)
+    l_p = make_2d_list_cols(l2)
     l = []
-    for k in range(len(m1)):  #? can the nested loop be extracted, w op func
-        l_temp = []
-        for i in range(len(l_cols_2)):
-            l_temp += [dotProduct(m1[k], l_cols_2[i])]
-        l += [l_temp]  # as 2d
+    for k in range(len(l1)):  #? can the nested loop be extracted, w op func
+        l_row = [dotProduct(l1[k], p) for p in l_p]
+        l += [l_row]  # as 2d
     return l
 
 
@@ -86,9 +83,7 @@ def isKnightsTour_get_posn(l, n):
 
 
 def isKnightsTour_check_legal(l1, l2):
-    l = []
-    for i in range(len(l1)):
-        l += [abs(l1[i] - l2[i])]
+    l = [abs(l1[i] - l2[i]) for i in range(len(l1))]
     # ic(l)
     if l in [[2, 1], [1, 2]]: return True  # 'L' shape direction
     else: return False
@@ -101,8 +96,7 @@ def isKnightsTour(board):
 
     l_temp = []
     for row in board:
-        for val in row:
-            l_temp += [val]
+        l_temp += [v for v in row]
     if sorted(l_temp) != [i for i in range(n_max)]: return False
 
     for i in range(n_max - 1):
