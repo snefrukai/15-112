@@ -2655,6 +2655,14 @@ info
 def
 
 - returns True if L does not contain any primes
+- refactor old ones
+  - 2,3,5,7
+  -
+
+step
+
+- loop each val in sublist l[0] and l[1]
+- check if val is prime
 
 ### 2 hasDuplicates(L)
 
@@ -2663,13 +2671,55 @@ def
 - returns True if L contains any duplicate values
   - (that is, if any two values in L are equal to each other)
 
+step
+
+- loop each val in sublist l[0]
+  - check if val is in sublist l[1]
+
 ### 3 isLatinSquare(board)
 
 def
 
 - returns True if it is a [Latin square](https://en.wikipedia.org/wiki/Latin_square)
 - n × n array filled with n different symbols
-  - each occurring exactly once in each row and exactly once in each column
+  - each occurring exactly _once in each row_ and exactly _once in each column_
   - [A,B,C]
   - [C,A,B]
   - [B,C,A]
+  - O(n\*\*2)?
+  - 1234
+    2143
+    3412
+    4, can only 4
+    4321
+  - 1234
+    2341
+    3412
+    4123
+
+step
+
+- const list of col
+- compare all sublist
+  - sort each, non-destru
+    - if l[x] != l[y]: F
+    - 2n
+      - sort each row - n
+      - sort each col - n
+  - or sort board?
+    - const list
+      - add each val\*n in l[0]
+    - if != sorted(board)
+    - (n+2)
+      - sort board - 1
+      - sort l[0] - 1
+      - loop and edit l[0] - n
+      - compare - 1
+    - (2+1,n+2)
+      - loop and check
+      - if val\*n not in board: F
+  - or just check board
+    - (n)
+    - if count(val in l[0]) in board == n
+- loop each val in l[n] in rows and cols
+  - if count(val) > 1: F

@@ -30,7 +30,11 @@ def test_name():
 
 
 def testAll():
+    print('Tesing all...')
+    
     test_name()
+
+    print('All passed')
 
 
 # ============================================================================ #

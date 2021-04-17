@@ -11,9 +11,26 @@ from icecream import ic
 #* standard func
 # ============================================================================ #
 
+# ============================================================================ #
+#
 
-def name(args):
-    pass
+
+def isLatinSquare_count_is_1(l):
+    for val in l[0]:
+        for i in range(len(l)):
+            if l[i].count(val) != 1: return False
+    return True
+
+
+def isLatinSquare(l):
+    l_row = l
+    l_col = []
+    for i in range(len(l[0])):
+        l_col += [rows[i] for rows in l],
+
+    for val in [l_row, l_col]:
+        if not isLatinSquare_count_is_1(val): return False
+    return True
 
 
 # ============================================================================ #
@@ -21,8 +38,21 @@ def name(args):
 # ============================================================================ #
 
 
-def test_name():
-    name()
+def test_isLatinSquare():
+    l = [
+        [1, 2, 3, 4],
+        [2, 3, 4, 1],
+        [3, 4, 1, 2],
+        [4, 1, 2, 3],
+    ]
+    l1 = [
+        [1, 2, 3, 4],
+        [2, 3, 4, 1],
+        [3, 4, 1, 2],
+        [3, 1, 2, 3],
+    ]
+    assert (isLatinSquare(l)) == True
+    assert (isLatinSquare(l1)) == False
 
 
 # ============================================================================ #
@@ -30,7 +60,11 @@ def test_name():
 
 
 def testAll():
-    test_name()
+    print('Tesing all...')
+
+    test_isLatinSquare()
+
+    print('All passed')
 
 
 # ============================================================================ #
