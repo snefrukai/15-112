@@ -2754,3 +2754,34 @@ step
       - m1[k] and l_cols_2[i]
     - add to sublist
   - add to 2d list
+
+### 5 isKnightsTour(board)
+
+def
+
+- takes such a 2d list of integers
+- returns True if it represents a legal knight's tour and False otherwise
+  - all the numbers from 1 to N2 will be included
+  - each move from k to (k+1) will be a legal knight's move
+- ref
+  - https://en.wikipedia.org/wiki/Knight's_tour
+  - https://www.geeksforgeeks.org/the-knights-tour-problem-backtracking-1/
+  -
+  - https://en.wikipedia.org/wiki/Knight_(chess) - forming the shape of an L) - may move two squares vertically and one square horizontally, - or two squares horizontally and one square vertically
+
+step
+
+- check board
+  - if not digit in sequence: F
+- for i
+  - `[0, n**n)`
+  - get position of i
+  - get position of i+1
+  - check if two postion are legal
+    - 8 moves in row and col
+    - [-2,-1], [-2,1]
+    - [2,-1], [2,1]
+    - [-1,-2], [1,-2]
+    - [-1,2], [1,2]
+    - if any(): T
+    - abs in [[2,1], [1,2]]
