@@ -48,28 +48,32 @@ def locker_problem(n):
 #
 
 
+def prime_wheel_basis(n):
+    pre = n != 2 and n != 3 and n != 5
+    factor = n % 2 == 0 or n % 3 == 0 or n % 5 == 0 or n**0.5 == int(n**0.5)
+    return (pre and factor)
+
+
 def isPrime(n):
     if n == 2 or n == 3 or n == 5: return True  # exclude 2,3,5
     if n < 2 or prime_wheel_basis(n): return False
 
-    for i in range(7, int(n**0.5), 2):  # factor start from 7
-        if not prime_wheel_basis((i)) and n % i == 0: return False
+    for i in range(7, int(n**0.5), 6):  # start from 7, step 6
+        if n % i == 0 or n % (i + 5) == 0:
+            # if not prime_wheel_basis(i) and (n % i == 0 or n % (i + 5) == 0):
+            # dont need to check i with 2,3,5
+            return False
     return True
 
 
 def nthPrime(nth):
     found = 0
     guess = 0
+    step = 2 if guess >= 3 else 1
     while (found <= nth):
-        guess += 1
+        guess += step
         if (isPrime(guess)): found += 1
     return guess
-
-
-def prime_wheel_basis(n):
-    pre = n != 2 and n != 3 and n != 5
-    factor = n % 2 == 0 or n % 3 == 0 or n % 5 == 0 or n**0.5 == int(n**0.5)
-    return pre and factor
 
 
 def sieve_eratos_des(n):  #* destructive list
@@ -85,23 +89,22 @@ def sieve_eratos_des(n):  #* destructive list
 
 
 def sieve_eratos(n):  #* non-destructive list
-    # l = [
-    #     False if i > 3 and (i % 2 == 0 or i % 3 == 0 or i % 5 == 0) else True
-    #     for i in range(n + 1)
-    # ]
-    # ic(l)
-    l = [True] * (n + 1)
+    l = [False if i > 3 and (i % 2 == 0) else True for i in range(n + 1)]
+    # l = [True] * (n + 1)
     l[0] = l[1] = False
-    for i in range(4, len(l)):
-        if i % 2 == 0 or i % 3 == 0 or i % 5 == 0:  # or i**0.5 == int(i**0.5)
-            l[i] = False
-    l_new = [2, 3, 5]
+    # ic(l)
 
-    for p in range(7, n + 1, 2):
+    # for i in range(4, len(l)): # dont need to pre edit
+    #     if i % 2 == 0 or i % 3 == 0 or i % 5 == 0:  # or i**0.5 == int(i**0.5)
+    #         l[i] = False
+
+    l_new = [2]
+    for p in range(3, n + 1, 2):
+        # for p in range(7, n + 1, 2):
         if l[p] == True:
-            # ic(p)
-            l_new += (p, )
-            for i in range(p**2, n + 1, p * 2):  # p*p+p = p*(p+1) is even
+            l_new += [p]
+            for i in range(p**2, n + 1, p * 2):
+                # p is ood, p*p+p = p*(p+1) is even
                 # ic(i)
                 l[i] = False
     return l_new
@@ -632,6 +635,7 @@ def test_isPrime():
     assert (isPrime(5)) == True
     assert (isPrime(17)) == True
     assert (isPrime(83)) == True
+    assert (isPrime(121)) == False
     assert (isPrime(173)) == True
     assert (isPrime(509)) == True
     assert (isPrime(511)) == False
@@ -647,24 +651,22 @@ def test_sieve_eratos():
     # ic(sieve_eratos(100))
     # ic(sieve_eratos(500))
     # ic(sieve_eratos(1000))
-    n = 4000
+    n = 40000
     nth = 50
     # ic(sieve_eratos(1000)[nth])
     sieve_eratos(n)[nth] == nthPrime(nth)
     # test_time(sieve_eratos, n)
-    # test_time(sieve_eratos_des, n)
     # test_time(sieve_course, n)
+    # test_time(sieve_eratos_des, n)
 
 
-def test_time(func_name, input):
-    param = input
+def test_time(func_name, parag):
     time0 = time.time()
-    times = 6
+    times = 10
     for i in range(times):
-        func_name(param)
-        # print(i, end='')
+        func_name(parag)
     dist = round((time.time() - time0) * 1000 / times, 2)
-    print("Timing sieve_eratos(", param, "):", dist, "ms")
+    print(f"Timing in {times} times, n =", parag, ":", dist, "ms")
 
 
 # ============================================================================ #
@@ -1251,6 +1253,7 @@ def test_polynomialToString():
 
 
 def testAll():
+    print('testing all...', end='')
     test_rc2()
 
     test_locker_problem()
@@ -1279,6 +1282,7 @@ def testAll():
     test_nearestWords()
     test_bowlingScore()
     test_polynomialToString()
+    print('all passed')
 
 
 def main():
