@@ -239,18 +239,22 @@ def newFallingPiece(app):
     # 10//2 - 3//2 = 5 -1 = 4
 
 
+def appReset(app):
+    app.board = [[app.emptyColor] * app.cols for row in range(app.rows)]
+    app.isGameOver = False
+    app.isPause = False
+    newFallingPiece(app)
+
+
 def appStarted(app):
-    # set board
     app.rows, app.cols, app.cellSize, app.margin = gameDimensions()
     app.emptyColor = 'blue'
-    app.board = [[app.emptyColor] * app.cols for row in range(app.rows)]
-    # ic(app.board)
 
-    # pre-load a few cells with known colors for testing purposes
-    app.board[0][0] = "red"  # top-left is red
-    app.board[0][app.cols - 1] = "white"  # top-right is white
-    app.board[app.rows - 1][0] = "green"  # bottom-left is green
-    app.board[app.rows - 1][app.cols - 1] = "gray"  # bottom-right is gray
+    #? pre-load a few cells with known colors for testing purposes
+    # app.board[0][0] = "red"  # top-left is red
+    # app.board[0][app.cols - 1] = "white"  # top-right is white
+    # app.board[app.rows - 1][0] = "green"  # bottom-left is green
+    # app.board[app.rows - 1][app.cols - 1] = "gray"  # bottom-right is gray
 
     # Seven "standard" pieces (tetrominoes)
     iPiece = [[True, True, True, True]]
@@ -282,7 +286,8 @@ def appStarted(app):
     app.tetrisPieceColors = [
         "red", "yellow", "magenta", "pink", "cyan", "green", "orange"
     ]
-    newFallingPiece(app)
+
+    appReset(app)
 
 
 # ============================================================================ #
@@ -290,26 +295,29 @@ def appStarted(app):
 # ============================================================================ #
 
 
-def loop_each_cell(l, f):
+def loop_each_cell(app, l, f):
     rows, cols = len(l), len(l[0])
     for row in range(rows):
         for col in range(cols):
-            # f(l, row, col)  #? how to return bool
-            bool = f(l, row, col)
-            if bool != None: return bool
+            if isinstance(l[row][col], str):
+                f(l, row, col)
+            elif l[row][col] == True:
+                # row += app.fallingPieceRow #? why bug
+                # col += app.fallingPieceCol
+                # bool = f(l, row, col)
+                x, y = row + app.fallingPieceRow, col + app.fallingPieceCol
+                bool = f(l, x, y)
+                if bool != None: return bool
 
 
 def fallingPieceIsLegal(app):
     def f(l, row, col):
-        if l[row][col] == True:
-            x = app.fallingPieceRow + row
-            y = app.fallingPieceCol + col
-            onBoard = x in range(app.rows) and y in range(app.cols)
-            # ic(app.fallingPieceRow, row, app.fallingPieceCol, col)
-            if not onBoard: return False
-            elif app.board[x][y] != app.emptyColor: return False
+        onBoard = row in range(app.rows) and col in range(app.cols)
+        # ic(app.fallingPieceRow, row, app.fallingPieceCol, col)
+        if not onBoard: return False
+        elif app.board[row][col] != app.emptyColor: return False
 
-    bool = loop_each_cell(app.fallingPiece, f)
+    bool = loop_each_cell(app, app.fallingPiece, f)
     return False if bool == False else True
 
 
@@ -322,6 +330,7 @@ def legal_backtrack(app, f):
     f()
     if not fallingPieceIsLegal(app):
         app.fallingPiece, app.fallingPieceRow, app.fallingPieceCol = l, row, col
+        return False
 
 
 def moveFallingPiece(app, key):
@@ -329,7 +338,8 @@ def moveFallingPiece(app, key):
         if key == 'Down': app.fallingPieceRow += 1
         else: app.fallingPieceCol += 1 if key == 'Right' else -1
 
-    legal_backtrack(app, f)
+    bool = legal_backtrack(app, f)
+    return False if bool == False else True
 
 
 def rotateFallingPiece(app):
@@ -355,18 +365,44 @@ def rotateFallingPiece(app):
 
 
 def keyPressed(app, event):
-    # test code for newFallingPiece
-    if event.key == 'n': newFallingPiece(app)
+    if event.key in ['r', 'R']:
+        appReset(app)
 
-    # move piece
-    if event.key in ['Right', 'Left', 'Down']:
-        moveFallingPiece(app, event.key)
-    elif event.key in ['Up']:
-        rotateFallingPiece(app)
+    if not app.isGameOver:
+        if event.key in ['p', 'P']:
+            app.isPause = not app.isPause
+
+    if not app.isPause:
+        if event.key == 'n': newFallingPiece(app)  #? test code
+        if event.key in ['Right', 'Left', 'Down']:
+            moveFallingPiece(app, event.key)
+        elif event.key in ['Up']:
+            rotateFallingPiece(app)
+    elif app.isPause:
+        if event.key in ['s', 'S']:
+            timerFired(app)
 
 
 def mousePressed(app, event):
-    rotateFallingPiece(app)
+    if not app.isPause:
+        rotateFallingPiece(app)
+
+
+def placeFallingPiece(app):
+    def f(l, row, col):
+        app.board[row][col] = app.fallingPieceColor
+
+    loop_each_cell(app, app.fallingPiece, f)
+
+
+def timerFired(app):
+    if not app.isPause:
+        if not moveFallingPiece(app, 'Down'):
+            placeFallingPiece(app)
+            newFallingPiece(app)
+            if not fallingPieceIsLegal(app):
+                app.isGameOver = True
+                app.isPause = True
 
 
 # ============================================================================ #
@@ -384,33 +420,27 @@ def drawBoard(app, canvas):
     def f(l, row, col):
         drawCell(app, canvas, row, col, app.board[row][col])
 
-    loop_each_cell(app.board, f)
+    loop_each_cell(app, app.board, f)
 
 
 def drawFallingPiece(app, canvas):
     def f(l, row, col):
-        if l[row][col] == True:
-            drawCell(app, canvas, app.fallingPieceRow + row,
-                     app.fallingPieceCol + col, app.fallingPieceColor)
+        drawCell(app, canvas, row, col, app.fallingPieceColor)
 
-    loop_each_cell(app.fallingPiece, f)
+    loop_each_cell(app, app.fallingPiece, f)
 
 
-# def drawBoard(app, canvas):
-#     l = app.board
-#     rows, cols = len(l), len(l[0])
-#     for row in range(rows):
-#         for col in range(cols):
-#             drawCell(app, canvas, row, col, app.board[row][col])
+def drawGameOver(app, canvas):
+    height = 60
+    x0, y0 = app.margin, app.margin + app.cellSize
+    x1, y1 = app.width - app.margin, y0 + height
+    canvas.create_rectangle(x0, y0, x1, y1, fill='black')
+    canvas.create_text((x0 + x1) / 2,
+                       y0 + height / 2,
+                       fill='orange',
+                       font='Arial 18 bold',
+                       text='Game Over.')
 
-# def drawFallingPiece(app, canvas):
-#     l = app.fallingPiece
-#     rows, cols = len(l), len(l[0])
-#     for row in range(rows):
-#         for col in range(cols):
-#             if l[row][col] == True:
-#                 drawCell(app, canvas, app.fallingPieceRow + row,
-#                          app.fallingPieceCol + col, app.fallingPieceColor)
 
 # ============================================================================ #
 #
@@ -418,9 +448,9 @@ def drawFallingPiece(app, canvas):
 
 def redrawAll(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height, fill='orange')
-
     drawBoard(app, canvas)
     drawFallingPiece(app, canvas)
+    if app.isGameOver: drawGameOver(app, canvas)
 
 
 # ============================================================================ #
@@ -430,7 +460,7 @@ def redrawAll(app, canvas):
 
 def gameDimensions():
     rows, cols = 15, 10
-    # rows, cols = 4, 4
+    # rows, cols = 4, 4  # test
     cellSize = 20
     margin = 25
     return (rows, cols, cellSize, margin)

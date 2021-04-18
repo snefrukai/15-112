@@ -2765,7 +2765,17 @@ rev
   - if not legal, undo
     - fallingPieceIsLegal()
 
-- Dropping and Placing the fallingPiece and Handling Game-Over
+#### 6 Dropping and Placing the fallingPiece and Handling Game-Over
+
+- piece stops moving
+  - timerFired # no user illegal move
+    - if not moveFallingPiece() # add return bool
+- placeFallingPiece() # fallingPiece'data to board
+  - board[x][y] = fallingPieceColor
+- newFallingPiece()
+- gameover
+  - not fallingPieceIsLegal()
+
 - Removing Full Rows and Keeping Score
 - More Ideas
   - if user presses 'b', then switches to
