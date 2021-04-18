@@ -197,6 +197,10 @@ def isRectangular(l):
     return True
 
 
+# ============================================================================ #
+#
+
+
 def makeMagicSquare(n):
     if n % 2 == 0 or n < 0: return None
     pesudo = '/'
@@ -217,8 +221,86 @@ def makeMagicSquare(n):
     return l
 
 
+# ============================================================================ #
+#* Tetris
+# ============================================================================ #
+
+# ============================================================================ #
+#
+
+
+def appStarted(app):
+    app.rows, app.cols, app.cellSize, app.margin = gameDimensions()
+    app.emptyColor = 'blue'
+    app.board = [[app.emptyColor] * app.cols for row in range(app.rows)]
+    # ic(app.board)
+
+    # pre-load a few cells with known colors for testing purposes
+    app.board[0][0] = "red"  # top-left is red
+    app.board[0][app.cols - 1] = "white"  # top-right is white
+    app.board[app.rows - 1][0] = "green"  # bottom-left is green
+    app.board[app.rows - 1][app.cols - 1] = "gray"  # bottom-right is gray
+
+
+# ============================================================================ #
+#
+def keyPressed(app, event):
+    pass
+
+
+# ============================================================================ #
+#
+
+
+def drawCell(app, canvas, row, col):
+    x = app.margin + app.cellSize * col
+    y = app.margin + app.cellSize * row
+    canvas.create_rectangle(
+        x,
+        y,
+        x + app.cellSize,
+        y + app.cellSize,
+        fill=app.board[row][col],
+        width=3,
+    )
+
+
+def drawBoard(app, canvas):
+    rows, cols = len(app.board), len(app.board[0])
+    for row in range(rows):
+        for col in range(cols):
+            drawCell(app, canvas, row, col)
+
+
+def redrawAll(app, canvas):
+    canvas.create_rectangle(
+        0,
+        0,
+        app.width,
+        app.height,
+        fill='orange',
+    )
+
+    drawBoard(app, canvas)
+
+
+# ============================================================================ #
+#
+
+
+def gameDimensions():
+    rows, cols = 15, 10
+    # rows, cols = 4, 4
+    cellSize = 20
+    margin = 25
+    return (rows, cols, cellSize, margin)
+
+
 def playTetris():
-    print('Replace this with your Tetris game!')
+    (rows, cols, cellSize, margin) = gameDimensions()
+    l_len = [margin * 2 + cellSize * n for n in [rows, cols]]
+    width, height = l_len[1], l_len[0]
+    runApp(width=width, height=height)
 
 
 #################################################

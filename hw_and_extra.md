@@ -2543,7 +2543,7 @@ rev
 info
 
 - not use recursion
-- 有些难度,考虑先做下 ep
+- 感觉些难度,考虑先做下 ep
 
 ### [case study](https://www.cs.cmu.edu/~112/notes/2d-list-case-studies.html)
 
@@ -2613,7 +2613,7 @@ step
   - check sub val
 - return True
 
-### makeMagicSquare
+### 2 makeMagicSquare
 
 def
 
@@ -2650,6 +2650,68 @@ step
 - 7
   - 2,0
   - (-1), (2+1)
+
+### 3 [Tetris](https://www.cs.cmu.edu/~112/notes/notes-tetris/index.html)
+
+def
+
+- may not use a different design
+- write code according to a specific algorithm, rather than writing code to solve a specific problem
+- Design Overview
+  - two main elements
+    - a falling piece
+      - is drawn over the board
+      - is a 2-dimensional list of booleans
+      - becomes part of the board when it can no longer fall
+      - introduced other colors
+      - to fill rows entirely with non-empty colors to remove row
+    - a board
+      - is full of one color, the emptyColor
+    - pause with 'p'
+    - step w 's'
+    - reset w 'r'
+- ref
+  - https://inventwithpython.com/pygame/chapter7.html
+  - game
+    - https://tetris.com/play-tetris
+    - https://www.lumpty.com/amusements/Games/Tetris/tetris.html
+
+step
+
+- Creating and Drawing the board
+  - appStarted(app)
+    - set app parameter from gameDimensions()
+    - app.board
+      - 2d list of str[['color names']]
+    - app.emptyColor
+    - test code
+  - redrawAll()
+    - drawBoard()
+      - iterate over every cell
+        - call drawCell(app,canvas,row,col)
+    - drawCell()
+      - use the color stored in the board[row][col]
+  - gameDimensions()
+    - set default parameters
+    - return tuple
+  - playTetris()
+    - set width and height for app window
+    - start app
+- Creating and Drawing the fallingPiece
+- Moving the fallingPiece left/right/down
+- Rotating the fallingPiece
+- Dropping and Placing the fallingPiece and Handling Game-Over
+- Removing Full Rows and Keeping Score
+- More Ideas
+  - if user presses 'b', then switches to
+  - show destination on mouse position
+  - multi level for bonus score
+  - show next cube
+
+rev
+
+- the goal is not to re-create a game
+  - but to practice knowledge and skills
 
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)
 
