@@ -229,7 +229,17 @@ def makeMagicSquare(n):
 #
 
 
+def newFallingPiece(app):
+    i = random.randint(0, len(app.tetrisPieces) - 1)
+    l_i = [v[i] for v in [app.tetrisPieces, app.tetrisPieceColors]]
+    app.fallingPiece, app.fallingPieceColor = l_i[0], l_i[1]
+    app.fallingPieceRow = 0
+    app.fallingPieceCol = app.cols // 2 - len(app.fallingPiece[0]) // 2
+    # 10//2 - 3//2 = 5 -1 = 4
+
+
 def appStarted(app):
+    # set board
     app.rows, app.cols, app.cellSize, app.margin = gameDimensions()
     app.emptyColor = 'blue'
     app.board = [[app.emptyColor] * app.cols for row in range(app.rows)]
@@ -241,47 +251,86 @@ def appStarted(app):
     app.board[app.rows - 1][0] = "green"  # bottom-left is green
     app.board[app.rows - 1][app.cols - 1] = "gray"  # bottom-right is gray
 
+    # Seven "standard" pieces (tetrominoes)
+    iPiece = [[True, True, True, True]]
+    jPiece = [
+        [True, False, False],
+        [True, True, True],
+    ]
+    lPiece = [
+        [False, False, True],
+        [True, True, True],
+    ]
+    oPiece = [
+        [True, True],
+        [True, True],
+    ]
+    sPiece = [
+        [False, True, True],
+        [True, True, False],
+    ]
+    tPiece = [
+        [False, True, False],
+        [True, True, True],
+    ]
+    zPiece = [
+        [True, True, False],
+        [False, True, True],
+    ]
+    app.tetrisPieces = [iPiece, jPiece, lPiece, oPiece, sPiece, tPiece, zPiece]
+    app.tetrisPieceColors = [
+        "red", "yellow", "magenta", "pink", "cyan", "green", "orange"
+    ]
+    newFallingPiece(app)
+
 
 # ============================================================================ #
 #
 def keyPressed(app, event):
-    pass
+    # test code for newFallingPiece
+    if event.key == 'n': newFallingPiece(app)
 
 
 # ============================================================================ #
 #
 
 
-def drawCell(app, canvas, row, col):
-    x = app.margin + app.cellSize * col
-    y = app.margin + app.cellSize * row
-    canvas.create_rectangle(
-        x,
-        y,
-        x + app.cellSize,
-        y + app.cellSize,
-        fill=app.board[row][col],
-        width=3,
-    )
+def drawCell(app, canvas, row, col, color):
+    l0 = [app.margin + app.cellSize * v for v in [row, col]]
+    x0, y0 = l0[1], l0[0]
+    l1 = [v + app.cellSize for v in [x0, y0]]
+    x1, y1 = l1[0], l1[1]
+    canvas.create_rectangle(x0, y0, x1, y1, fill=color, width=3)
 
 
 def drawBoard(app, canvas):
-    rows, cols = len(app.board), len(app.board[0])
+    l = app.board
+    rows, cols = len(l), len(l[0])
     for row in range(rows):
         for col in range(cols):
-            drawCell(app, canvas, row, col)
+            drawCell(app, canvas, row, col, app.board[row][col])
+
+
+def drawFallingPiece(app, canvas):
+    l = app.fallingPiece
+    rows, cols = len(l), len(l[0])
+    for row in range(rows):
+        for col in range(cols):
+            if l[row][col] == True:
+                drawCell(
+                    app,
+                    canvas,
+                    app.fallingPieceRow + row,
+                    app.fallingPieceCol + col,
+                    app.fallingPieceColor,
+                )
 
 
 def redrawAll(app, canvas):
-    canvas.create_rectangle(
-        0,
-        0,
-        app.width,
-        app.height,
-        fill='orange',
-    )
+    canvas.create_rectangle(0, 0, app.width, app.height, fill='orange')
 
     drawBoard(app, canvas)
+    drawFallingPiece(app, canvas)
 
 
 # ============================================================================ #
@@ -300,7 +349,7 @@ def playTetris():
     (rows, cols, cellSize, margin) = gameDimensions()
     l_len = [margin * 2 + cellSize * n for n in [rows, cols]]
     width, height = l_len[1], l_len[0]
-    runApp(width=width, height=height)
+    runApp(width=width, height=height)  # start app
 
 
 #################################################

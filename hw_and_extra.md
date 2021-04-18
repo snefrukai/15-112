@@ -2656,48 +2656,75 @@ step
 def
 
 - may not use a different design
-- write code according to a specific algorithm, rather than writing code to solve a specific problem
-- Design Overview
-  - two main elements
-    - a falling piece
-      - is drawn over the board
-      - is a 2-dimensional list of booleans
-      - becomes part of the board when it can no longer fall
-      - introduced other colors
-      - to fill rows entirely with non-empty colors to remove row
-    - a board
-      - is full of one color, the emptyColor
-    - pause with 'p'
-    - step w 's'
-    - reset w 'r'
+- write code according to a specific algorithm
+  - rather than writing code to solve a specific problem
 - ref
   - https://inventwithpython.com/pygame/chapter7.html
   - game
     - https://tetris.com/play-tetris
     - https://www.lumpty.com/amusements/Games/Tetris/tetris.html
 
-step
+#### 1 Design Overview
 
-- Creating and Drawing the board
-  - appStarted(app)
-    - set app parameter from gameDimensions()
-    - app.board
-      - 2d list of str[['color names']]
-    - app.emptyColor
-    - test code
-  - redrawAll()
-    - drawBoard()
-      - iterate over every cell
-        - call drawCell(app,canvas,row,col)
-    - drawCell()
-      - use the color stored in the board[row][col]
+- two main elements
+  - a falling piece
+    - is drawn over the board
+    - is a 2-dimensional list of booleans
+    - becomes part of the board when it can no longer fall
+    - introduced other colors
+    - to fill rows entirely with non-empty colors to remove row
+  - a board
+    - is full of one color, the emptyColor
+- pause with 'p'
+- step w 's'
+- reset w 'r'
+
+#### 2 Creating and Drawing the board
+
+- basic setup
   - gameDimensions()
     - set default parameters
     - return tuple
   - playTetris()
     - set width and height for app window
     - start app
-- Creating and Drawing the fallingPiece
+- draw board
+  - appStarted(app)
+    - set app parameter from gameDimensions()
+    - app.board
+      - 2d list of str[['color names']]
+    - app.emptyColor
+  - redrawAll(app,canvas)
+    - drawBoard()
+      - iterate over every cell
+        - call drawCell()
+    - drawCell(app,canvas,row,col)
+      - use the color stored in the board[row][col]
+- test code 
+
+#### 3 Creating and Drawing the fallingPiece
+
+- select a random falling piece in a random color
+  - set pieces parameter 
+    - tetrisPieces
+      - list of boolean
+      - whether the given cell is painted
+    - tetrisPieceColors 
+  - newFallingPiece(app)
+    - randomly choose i from pieces
+      - set fallingPiece 
+      - set fallingPieceColor 
+    - position in middle of the top row
+      - set fallingPieceRow
+      - set fallingPieceCol
+- draw it over the board
+  - drawFallingPiece()
+    - iterate over each cell in the fallingPiece
+    - if T: call drawCell
+  - add color parameter to drawCell() 
+- test code
+
+- changes the falling piece whenever any key is pressed
 - Moving the fallingPiece left/right/down
 - Rotating the fallingPiece
 - Dropping and Placing the fallingPiece and Handling Game-Over
@@ -2710,8 +2737,8 @@ step
 
 rev
 
-- the goal is not to re-create a game
-  - but to practice knowledge and skills
+- the goal is to practice knowledge and skills
+  - not just to re-create a game
 
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)
 
