@@ -6,9 +6,9 @@ import math, copy, random
 # import decimal
 # from cmu_112_graphics import *
 from icecream import ic
+from hw3 import test_unexpected
 
 import cs112_s21_week8_linter
-from hw3 import test_unexpected
 from extra_practice5 import dotProduct
 
 # ============================================================================ #
@@ -31,8 +31,8 @@ def make_2d_list_cols(board):
 
 def isLatinSquare_count_is_1(l):
     for val in l[0]:
-        for i in range(len(l)):
-            if l[i].count(val) != 1: return False
+        for row in l:  # in each row
+            if row.count(val) != 1: return False
     return True
 
 
@@ -54,10 +54,10 @@ def matrixMultiply(l1, l2):
     n2 = len(l2)  # if isinstance(m2[0], list) else 1  # row of m2
     if n1 != n2: return None
 
-    l_p = make_2d_list_cols(l2)
     l = []
-    for k in range(len(l1)):  #? can the nested loop be extracted, w op func
-        l_row = [dotProduct(l1[k], p) for p in l_p]
+    l_p = make_2d_list_cols(l2)
+    for m in l1:  #? can the nested loop be extracted, w op func
+        l_row = [dotProduct(m, p) for p in l_p]
         l += [l_row]  # as 2d
     return l
 
