@@ -226,20 +226,6 @@ def makeMagicSquare(n):
 # ============================================================================ #
 
 # ============================================================================ #
-# helper
-# ============================================================================ #
-
-
-def loop_each_cell(l, f):
-    rows, cols = len(l), len(l[0])
-    for row in range(rows):
-        for col in range(cols):
-            # f(l, row, col)  #? how to return bool
-            bool = f(l, row, col)
-            if bool != None: return bool
-
-
-# ============================================================================ #
 # model
 # ============================================================================ #
 
@@ -304,6 +290,15 @@ def appStarted(app):
 # ============================================================================ #
 
 
+def loop_each_cell(l, f):
+    rows, cols = len(l), len(l[0])
+    for row in range(rows):
+        for col in range(cols):
+            # f(l, row, col)  #? how to return bool
+            bool = f(l, row, col)
+            if bool != None: return bool
+
+
 def fallingPieceIsLegal(app):
     def f(l, row, col):
         if l[row][col] == True:
@@ -311,24 +306,48 @@ def fallingPieceIsLegal(app):
             y = app.fallingPieceCol + col
             onBoard = x in range(app.rows) and y in range(app.cols)
             # ic(app.fallingPieceRow, row, app.fallingPieceCol, col)
-            if not onBoard:
-                return False
-            elif app.board[x][y] != app.emptyColor:
-                return False
+            if not onBoard: return False
+            elif app.board[x][y] != app.emptyColor: return False
 
     bool = loop_each_cell(app.fallingPiece, f)
-    if bool == False: return False
-    else: return True
+    return False if bool == False else True
+
+
+# ============================================================================ #
+#
+
+
+def legal_backtrack(app, f):
+    l, row, col = app.fallingPiece, app.fallingPieceRow, app.fallingPieceCol
+    f()
+    if not fallingPieceIsLegal(app):
+        app.fallingPiece, app.fallingPieceRow, app.fallingPieceCol = l, row, col
 
 
 def moveFallingPiece(app, key):
-    l_temp = [app.fallingPieceRow, app.fallingPieceCol]
-    if key == 'Down': app.fallingPieceRow += 1  # ['Down', 'Right', 'Left']
-    else: app.fallingPieceCol += 1 if key == 'Right' else -1
+    def f():  # ['Down', 'Right', 'Left']
+        if key == 'Down': app.fallingPieceRow += 1
+        else: app.fallingPieceCol += 1 if key == 'Right' else -1
 
-    # ic(fallingPieceIsLegal(app))
-    if not fallingPieceIsLegal(app):
-        app.fallingPieceRow, app.fallingPieceCol = l_temp[0], l_temp[1]
+    legal_backtrack(app, f)
+
+
+def rotateFallingPiece(app):
+    def f():
+        l = app.fallingPiece
+        rows, cols = len(l), len(l[0])
+        l_dimens = [rows, cols]
+        l_new = [[None] * rows for i in range(cols)]
+
+        for row in range(rows):
+            for col in range(cols):
+                l_new[-1 - col][row] = l[row][col]
+        app.fallingPiece = l_new
+        app.fallingPieceRow += l_dimens[0] // 2 - len(app.fallingPiece) // 2
+        app.fallingPieceCol += l_dimens[1] // 2 - len(app.fallingPiece[0]) // 2
+        #? step
+
+    legal_backtrack(app, f)
 
 
 # ============================================================================ #
@@ -342,6 +361,12 @@ def keyPressed(app, event):
     # move piece
     if event.key in ['Right', 'Left', 'Down']:
         moveFallingPiece(app, event.key)
+    elif event.key in ['Up']:
+        rotateFallingPiece(app)
+
+
+def mousePressed(app, event):
+    rotateFallingPiece(app)
 
 
 # ============================================================================ #
@@ -350,11 +375,9 @@ def keyPressed(app, event):
 
 
 def drawCell(app, canvas, row, col, color):
-    l0 = [app.margin + app.cellSize * v for v in [row, col]]
-    x0, y0 = l0[1], l0[0]
-    l1 = [v + app.cellSize for v in [x0, y0]]
-    x1, y1 = l1[0], l1[1]
-    canvas.create_rectangle(x0, y0, x1, y1, fill=color, width=3)
+    l0 = [app.margin + app.cellSize * v for v in [col, row]]
+    l1 = [v + app.cellSize for v in l0]
+    canvas.create_rectangle(l0[0], l0[1], l1[0], l1[1], fill=color, width=3)
 
 
 def drawBoard(app, canvas):
@@ -415,9 +438,8 @@ def gameDimensions():
 
 def playTetris():
     (rows, cols, cellSize, margin) = gameDimensions()
-    l_len = [margin * 2 + cellSize * n for n in [rows, cols]]
-    width, height = l_len[1], l_len[0]
-    runApp(width=width, height=height)  # start app
+    l = [margin * 2 + cellSize * n for n in [cols, rows]]
+    runApp(width=l[0], height=l[1])  # start app
 
 
 #################################################

@@ -2658,14 +2658,19 @@ def
 - may not use a different design
 - write code according to a specific algorithm
   - rather than writing code to solve a specific problem
-- ref
-  - https://inventwithpython.com/pygame/chapter7.html
-  - game
-    - https://tetris.com/play-tetris
-    - https://www.lumpty.com/amusements/Games/Tetris/tetris.html
 
-helper
-- loop_each_cell
+ref
+
+- https://inventwithpython.com/pygame/chapter7.html
+- game
+  - https://tetris.com/play-tetris
+  - https://www.lumpty.com/amusements/Games/Tetris/tetris.html
+
+rev
+
+- the goal is to practice knowledge and skills
+  - not just to re-create a game
+
 #### 1 Design Overview
 
 - two main elements
@@ -2676,10 +2681,14 @@ helper
     - introduced other colors
     - to fill rows entirely with non-empty colors to remove row
   - a board
-    - is full of one color, the emptyColor
-- pause with 'p'
-- step w 's'
-- reset w 'r'
+    - is full of one color(emptyColor)
+- hci
+  - pause 'p'
+  - step 's'
+  - reset 'r'
+- helper
+  - loop_each_cell
+    - 因为 parameter 数量的限制，只适合这个项目？
 
 #### 2 Creating and Drawing the board
 
@@ -2689,27 +2698,24 @@ helper
     - return tuple
   - playTetris()
     - set width and height for app window
-    - start app
+    - call app
 - draw board
   - appStarted(app)
     - set app parameter from gameDimensions()
-    - app.board
-      - 2d list of str[['color names']]
+    - app.board # 2d list of str[['color names']]
     - app.emptyColor
   - redrawAll(app,canvas)
-    - drawBoard()
-      - iterate over every cell
-        - call drawCell()
+    - drawBoard() # loop each cell
+      - call drawCell()
     - drawCell(app,canvas,row,col)
-      - use the color stored in the board[row][col]
+      - fill = board[row][col]
 - test code
 
 #### 3 Creating and Drawing the fallingPiece
 
 - select a random falling piece in a random color
   - set pieces parameter
-    - tetrisPieces
-      - list of boolean
+    - tetrisPieces # list of boolean
       - whether the given cell is painted
     - tetrisPieceColors
   - newFallingPiece(app)
@@ -2720,30 +2726,45 @@ helper
       - set fallingPieceRow
       - set fallingPieceCol
 - draw it over the board
-  - drawFallingPiece()
-    - iterate every cell in fallingPiece
-    - if T: call drawCell
-  - add color parameter to drawCell()
+  - drawFallingPiece() # loop each cell in fallingPiece
+    - if T: call drawCell()
+      - add color parameter
 - test code
-  - changes the falling piece whenever any key is pressed
+  - changes the falling piece if key == 'n'
 
 #### 4 Moving the fallingPiece left/right/down
 
 - make move
-  - when key pressed is in direction
+  - if keys in [directions]
   - moveFallingPiece()
-  - check legal
-    - the result of the move
-    - fallingPieceIsLegal()
-      - iterate every cell in fallingPiece
+    - save var temp
+  - if not legal, undo # the result of the move
+    - fallingPieceIsLegal() # loop each cell in fallingPiece
       - on board
       - no collision -> empty color
-    - if not legal, undo
 - when piece reach bottom
-
   - stay until reset
 
-- Rotating the fallingPiece
+#### 5 Rotating the fallingPiece
+
+- make change
+  - if key == 'Up'
+  - rotateFallingPiece() # 90 degrees counterclockwise
+    - save var temp
+      - [1,2,3]
+      - [4,5,6]
+      - to
+      - [3,6]
+      - [2,5]
+      - [1,4]
+    - col_new = reversed(row)
+      - [3,2,1]
+    - row_new = col[-1]
+      - [3,6]
+    - update location
+  - if not legal, undo
+    - fallingPieceIsLegal()
+
 - Dropping and Placing the fallingPiece and Handling Game-Over
 - Removing Full Rows and Keeping Score
 - More Ideas
@@ -2751,11 +2772,6 @@ helper
   - show destination on mouse position
   - multi level for bonus score
   - show next cube
-
-rev
-
-- the goal is to practice knowledge and skills
-  - not just to re-create a game
 
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)
 
