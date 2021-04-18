@@ -2664,6 +2664,8 @@ def
     - https://tetris.com/play-tetris
     - https://www.lumpty.com/amusements/Games/Tetris/tetris.html
 
+helper
+- loop_each_cell
 #### 1 Design Overview
 
 - two main elements
@@ -2700,32 +2702,47 @@ def
         - call drawCell()
     - drawCell(app,canvas,row,col)
       - use the color stored in the board[row][col]
-- test code 
+- test code
 
 #### 3 Creating and Drawing the fallingPiece
 
 - select a random falling piece in a random color
-  - set pieces parameter 
+  - set pieces parameter
     - tetrisPieces
       - list of boolean
       - whether the given cell is painted
-    - tetrisPieceColors 
+    - tetrisPieceColors
   - newFallingPiece(app)
     - randomly choose i from pieces
-      - set fallingPiece 
-      - set fallingPieceColor 
+      - set fallingPiece
+      - set fallingPieceColor
     - position in middle of the top row
       - set fallingPieceRow
       - set fallingPieceCol
 - draw it over the board
   - drawFallingPiece()
-    - iterate over each cell in the fallingPiece
+    - iterate every cell in fallingPiece
     - if T: call drawCell
-  - add color parameter to drawCell() 
+  - add color parameter to drawCell()
 - test code
+  - changes the falling piece whenever any key is pressed
 
-- changes the falling piece whenever any key is pressed
-- Moving the fallingPiece left/right/down
+#### 4 Moving the fallingPiece left/right/down
+
+- make move
+  - when key pressed is in direction
+  - moveFallingPiece()
+  - check legal
+    - the result of the move
+    - fallingPieceIsLegal()
+      - iterate every cell in fallingPiece
+      - on board
+      - no collision -> empty color
+    - if not legal, undo
+- when piece reach bottom
+
+  - stay until reset
+
 - Rotating the fallingPiece
 - Dropping and Placing the fallingPiece and Handling Game-Over
 - Removing Full Rows and Keeping Score

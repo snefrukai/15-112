@@ -226,7 +226,22 @@ def makeMagicSquare(n):
 # ============================================================================ #
 
 # ============================================================================ #
-#
+# helper
+# ============================================================================ #
+
+
+def loop_each_cell(l, f):
+    rows, cols = len(l), len(l[0])
+    for row in range(rows):
+        for col in range(cols):
+            # f(l, row, col)  #? how to return bool
+            bool = f(l, row, col)
+            if bool != None: return bool
+
+
+# ============================================================================ #
+# model
+# ============================================================================ #
 
 
 def newFallingPiece(app):
@@ -285,14 +300,53 @@ def appStarted(app):
 
 
 # ============================================================================ #
-#
-def keyPressed(app, event):
-    # test code for newFallingPiece
-    if event.key == 'n': newFallingPiece(app)
+# controller
+# ============================================================================ #
+
+
+def fallingPieceIsLegal(app):
+    def f(l, row, col):
+        if l[row][col] == True:
+            x = app.fallingPieceRow + row
+            y = app.fallingPieceCol + col
+            onBoard = x in range(app.rows) and y in range(app.cols)
+            # ic(app.fallingPieceRow, row, app.fallingPieceCol, col)
+            if not onBoard:
+                return False
+            elif app.board[x][y] != app.emptyColor:
+                return False
+
+    bool = loop_each_cell(app.fallingPiece, f)
+    if bool == False: return False
+    else: return True
+
+
+def moveFallingPiece(app, key):
+    l_temp = [app.fallingPieceRow, app.fallingPieceCol]
+    if key == 'Down': app.fallingPieceRow += 1  # ['Down', 'Right', 'Left']
+    else: app.fallingPieceCol += 1 if key == 'Right' else -1
+
+    # ic(fallingPieceIsLegal(app))
+    if not fallingPieceIsLegal(app):
+        app.fallingPieceRow, app.fallingPieceCol = l_temp[0], l_temp[1]
 
 
 # ============================================================================ #
 #
+
+
+def keyPressed(app, event):
+    # test code for newFallingPiece
+    if event.key == 'n': newFallingPiece(app)
+
+    # move piece
+    if event.key in ['Right', 'Left', 'Down']:
+        moveFallingPiece(app, event.key)
+
+
+# ============================================================================ #
+# view
+# ============================================================================ #
 
 
 def drawCell(app, canvas, row, col, color):
@@ -304,26 +358,39 @@ def drawCell(app, canvas, row, col, color):
 
 
 def drawBoard(app, canvas):
-    l = app.board
-    rows, cols = len(l), len(l[0])
-    for row in range(rows):
-        for col in range(cols):
-            drawCell(app, canvas, row, col, app.board[row][col])
+    def f(l, row, col):
+        drawCell(app, canvas, row, col, app.board[row][col])
+
+    loop_each_cell(app.board, f)
 
 
 def drawFallingPiece(app, canvas):
-    l = app.fallingPiece
-    rows, cols = len(l), len(l[0])
-    for row in range(rows):
-        for col in range(cols):
-            if l[row][col] == True:
-                drawCell(
-                    app,
-                    canvas,
-                    app.fallingPieceRow + row,
-                    app.fallingPieceCol + col,
-                    app.fallingPieceColor,
-                )
+    def f(l, row, col):
+        if l[row][col] == True:
+            drawCell(app, canvas, app.fallingPieceRow + row,
+                     app.fallingPieceCol + col, app.fallingPieceColor)
+
+    loop_each_cell(app.fallingPiece, f)
+
+
+# def drawBoard(app, canvas):
+#     l = app.board
+#     rows, cols = len(l), len(l[0])
+#     for row in range(rows):
+#         for col in range(cols):
+#             drawCell(app, canvas, row, col, app.board[row][col])
+
+# def drawFallingPiece(app, canvas):
+#     l = app.fallingPiece
+#     rows, cols = len(l), len(l[0])
+#     for row in range(rows):
+#         for col in range(cols):
+#             if l[row][col] == True:
+#                 drawCell(app, canvas, app.fallingPieceRow + row,
+#                          app.fallingPieceCol + col, app.fallingPieceColor)
+
+# ============================================================================ #
+#
 
 
 def redrawAll(app, canvas):
@@ -334,7 +401,8 @@ def redrawAll(app, canvas):
 
 
 # ============================================================================ #
-#
+# setup
+# ============================================================================ #
 
 
 def gameDimensions():
