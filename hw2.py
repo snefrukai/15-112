@@ -4,9 +4,10 @@
 # andrew id:
 #################################################
 
-import decimal
+import decimal, math
+from icecream import ic
+
 import cs112_s21_week2_linter
-import math
 from extra_practice1 import getKthDigit
 from extra_practice1 import setKthDigit
 
@@ -126,7 +127,6 @@ def nthCircularPrime(nth):
 def digit_count(n):
     n = abs(n)
     count = 1
-    # if n < 10: count = 1
     while n >= 10:
         n //= 10
         count += 1
@@ -271,59 +271,49 @@ def play112(game):
 
 
 def carrylessAdd(x1, x2):
-    n = 0
     count_x1 = digit_count(x1)
     count_x2 = digit_count(x2)
     count_min = min(count_x1, count_x2)
-    # countMax = max(count_x1, count_x2)
     n_max = max(x1, x2)
-    # print(count_x1, "-", count_x2, "=", count_min)
+    n = 0
     for i in range(count_min):
         rem = (x1 % 10 + x2 % 10) % 10
+        n += rem * 10**i
         x1 //= 10
         x2 //= 10
-        n += rem * 10**i
-        # print("rem:", rem, n)
     if count_x1 != count_x2:
-        # print("left:", n_max)
-        n = n + n_max // 10**count_min * 10**count_min
+        step = 10**count_min
+        n += (n_max // step) * step  # leftmost digit
     return n
-
-    # return 42
 
 
 def findZeroWithBisection(f, x0, x1, epsilon):
     xmid = (x0 + x1) / 2
     while x1 - x0 >= epsilon:
-        a = f(x0)
-        z = f(x1)
+        a, z = f(x0), f(x1)
         mid = f(xmid)
         if a * z > 0:
             return None
-        if mid != 0:
-            if a * mid > 0:
-                x0 = xmid
-            if z * mid > 0:
-                x1 = xmid
+        elif mid != 0:
+            if a * mid > 0: x0 = xmid
+            elif z * mid > 0: x1 = xmid
             xmid = (x0 + x1) / 2  # new mid
         # print(x0, "..", xmid,"..", x1)
-        if mid == 0:
+        elif mid == 0:
             return None
-
     return xmid
 
 
 def checkKaprekar(n):
-    check = n
-    count = digit_count(n)
-    # print(count)
+    if n == 1: return True
+    n_origin = n
     n = n**2
-    for i in range(2):
-        foo = n // 10**(count - 1 + i)
-        bar = n - foo * 10**(count - 1 + i)
-        # print(n, count-1+i, foo, bar)
-        if check == foo + bar and bar != 0:
-            return True
+    count = digit_count(n)
+    for i in range(count):  # two possibly-different-length parts
+        step = 10**(count - 1 - i)
+        left = n // step
+        right = n % step
+        if right != 0 and n_origin == left + right: return True
     return False
 
 
@@ -333,10 +323,7 @@ def nthKaprekarNumber(nth):
     guess = 0
     while (found <= nth):
         guess += 1
-        cond = checkKaprekar(guess)
-        if cond:
-            found += 1
-            # print(guess, checkKaprekar(guess))
+        if checkKaprekar(guess): found += 1
     return guess
 
 
@@ -569,8 +556,24 @@ def testFindZeroWithBisection():
 # nthKaprekarNumber
 
 
+def test_checkKaprekar():
+    # print(checkKaprekar(1))
+    # print(checkKaprekar(230))
+    # print(checkKaprekar(297))
+    # print(checkKaprekar(703))
+    # print(checkKaprekar(999))
+    # print(checkKaprekar(2223))
+    # print(checkKaprekar(2728))
+    # print(checkKaprekar(2729))
+    # print(checkKaprekar(100))
+    assert (checkKaprekar(5292)) == True
+    assert (checkKaprekar(5293)) == False
+
+
 def testNthKaprekarNumber():
     print('Testing nthKaprekarNumber()...', end='')
+    test_checkKaprekar()
+
     assert (nthKaprekarNumber(0) == 1)
     assert (nthKaprekarNumber(1) == 9)
     assert (nthKaprekarNumber(2) == 45)
@@ -579,6 +582,12 @@ def testNthKaprekarNumber():
     assert (nthKaprekarNumber(5) == 297)
     assert (nthKaprekarNumber(6) == 703)
     assert (nthKaprekarNumber(7) == 999)
+    assert (nthKaprekarNumber(8) == 2223)
+    assert (nthKaprekarNumber(9) == 2728)
+    # ic(nthKaprekarNumber(2))
+    ic(nthKaprekarNumber(10))
+    ic(nthKaprekarNumber(11))
+    ic(nthKaprekarNumber(12))
     print('Passed.')
 
 
@@ -913,23 +922,6 @@ def main():
     # print(findZeroWithBisection(f1, 0, 2, 0.000000001))  # 1.41421356192
     # print(findZeroWithBisection(f2, 0, 2, 0.000000001))  # 1.61803398887
     # print(findZeroWithBisection(f3, 1, 2, 0.000000001))  # 17727855081
-
-    # print(checkKaprekar(1))
-    # print(checkKaprekar(230))
-    # print(checkKaprekar(297))
-    # print(checkKaprekar(703))
-    # print(checkKaprekar(999))
-    # print(checkKaprekar(2223))
-    # print(checkKaprekar(2728))
-    # print(checkKaprekar(2729))
-    # print(checkKaprekar(100))
-    # print(nthKaprekarNumber(0)) # 1
-    # print(nthKaprekarNumber(1)) # 9
-    '''print(nthKaprekarNumber(2)) # 45
-    print(nthKaprekarNumber(3)) # 55
-    print(nthKaprekarNumber(4)) # 99
-    print(nthKaprekarNumber(5)) # 297
-    print(nthKaprekarNumber(6)) # 703'''
     '''assert(makeBoard(1) == 8)
     assert(makeBoard(2) == 88)
     assert(makeBoard(3) == 888)
