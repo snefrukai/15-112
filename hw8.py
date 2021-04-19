@@ -13,6 +13,7 @@ import math, copy, random
 from icecream import ic
 
 from cmu_112_graphics import *
+import time
 
 #################################################
 #* Helper functions
@@ -33,6 +34,13 @@ def roundHalfUp(d):
     # See other rounding options here:
     # https://docs.python.org/3/library/decimal.html#rounding-modes
     return int(decimal.Decimal(d).to_integral_value(rounding=rounding))
+
+
+def myDeepCopy(a):
+    if (isinstance(a, list) or isinstance(a, tuple)):
+        return [myDeepCopy(element) for element in a]
+    else:
+        return copy.copy(a)
 
 
 def plus(x, n):
@@ -230,25 +238,10 @@ def makeMagicSquare(n):
 # ============================================================================ #
 
 
-def newFallingPiece(app):
-    i = random.randint(0, len(app.tetrisPieces) - 1)
-    l_i = [v[i] for v in [app.tetrisPieces, app.tetrisPieceColors]]
-    app.fallingPiece, app.fallingPieceColor = l_i[0], l_i[1]
-    app.fallingPieceRow = 0
-    app.fallingPieceCol = app.cols // 2 - len(app.fallingPiece[0]) // 2
-    # 10//2 - 3//2 = 5 -1 = 4
-
-
-def appReset(app):
-    app.board = [[app.emptyColor] * app.cols for row in range(app.rows)]
-    app.isGameOver = False
-    app.isPause = False
-    newFallingPiece(app)
-
-
 def appStarted(app):
     app.rows, app.cols, app.cellSize, app.margin = gameDimensions()
-    app.emptyColor = 'blue'
+    app.board_width = app.cellSize * app.cols
+    app.timerDelay = 750  # def level
 
     #? pre-load a few cells with known colors for testing purposes
     # app.board[0][0] = "red"  # top-left is red
@@ -282,12 +275,34 @@ def appStarted(app):
         [True, True, False],
         [False, True, True],
     ]
+    app.tetrisPieces = [iPiece]
     app.tetrisPieces = [iPiece, jPiece, lPiece, oPiece, sPiece, tPiece, zPiece]
     app.tetrisPieceColors = [
         "red", "yellow", "magenta", "pink", "cyan", "green", "orange"
     ]
+    app.color_black = ["#000", "#333", "#666", "#999"]
+    app.emptyColor = app.color_black[0]
 
     appReset(app)
+
+
+def appReset(app):
+    app.board = [[app.emptyColor] * app.cols for row in range(app.rows)]
+    app.board_empty = copy.deepcopy(app.board)
+    app.isGameOver = False
+    app.isPause = False
+    app.score = 0
+    app.rows_full = []
+    newFallingPiece(app)
+
+
+def newFallingPiece(app):
+    i = random.randint(0, len(app.tetrisPieces) - 1)
+    # l_i = [v[i] for v in [app.tetrisPieces, app.tetrisPieceColors]] #? when
+    bool, color = app.tetrisPieces[i], app.tetrisPieceColors[i]
+    row, col = 0, app.cols // 2 - len(bool[0]) // 2  # 10//2 - 3//2 = 5 -1 = 4
+    app.fallingPiece = [bool, row, col, color]
+    app.shadowPiece = []
 
 
 # ============================================================================ #
@@ -296,68 +311,129 @@ def appStarted(app):
 
 
 def loop_each_cell(app, l, f):
-    rows, cols = len(l), len(l[0])
+    l_cells = l[0] if isinstance(l[1], int) else l
+    rows, cols = len(l_cells), len(l_cells[0])
+
     for row in range(rows):
         for col in range(cols):
-            if isinstance(l[row][col], str):
-                f(l, row, col)
-            elif l[row][col] == True:
-                # row += app.fallingPieceRow #? why bug
-                # col += app.fallingPieceCol
-                # bool = f(l, row, col)
-                x, y = row + app.fallingPieceRow, col + app.fallingPieceCol
-                bool = f(l, x, y)
+            if isinstance(l_cells[row][col], str):
+                f(l_cells, row, col)
+            elif l_cells[row][col] == True:
+                # row += l[1]  #? why out of range
+                # col += l[2]
+                # bool = f(l_cells, row, col)
+                x, y = row + l[1], col + l[2]
+                bool = f(l_cells, x, y)
                 if bool != None: return bool
 
 
-def fallingPieceIsLegal(app):
-    def f(l, row, col):
+def pieceIsLegal(app, l):
+    def g(list, row, col):
         onBoard = row in range(app.rows) and col in range(app.cols)
-        # ic(app.fallingPieceRow, row, app.fallingPieceCol, col)
         if not onBoard: return False
         elif app.board[row][col] != app.emptyColor: return False
 
-    bool = loop_each_cell(app, app.fallingPiece, f)
+    bool = loop_each_cell(app, l, g)
     return False if bool == False else True
+
+
+def fallingPieceIsLegal(app, l, f):  # backtrack
+    shadow = True if l == app.shadowPiece else None
+    falling = True if l == app.fallingPiece else None
+
+    l_temp = copy.deepcopy(l)
+    f()
+    bool = pieceIsLegal(app, l)
+    if bool == False:
+        # app.fallingPiece = l_temp  # using var l cant send back data too app
+        if shadow and falling:
+            app.shadowPiece = l_temp
+            app.fallingPiece = l_temp
+        elif shadow:
+            app.shadowPiece = l_temp
+        elif falling:
+            app.fallingPiece = l_temp
+        return False
+    else:
+        return True
 
 
 # ============================================================================ #
 #
 
 
-def legal_backtrack(app, f):
-    l, row, col = app.fallingPiece, app.fallingPieceRow, app.fallingPieceCol
-    f()
-    if not fallingPieceIsLegal(app):
-        app.fallingPiece, app.fallingPieceRow, app.fallingPieceCol = l, row, col
-        return False
+def hardDrop(app):
+    while True:
+        if moveFallingPiece(app, 'Down') == False: return
+
+
+def moveShadowPiece(app):  #* bonus
+    l = app.shadowPiece = copy.deepcopy(app.fallingPiece)
+
+    def f():
+        l[1] += 1
+
+    while True:
+        if fallingPieceIsLegal(app, l, f) == False: return
+
+
+def falling_piece_check_act(app, l, f):
+    bool = fallingPieceIsLegal(app, l, f)
+    if bool: moveShadowPiece(app)
+    return bool
 
 
 def moveFallingPiece(app, key):
-    def f():  # ['Down', 'Right', 'Left']
-        if key == 'Down': app.fallingPieceRow += 1
-        else: app.fallingPieceCol += 1 if key == 'Right' else -1
+    l = app.fallingPiece
 
-    bool = legal_backtrack(app, f)
-    return False if bool == False else True
+    def f():  # ['Down', 'Right', 'Left']
+        if key == 'Down': l[1] += 1
+        else: l[2] += 1 if key == 'Right' else -1
+
+    return falling_piece_check_act(app, l, f)
 
 
 def rotateFallingPiece(app):
-    def f():
-        l = app.fallingPiece
-        rows, cols = len(l), len(l[0])
-        l_dimens = [rows, cols]
-        l_new = [[None] * rows for i in range(cols)]
+    l = app.fallingPiece
 
+    def f():
+        rows, cols = len(l[0]), len(l[0][0])
+        l_new = [[None] * rows for i in range(cols)]
         for row in range(rows):
             for col in range(cols):
-                l_new[-1 - col][row] = l[row][col]
-        app.fallingPiece = l_new
-        app.fallingPieceRow += l_dimens[0] // 2 - len(app.fallingPiece) // 2
-        app.fallingPieceCol += l_dimens[1] // 2 - len(app.fallingPiece[0]) // 2
-        #? step
+                l_new[-1 - col][row] = l[0][row][col]
+        l[0] = l_new
+        l[1] += rows // 2 - len(l[0]) // 2
+        l[2] += cols // 2 - len(l[0][0]) // 2
 
-    legal_backtrack(app, f)
+    return falling_piece_check_act(app, l, f)
+
+
+# ============================================================================ #
+#
+
+
+def placeFallingPiece(app):
+    def f(l, row, col):
+        app.board[row][col] = app.fallingPiece[-1]  # transfer color
+
+    loop_each_cell(app, app.fallingPiece, f)
+    removeFullRows(app)
+    app.shadowPiece = []
+
+
+def removeFullRows(app):
+    l_unfull = []
+    for i in range(len(app.board)):
+        row = app.board[i]
+        if app.emptyColor in row: l_unfull += [row]
+        else: app.rows_full += [i]
+
+    n_full = len(app.rows_full)
+    if n_full != 0:
+        app.board = app.board_empty[:-len(l_unfull)] + l_unfull
+        app.score += n_full**2
+        app.rows_full = []  #? delay this but not the whole process
 
 
 # ============================================================================ #
@@ -378,6 +454,8 @@ def keyPressed(app, event):
             moveFallingPiece(app, event.key)
         elif event.key in ['Up']:
             rotateFallingPiece(app)
+        elif event.key in ['Space']:
+            hardDrop(app)
     elif app.isPause:
         if event.key in ['s', 'S']:
             timerFired(app)
@@ -388,19 +466,14 @@ def mousePressed(app, event):
         rotateFallingPiece(app)
 
 
-def placeFallingPiece(app):
-    def f(l, row, col):
-        app.board[row][col] = app.fallingPieceColor
-
-    loop_each_cell(app, app.fallingPiece, f)
-
-
 def timerFired(app):
     if not app.isPause:
-        if not moveFallingPiece(app, 'Down'):
+        move = moveFallingPiece(app, 'Down')
+        # if not moveFallingPiece(app, 'Down'):
+        if not move:
             placeFallingPiece(app)
             newFallingPiece(app)
-            if not fallingPieceIsLegal(app):
+            if not pieceIsLegal(app, app.fallingPiece):
                 app.isGameOver = True
                 app.isPause = True
 
@@ -410,31 +483,69 @@ def timerFired(app):
 # ============================================================================ #
 
 
-def drawCell(app, canvas, row, col, color):
+def drawCell(app, canvas, row, col, fill, outline):
     l0 = [app.margin + app.cellSize * v for v in [col, row]]
     l1 = [v + app.cellSize for v in l0]
-    canvas.create_rectangle(l0[0], l0[1], l1[0], l1[1], fill=color, width=3)
+    canvas.create_rectangle(l0[0],
+                            l0[1],
+                            l1[0],
+                            l1[1],
+                            fill=fill,
+                            width=1,
+                            outline=outline)
 
 
 def drawBoard(app, canvas):
-    def f(l, row, col):
-        drawCell(app, canvas, row, col, app.board[row][col])
+    def f(list, row, col):
+        drawCell(app, canvas, row, col, app.board[row][col],
+                 app.color_black[1])
 
     loop_each_cell(app, app.board, f)
 
 
 def drawFallingPiece(app, canvas):
-    def f(l, row, col):
-        drawCell(app, canvas, row, col, app.fallingPieceColor)
+    l = app.fallingPiece
 
-    loop_each_cell(app, app.fallingPiece, f)
+    def f(list, row, col):
+        drawCell(app, canvas, row, col, l[-1], app.color_black[1])
+
+    loop_each_cell(app, l, f)
+
+
+def drawShadowPiece(app, canvas):  #* bonus
+    l = app.shadowPiece
+
+    def f(list, row, col):
+        drawCell(app, canvas, row, col, '', app.shadowPiece[-1])
+
+    loop_each_cell(app, l, f)
+
+
+def drawRowFull(app, canvas):  #* bonus
+    for i in app.rows_full:
+        x0, y0 = app.margin, app.margin + app.cellSize * i
+        x1, y1 = app.width - app.margin, y0 + app.cellSize
+        canvas.create_rectangle(x0, y0, x1, y1, fill='black')
+
+
+# ============================================================================ #
+#
+
+
+def drawScore(app, canvas):
+    x, y = app.width / 2, app.cellSize / 2 + 4
+    canvas.create_text(x,
+                       y,
+                       fill='blue',
+                       font='Arial 12 bold',
+                       text=f'Score: {app.score}')
 
 
 def drawGameOver(app, canvas):
     height = 60
     x0, y0 = app.margin, app.margin + app.cellSize
-    x1, y1 = app.width - app.margin, y0 + height
-    canvas.create_rectangle(x0, y0, x1, y1, fill='black')
+    x1, y1 = x0 + app.board_width, y0 + height
+    canvas.create_rectangle(x0, y0, x1, y1, fill='white')
     canvas.create_text((x0 + x1) / 2,
                        y0 + height / 2,
                        fill='orange',
@@ -449,7 +560,13 @@ def drawGameOver(app, canvas):
 def redrawAll(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height, fill='orange')
     drawBoard(app, canvas)
+    drawScore(app, canvas)
+
+    if app.shadowPiece != []: drawShadowPiece(app, canvas)  #* bounus
     drawFallingPiece(app, canvas)
+
+    # if app.rows_full != []: drawRowFull(app, canvas) #* bounus
+
     if app.isGameOver: drawGameOver(app, canvas)
 
 
@@ -461,7 +578,7 @@ def redrawAll(app, canvas):
 def gameDimensions():
     rows, cols = 15, 10
     # rows, cols = 4, 4  # test
-    cellSize = 20
+    cellSize = 26
     margin = 25
     return (rows, cols, cellSize, margin)
 
@@ -469,7 +586,8 @@ def gameDimensions():
 def playTetris():
     (rows, cols, cellSize, margin) = gameDimensions()
     l = [margin * 2 + cellSize * n for n in [cols, rows]]
-    runApp(width=l[0], height=l[1])  # start app
+    width = l[0] + 200
+    runApp(width=width, height=l[1])  # start app
 
 
 #################################################

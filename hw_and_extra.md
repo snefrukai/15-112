@@ -2776,12 +2776,55 @@ rev
 - gameover
   - not fallingPieceIsLegal()
 
-- Removing Full Rows and Keeping Score
-- More Ideas
-  - if user presses 'b', then switches to
-  - show destination on mouse position
-  - multi level for bonus score
-  - show next cube
+#### 7 Removing Full Rows and Keeping Score
+
+- removeFullRows()
+  - could be at any row
+  - new board to store non empty rows
+  - call in placeFallingPiece()
+  - update score
+- score
+  - reward removing multiple lines at once
+    - square of total number of full rows
+  - dispaly
+    - drawScore()
+- hard drop
+  - if key == 'space'
+
+#### 8 More Ideas
+
+- if user presses 'b', then switches to
+- course
+  - Dual rotation
+  - Levels difficulty
+    - dropping faster
+    - **more difficult piece types**
+      - row from -1 to -n
+      - randomly choose colors other than empty
+  - More attractive pieces
+  - "Splash screens" with help instructions
+  - **Piece Preview**
+    - app.pieceNext
+      - call newPiece earlier and save
+  - (Moderate) High scores list # tedious to test
+    - if gameover: add score to list
+    - sort and display list
+  - (Moderate) A Piece editor
+    - (so you can create new types of pieces and add them to the game)
+  - (Moderate/Hard) Integration with other Tkinter widgets
+    - (buttons, menus, etc)
+  - hard
+    - Music (you can find the Tetris midi here).
+    - (Hard) High scores list, but stored on the web and shared across users.
+    - (Very Hard) Making this implementation **object-oriented**
+      - adding a Piece class with LPiece, SPiece, and so on as subclasses,
+      - then actual falling pieces as instances
+    - (Very Hard) Network-based multiplayer Tetris.
+- self
+  - **show destination**
+    - on current falling
+  - store fallingPiece info as list
+    - list works but might not be that efficient like class
 
 ## [ep8](https://www.cs.cmu.edu/~112/notes/ep8.html)
 
