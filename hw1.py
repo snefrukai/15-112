@@ -70,62 +70,60 @@ def numberOfPoolBallRows(balls):
 #################################################
 
 
-def handToDice(hand):  # 123
-    c = hand % 10
-    b = hand // 10 % 10
-    a = hand // 100 % 10
-    return a, b, c
+def handToDice(hand):  # m1m2m3 as 123
+    m3 = hand % 10
+    m2 = hand // 10 % 10
+    m1 = hand // 100 % 10
+    return m1, m2, m3
 
 
-def diceToOrderedHand(a, b, c):
-    foo = max(a, b, c) * 100 + min(a, b, c)
-    mid = a + b + c - max(a, b, c) - min(a, b, c)
-    return foo + mid * 10
+def diceToOrderedHand(a, b, c):  # m1m2m3 as 123
+    m1 = max(a, b, c)
+    m3 = min(a, b, c)
+    m2 = a + b + c - m1 - m3
+    return m1 * 100 + m2 * 10 + m3
 
 
 def playStep2(hand, dice):
     dice1 = dice % 10
     dice2 = dice // 10 % 10
-    a, b, c = handToDice(hand)
-    match2 = a == b or a == c or b == c
+    m1, m2, m3 = handToDice(hand)
+    match2 = (m1 == m2 or m1 == m3 or m2 == m3)
 
     if match2:
-        if a == b: c = dice1
-        elif a == c: b = dice1
-        else: a = dice1
+        m1 = m2 = median_number_of_3(m1, m2, m3)
         dice //= 10
-    if not match2:
-        a = max(a, b, c)
-        b = dice1
-        c = dice2
+    else:
+        m1 = max(m1, m2, m3)
+        m2 = dice2
         dice //= 100
-    hand = diceToOrderedHand(a, b, c)
-    #print(a, b, c, hand, dice)
+    m3 = dice1
+    hand = diceToOrderedHand(m1, m2, m3)
     return hand, dice
+
+
+def median_number_of_3(n1, n2, n3):
+    return (n1 + n2 + n3) - max(n1, n2, n3) - min(n1, n2, n3)
 
 
 def score(hand):
     a, b, c = handToDice(hand)
-    if a == b and b == c:
-        foo = 20 + a * 3
-    elif a == b or a == c:
-        foo = 10 + a * 2
-    elif b == c:
-        foo = 10 + b * 2
+    if a == b == c:
+        return 20 + a * 3
+    elif a == b or a == c or b == c:
+        return 10 + (median_number_of_3(a, b, c)) * 2
     else:
-        foo = max(a, b, c)
-    #print(foo)
-    return foo
+        return max(a, b, c)
 
 
 def playThreeDiceYahtzee(dice):
     a, b, c = handToDice(dice)
     hand = diceToOrderedHand(a, b, c)
     dice //= 1000
-    if a == b and b == c: return hand, score(hand)
+    if a == b == c: return hand, score(hand)
 
-    hand, dice = playStep2(hand, dice)  #s21
-    hand, dice = playStep2(hand, dice)  #s22
+    hand, dice = playStep2(hand, dice)  # s21
+    hand, dice = playStep2(hand, dice)  # s22
     return hand, score(hand)
 
 
@@ -135,65 +133,40 @@ def playThreeDiceYahtzee(dice):
 
 
 def rectanglesOverlap(x1, y1, w1, h1, x2, y2, w2, h2):
-    r1 = x1 + w1
-    b1 = y1 + h1
-    r2 = x2 + w2
-    b2 = y2 + h2
-    cond1 = r1 < x2
-    cond2 = x1 > r2
-    cond3 = b1 < y2
-    cond4 = y1 > b2
-    overlap = not (cond1 or cond2 or cond3 or cond4)
-    #print("re:", overlap)
-    return overlap
+    x1_1, y1_1 = x1 + w1, y1 + h1
+    x2_1, y2_1 = x2 + w2, y2 + h2
+    cond_hor_1, cond_hor_2 = x1_1 < x2, x2_1 < x1
+    cond_ver_1, cond_ver_2 = y1_1 < y2, y2_1 < y1
+    return not (cond_hor_1 or cond_hor_2 or cond_ver_1 or cond_ver_2)
 
 
-def getIntersect(a1, c1, a2, c2):
-    # parameter用别的var就不容易乱了
-    #x = (b1-b2)/(m2-m1)
-    #y = m1*x+b1
-    #a1*x+b1*y+c1 = 0
-    b1 = -1
-    b2 = -1
+def getIntersect(a1, c1, a2, c2):  # parameter用别的var就不容易乱了
+    # a1*x + b1*y + c1 = 0
+    # y = m1*x + b1
+    # m1*x + y + b1 = 0
+    b1, b2 = -1, -1
+    # x = (b1-b2)/(m2-m1)
     x = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1)
-    #y = (a2*c1-a1*c2)/(a1*b2-a2*b1)
-    #y = m1*x + b1
+    # y = (a2*c1-a1*c2)/(a1*b2-a2*b1)
     y = a1 * x + c1
-    #print(x, y)
     return x, y
 
 
 def getDistance(x1, y1, x2, y2):
-    foo = ((x1 - x2)**2 + (y1 - y2)**2)**0.5
-    return foo
+    return ((x1 - x2)**2 + (y1 - y2)**2)**0.5
 
 
-def threeLinesArea(m1, b1, m2, b2, m3, b3):
-    #y = m1*x + b1
+def threeLinesArea(m1, b1, m2, b2, m3, b3):  #y = m1*x + b1
     x1, y1 = getIntersect(m1, b1, m2, b2)
     x2, y2 = getIntersect(m1, b1, m3, b3)
     x3, y3 = getIntersect(m2, b2, m3, b3)
-    #print("tuple:", x1, y1, x2, y2, x3, y3)
+
     a = getDistance(x1, y1, x2, y2)
     b = getDistance(x1, y1, x3, y3)
     c = getDistance(x2, y2, x3, y3)
-    #print(a, b, c)
-    #x12 = (b1-b2)/(m2-m1)
-    #y12 = m1*x12 + b1
-    #x13 = (b1-b3)/(m3-m1)
-    #y13 = m1*x13 + b1
-    #x23 = (b2-b3)/(m3-m2)
-    #y23 = m2*x23 + b2
 
-    #a = math.sqrt((x12-x13)**2+(y12-y13)**2)
-    #b = math.sqrt((x13-x23)**2+(y13-y23)**2)
-    #c = math.sqrt((x12-x23)**2+(y12-y23)**2)
-    #print("wid:", a)
-    #print("wid:", c)
-    #print("wid:", b)
     p = (a + b + c) / 2
-    area = math.sqrt(p * (p - a) * (p - b) * (p - c))
-    #print("area:", area)
+    area = (p * (p - a) * (p - b) * (p - c))**0.5
     return area
 
 
@@ -205,12 +178,12 @@ def threeLinesArea(m1, b1, m2, b2, m3, b3):
 
 def colorBlender(rgb1, rgb2, midpoints, n):
     if not (0 <= n < midpoints + 2): return None
-    step1, step2 = 10**6, 10**3
+    step = 10**3
 
     def get_part(n):
-        r = n // step1
-        g = (n - r * step1) // step2
-        b = (n - r * step1 - g * step2)
+        r = n // step**2
+        g = n // step % step
+        b = n % step
         return r, g, b
 
     r1, g1, b1 = get_part(rgb1)

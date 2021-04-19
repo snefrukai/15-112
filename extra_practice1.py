@@ -40,8 +40,10 @@ def isDoubly(n):
     n = abs(n)
     if n >= 10000: return "too many digits"
     elif 0 < n < 1000: return "not enough digits"
-    n_left = n // 100
-    n_right = n - n_left * 100
+
+    step = 100
+    n_left = n // step
+    n_right = n % step
     return n_left == n_right
 
 
@@ -50,8 +52,10 @@ def splitPower(x, n):
     if type(x) != int or type(n) != int: return "not int"
     sign = x
     x = abs(x)
-    left = x // 10**n
-    right = x - left * 10**n
+    
+    step = 10**n
+    left = x // step
+    right = x % step
     new = left**right
     return -new if sign < 0 and right % 2 != 0 else new
 
