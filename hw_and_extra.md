@@ -13,8 +13,40 @@ info
 
 ## hw1
 
+### colorBlender(rgb1, rgb2, midpoints, nth)
+
+def
+
+- takes
+  - a non-negative integer number of midpoints
+  - a non-negative integer n
+- returns the nth color in the palette 
+  - that creates with midpoints
+  - None If n is out of range (too small or too large)
+  - represent these RGB values as a single integer
+    - first 3 digits
+    - 220-020-060
+      - color0: rgb(220,  20,  60)
+    - RGB values must be ints, not floats
+- use roundHalfUp(n) instead of round(n)
+
 ## [ep1](https://www.cs.cmu.edu/~112/notes/ep1.html)
 
+- Previous Quizzes
+  - splitPower(x,n) # S20
+    - int
+      - n > 0
+    - removes the n rightmost digits of x
+      - leaving 0 or more leftmost digits
+      - (-902,2)
+      - -9
+    - returns
+      - leftmost digits raised to the power of the rightmost digits
+      - (-9)\*\*2
+  - largestPerfectSquare
+    - non-negative int n
+    - returns the largest perfect square
+      - that is no larger than n
 - dist
   - ez
 - dist

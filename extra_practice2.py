@@ -5,10 +5,11 @@
 # Your andrew id:
 #################################################
 
-import decimal
+import math, time, decimal
+
 import cs112_s21_week2_linter
-import math
 from tkinter import *
+
 from hw2 import isPrime
 from hw2 import digit_count
 from hw2 import getLeftmostDigit
@@ -180,6 +181,44 @@ def estimatedPi(n):
 
 def estimatedPiError(n):
     return 42
+
+
+# ============================================================================ #
+# 12F
+
+
+def digit_count(n, digit):  # digit_count(123423526, 2) returns 3
+    n = abs(n)
+    count = 0
+    if n == 0 and digit == 0:
+        count == 1
+    while n > 0:
+        if digit == n % 10:
+            count += 1
+        n //= 10
+    # print(count)
+    return count
+
+
+def mostFrequentDigit(n):
+    run = 0
+    val = 0
+    n = abs(n)
+    for digit in range(10):
+        foo = 0
+        bar = n
+        while bar > 0:
+            if digit == bar % 10:
+                foo += 1
+            bar //= 10
+        if foo >= run:  # most freq
+            run = foo
+            if foo == run:
+                val = max(val, digit)
+            else:
+                val = digit
+        digit += 1
+    return (run, val)
 
 
 #################################################
@@ -491,6 +530,9 @@ def testPrimeCounting():
     testEstimatedPiError()
 
 
+# ============================================================================ #
+# 12F
+
 #################################################
 # testAll and main
 #################################################
@@ -515,16 +557,32 @@ def testAll():
     testIsSemiPrime()
     testPrimeCounting()'''
 
-
-def main():
-    cs112_s21_week2_linter.lint()
-    testAll()
     # print(leftTruncatable(9137))
     # print(nthLeftTruncatablePrime(10))
     # print(digitPowerful(25))
     # print(digitPowerful(44))
     # print(digitPowerful(176))
     # print(nthPowerfulNumber(1))
+
+    # 12F
+    # assert digit_count(123423526, 2) == 3
+    # digit_count(224, 2) #2
+    # digit_count(224, 0)  # 0
+    # digit_count(2, 2)  # 1
+    # digit_count(-2, 2)  # 1
+    # digit_count(100, 0)  # 2
+    # digit_count(0, 0)  # 1
+
+    assert mostFrequentDigit(11) == (2, 1)
+    assert mostFrequentDigit(111) == (3, 1)
+    assert mostFrequentDigit(101) == (2, 1)
+    assert mostFrequentDigit(100) == (2, 0)
+    assert mostFrequentDigit(9898) == (2, 9)
+
+
+def main():
+    cs112_s21_week2_linter.lint()
+    testAll()
 
 
 if __name__ == '__main__':
