@@ -7,6 +7,8 @@
 import cs112_s21_week1_linter
 import math
 
+from icecream import ic
+
 #################################################
 # Helper functions
 #################################################
@@ -202,7 +204,36 @@ def threeLinesArea(m1, b1, m2, b2, m3, b3):
 
 
 def colorBlender(rgb1, rgb2, midpoints, n):
-    return 42
+    if not (0 <= n < midpoints + 2): return None
+    step1, step2 = 10**6, 10**3
+
+    def get_part(n):
+        r = n // step1
+        g = (n - r * step1) // step2
+        b = (n - r * step1 - g * step2)
+        return r, g, b
+
+    r1, g1, b1 = get_part(rgb1)
+    r2, g2, b2 = get_part(rgb2)
+
+    def get_step(n1, n2, midpoints):
+        return (n1 - n2) / (midpoints + 1)
+
+    step_r = get_step(r1, r2, midpoints)
+    step_g = get_step(g1, g2, midpoints)
+    step_b = get_step(b1, b2, midpoints)
+
+    # ic(r1, g1, b1)
+    # ic(s_r, s_g, s_b)
+
+    def get_round(n, step, nth):
+        return roundHalfUp(n - step * nth)
+
+    r = get_round(r1, step_r, n)
+    g = get_round(g1, step_g, n)
+    b = get_round(b1, step_b, n)
+
+    return r * step1 + g * step2 + b
 
 
 def findIntRootsOfCubic(a, b, c, d):
@@ -337,6 +368,8 @@ def testThreeLinesArea():
 
 def testColorBlender():
     print('Testing colorBlender()... ', end='')
+    # ic(colorBlender(220020060, 189252201, 3, 2))  # 205136131
+
     # http://meyerweb.com/eric/tools/color-blend/#Ddice43C:BDFCC9:3:rgbd
     assert (colorBlender(220020060, 189252201, 3, -1) == None)
     assert (colorBlender(220020060, 189252201, 3, 0) == 220020060)
@@ -345,7 +378,7 @@ def testColorBlender():
     assert (colorBlender(220020060, 189252201, 3, 3) == 197194166)
     assert (colorBlender(220020060, 189252201, 3, 4) == 189252201)
     assert (colorBlender(220020060, 189252201, 3, 5) == None)
-    # http://meyerweb.com/eric/tools/color-blend/#0100FF:FF0280:2:rgbd
+    # # http://meyerweb.com/eric/tools/color-blend/#0100FF:FF0280:2:rgbd
     assert (colorBlender(1000255, 255002128, 2, -1) == None)
     assert (colorBlender(1000255, 255002128, 2, 0) == 1000255)
     assert (colorBlender(1000255, 255002128, 2, 1) == 86001213)
@@ -402,7 +435,8 @@ def testAll():
     testPlayThreeDiceYahtzee()
     testRectanglesOverlap()
     testThreeLinesArea()
-    #testColorBlender()
+
+    testColorBlender()
     #testFindIntRootsOfCubic()
 
 
