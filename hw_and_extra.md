@@ -401,6 +401,15 @@ for i in count_min
 
 ### nthKaprekarNumber
 
+def
+
+- Kaprekar number is a positive integer
+  - the representation of whose square
+    - two possibly-different-length parts
+    - right part is not zero
+    - add up to the original number again
+  - 1, 9, 45, 55, 99, 297, 703, 999 , 2223, 2728,...
+
 - rev
   - mid break
     - 88209
@@ -465,6 +474,15 @@ step
   - i = 1
     - rightmost 2nd digit
     - \*10\*\*1
+
+### nearestKaprekarNumber(n)
+
+def
+
+- that takes an int or float value n
+  - returns the Kaprekar number closest to n
+    - ties going to smaller value
+- check from n
 
 ## [ep2](https://www.cs.cmu.edu/~112/notes/ep2.html)
 
