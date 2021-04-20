@@ -61,29 +61,27 @@ def locker_problem(n):
 
 
 def prime_wheel_basis(n):
-    pre = n != 2 and n != 3 and n != 5
+    # pre = n != 2 and n != 3 and n != 5
     factor = n % 2 == 0 or n % 3 == 0 or n % 5 == 0 or n**0.5 == int(n**0.5)
-    return (pre and factor)
+    return factor
+    # return (pre and factor)
 
 
 def isPrime(n):
     if n == 2 or n == 3 or n == 5: return True  # exclude 2,3,5
-    if n < 2 or prime_wheel_basis(n): return False
+    elif n < 2 or prime_wheel_basis(n): return False
 
     for i in range(7, int(n**0.5), 6):  # start from 7, step 6
-        if n % i == 0 or n % (i + 5) == 0:
-            # if not prime_wheel_basis(i) and (n % i == 0 or n % (i + 5) == 0):
-            # dont need to check i with 2,3,5
-            return False
+        if n % i == 0 or n % (i + 5) == 0: return False
+        #* the range has skip multis of 2,3,5
+        # if not prime_wheel_basis(i) and (n % i == 0 or n % (i + 5) == 0):
     return True
 
 
 def nthPrime(nth):
-    found = 0
-    guess = 0
-    step = 2 if guess >= 3 else 1
+    found, guess = 0, 0
     while (found <= nth):
-        guess += step
+        guess += 2 if guess >= 3 else 1
         if (isPrime(guess)): found += 1
     return guess
 
@@ -102,38 +100,34 @@ def sieve_eratos_des(n):  #* destructive list
 
 def sieve_eratos(n):  #* non-destructive list
     l = [False if i > 3 and (i % 2 == 0) else True for i in range(n + 1)]
-    # l = [True] * (n + 1)
+    # l = [True] * (n + 1) #* about the same speed
     l[0] = l[1] = False
-    # ic(l)
 
-    # for i in range(4, len(l)): # dont need to pre edit
+    # for i in range(4, len(l)): #* dont need to pre edit
     #     if i % 2 == 0 or i % 3 == 0 or i % 5 == 0:  # or i**0.5 == int(i**0.5)
     #         l[i] = False
 
-    l_new = [2]
+    l_primes = [2]
     for p in range(3, n + 1, 2):
-        # for p in range(7, n + 1, 2):
         if l[p] == True:
-            l_new += [p]
-            for i in range(p**2, n + 1, p * 2):
-                # p is ood, p*p+p = p*(p+1) is even
-                # ic(i)
+            l_primes += [p]
+            for i in range(p**2, n + 1, p * 2):  # p ood, p*p+p = p*(p+1) even
                 l[i] = False
-    return l_new
+    return l_primes
 
 
 def sieve_course(n):  #* course method
-    isPrime = [True] * (n + 1)  # assume all are prime to start
-    isPrime[0] = isPrime[1] = False  # except 0 and 1, of course
-    primes = []
+    l = [True] * (n + 1)  # assume all are prime to start
+    l[0] = l[1] = False  # except 0 and 1, of course
+    l_primes = []
     for prime in range(n + 1):
-        if (isPrime[prime] == True):
+        if (l[prime] == True):
             # we found a prime, so add it to our result
-            primes.append(prime)
+            l_primes.append(prime)
             # and mark all its multiples as not prime
             for multiple in range(2 * prime, n + 1, prime):
-                isPrime[multiple] = False
-    return primes
+                l[multiple] = False
+    return l_primes
 
 
 # ============================================================================ #

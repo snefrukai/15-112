@@ -20,13 +20,13 @@ def
 - takes
   - a non-negative integer number of midpoints
   - a non-negative integer n
-- returns the nth color in the palette 
+- returns the nth color in the palette
   - that creates with midpoints
   - None If n is out of range (too small or too large)
   - represent these RGB values as a single integer
     - first 3 digits
     - 220-020-060
-      - color0: rgb(220,  20,  60)
+      - color0: rgb(220, 20, 60)
     - RGB values must be ints, not floats
 - use roundHalfUp(n) instead of round(n)
 
@@ -445,6 +445,26 @@ You want to make sure the Markdown render will not touch your special characters
 ```
 
 ```
+
+### carrylessMultiply (x,y)
+
+def
+
+- carrylessMultiply(643, 59)
+  - returns 417
+    - 005- = 643\*5
+    - -467 = 643\*9
+    - 417
+
+step
+
+- for i
+  - i = 0
+    - rightmost digit
+    - \*10\*\*0
+  - i = 1
+    - rightmost 2nd digit
+    - \*10\*\*1
 
 ## [ep2](https://www.cs.cmu.edu/~112/notes/ep2.html)
 
@@ -1478,9 +1498,16 @@ adv: mathematical solution
 
 ### 2 sieve prime
 
-Qs
+def
 
-- why edit list is faster than create new list
+- https://en.wikipedia.org/wiki/Wheel_factorization
+
+  - factor is coprime with basis in prime{2,3,5,7}
+
+rev
+
+- why edit list is faster than create new list?
+- **过于沉浸于自己的方法里了**
 
 step
 
@@ -1496,11 +1523,6 @@ step
     - if prime
       - add to new list
       - check list by Eratos, set F
-
-ref
-
-- https://en.wikipedia.org/wiki/Wheel_factorization
-  - factor is coprime with basis in prime{2,3,5,7}
 
 ## [ep5](https://www.cs.cmu.edu/~112/notes/ep5.html)
 
@@ -2702,6 +2724,9 @@ rev
 
 - the goal is to practice knowledge and skills
   - not just to re-create a game
+- **有点像 hw2 的 nthCircularPrime**
+  - 都是被 func 的嵌套弄得晕头转向
+  - 并且急切地想“提高效率以及复用率”
 
 #### 1 Design Overview
 

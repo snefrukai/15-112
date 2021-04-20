@@ -34,94 +34,81 @@ def roundHalfUp(d):  # helper-fn
 #################################################
 
 
-def left_digit_equal(n):
-    return n % 10 == n // 10 % 10
-
-
 def longestDigitRun(n):
+    if 0 <= n < 10: return n
     n = abs(n)
-    runNew = 1
-    run = 1  # max
-    valNew = 0
-    val = 0  # max
+    digit_max = 0
+    digit = 0
+    run_max = 1
+    run = 1
 
-    if n < 0:
-        return "negative numb"
-    if 0 <= n < 10:
-        return n
     while (n >= 10):
-        # print(n%10, "?", n//10%10)
-        if left_digit_equal(n):
-            runNew += 1
-            valNew = n % 10
-            # val = valNew
-        elif runNew > run:  # save max
-            run = runNew
-            val = n % 10
-            runNew = 1
-        elif runNew == run:  # get lower tie
-            val = min(n % 10, val)
-            runNew = 1
+        digit = n % 10
+        if digit == n // 10 % 10:
+            run += 1
+        else:
+            digit_max = digit if run > run_max else min(digit, digit_max)
+            run_max = run
+            run = 1
         n //= 10
-    if runNew > 1 and val == 0:  # 22222, 1000001
-        return valNew
-    # else: return val
-    else:
-        return val
+
+    if run > 1 and digit_max == 0: return digit  # 22222, 1000001
+    else: return digit_max
+
+
+# ============================================================================ #
+#
 
 
 def isPrime(n):
-    if n == 2 or n == 3: return True
     factor = int(n**0.5)
-    cond = n < 2 or n % 2 == 0 or n % 3 == 0 or n == factor**2
-    if cond: return False
+    if n == 2 or n == 3: return True
+    elif n < 2 or n % 2 == 0 or n % 3 == 0 or n**0.5 == factor: return False
 
     for i in range(5, factor + 1, 6):
-        cond = n % i == 0 or n % (i + 2) == 0
-        if cond: return False
+        if n % i == 0 or n % (i + 2) == 0: return False
     return True
 
 
-def circular_p_digit(n):  # not have [0, 5, 2, 4, 6, 8]
+def circular_prime(n):  # all rotates are prime(n):
     n = abs(n)
-    # when n < 10, return...?
-    while n >= 10:
-        n = n // 10
-        # print(n % 10%2)
-        if n % 10 == 0 or n % 10 % 2 == 0 or n % 10 % 5 == 0:
-            return False
-    return True
 
+    def check_digit(n):
+        while n >= 10:  # not have [0, 5, 2, 4, 6, 8]
+            digit = n % 10
+            if digit == 0 or digit % 2 == 0 or digit % 5 == 0: return False
+            n //= 10  # when n < 10, return...?
+        return True
 
-def circular_p_rotate(n):  # all rotates are prime(n):
-    n = abs(n)
-    if (n <= 11): return True
-    count = digit_count(n)
-    # if not digitCheck: return False
-    for i in range(1, count):
-        # a = n
-        # count1 = 1
-        # while (a >= 10):
-        #     a = a // 10
-        #     count1 += 1
-        # # print("left1:", a, count1)
-        # foo = (n - a * 10**(count1 - 1)) * 10 + a
-        n = n // 10 + n % 10 * 10**(count - 1)
-        # print("rotate:", i, foo)
-        if not isPrime(n): return False
-    return True
+    def check_rotate(n):
+        if (n <= 11): return True
+        count = digit_count(n)
+        for i in range(1, count):
+            n = n % 10 * 10**(count - 1) + n // 10
+            if not isPrime(n): return False
+        return True
+
+    return (check_digit(n) and isPrime(n) and check_rotate(n))
 
 
 def nthCircularPrime(nth):
+    def f(n):
+        return circular_prime(n)
+
+    return counter_int_positive(nth, f)
+
+
+def counter_int_positive(nth, f):
     found = 0
     guess = 0
     while (found <= nth):
         guess += 1
-        cond = circular_p_digit(guess) and isPrime(
-            guess) and circular_p_rotate(guess)
-        if cond: found += 1
-        # print(guess, isPrime(guess), circular_p_rotate(guess))
+        if f(guess): found += 1
     return guess
+
+
+# ============================================================================ #
+#
 
 
 def digit_count(n):
@@ -133,38 +120,26 @@ def digit_count(n):
     return count
 
 
-def palindromic_digit(n):
-    if n > 10:
-        count = digit_count(n)
-        for i in range(int(count / 2)):
-            a = getKthDigit(n, count - 1 - i)
-            z = getKthDigit(n, i)
-            # a = n[i]
-            # z = n[-1 - i]
-            # print(i, a, "..", z)
-            if a != z: return False
-    return True
+def palindromic_prime(n):
+    def check_palindro(n):
+        if n > 10:
+            count = digit_count(n)
+            for i in range(int(count / 2)):
+                # a = getKthDigit(n, count - 1 - i)  # a = n[i]
+                # z = getKthDigit(n, i)  # z = n[-1 - i]
+                a = n // 10**(count - 1 - i) % 10
+                z = n // 10**i % 10
+                if a != z: return False
+        return True
 
-
-# def getNth(nth, cond):
-#     found = 0
-#     guess = 0
-#     while (found <= nth):
-#         guess += 1
-#         x = cond {cond1(guess), cond2(guess)}
-#         if x(guess): found += 1
-#     return guess
+    return isPrime(n) and check_palindro(n)
 
 
 def nthPalindromicPrime(nth):
-    found = 0
-    guess = 0
-    while (found <= nth):
-        guess += 1
-        cond = palindromic_digit(guess) and isPrime(guess)  # how to extract
-        if cond: found += 1
-        # print(guess, palindromic_digit(guess), isPrime(guess))
-    return guess
+    def f(n):
+        return palindromic_prime(n)
+
+    return counter_int_positive(nth, f)
 
 
 #################################################
@@ -287,6 +262,10 @@ def carrylessAdd(x1, x2):
     return n
 
 
+# ============================================================================ #
+#
+
+
 def findZeroWithBisection(f, x0, x1, epsilon):
     xmid = (x0 + x1) / 2
     while x1 - x0 >= epsilon:
@@ -304,6 +283,10 @@ def findZeroWithBisection(f, x0, x1, epsilon):
     return xmid
 
 
+# ============================================================================ #
+#
+
+
 def checkKaprekar(n):
     if n == 1: return True
     n_origin = n
@@ -317,14 +300,11 @@ def checkKaprekar(n):
     return False
 
 
-def nthKaprekarNumber(nth):
-    # 1, 9, 45, 55, 99, 297, 703, 999 , 2223, 2728,...
-    found = 0
-    guess = 0
-    while (found <= nth):
-        guess += 1
-        if checkKaprekar(guess): found += 1
-    return guess
+def nthKaprekarNumber(nth):  # 1, 9, 45, 55, 99, 297, 703, 999 , 2223, 2728,...
+    def f(n):
+        return checkKaprekar(n)
+
+    return counter_int_positive(nth, f)
 
 
 #################################################
@@ -475,8 +455,38 @@ def testLongestDigitRun():
     print('Passed.')
 
 
+def test_isPrime():
+    assert (isPrime(3)) == True
+    assert (isPrime(5)) == True
+    assert (isPrime(17)) == True
+    assert (isPrime(83)) == True
+    assert (isPrime(173)) == True
+    assert (isPrime(509)) == True
+    assert (isPrime(511)) == False
+    assert (isPrime(1373731)) == False
+
+    # print("prime:",isPrime(149345643266432421))
+    # testNumb = 13173
+    # print(testNumb, isPrime(testNumb) and circular_p_rotate(testNumb))
+
+
+def test_circular_prime():
+    # print(circular_p_rotate(3))
+    # print(circular_p_rotate(5))
+    # print( circular_p_rotate(19))
+    # print( circular_p_rotate(23))
+    # print(circular_p_rotate(173))
+    # print(circular_p_rotate(709))  # 097 970
+    # print(circular_p_rotate(590))
+    # print( circular_p_rotate(7937))
+    pass
+
+
 def testNthCircularPrime():
     print('Testing nthCircularPrime()...', end='')
+    test_isPrime()
+    test_circular_prime()
+
     # [2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, 97, 113,
     #  131, 197, 199, 311, 337, 373, 719, 733, 919, 971, 991, 1193, ...]
     assert (nthCircularPrime(0) == 2)
@@ -485,21 +495,131 @@ def testNthCircularPrime():
     assert (nthCircularPrime(15) == 197)
     assert (nthCircularPrime(20) == 719)
     assert (nthCircularPrime(25) == 1193)
+    # print(nthCircularPrime(0), end="?2 ")
+    # print(nthCircularPrime(1), end="?3 ")
+    # print(nthCircularPrime(2), end="?5 ")
+    # print(nthCircularPrime(3), end="?7 ")
+    # print(nthCircularPrime(4), end="?11 ")
+    # print(nthCircularPrime(5), end="?13 ")
+    # print(nthCircularPrime(6), end="?17 ")
+    # print(nthCircularPrime(7), end="?31 ") #91
+    # print(nthCircularPrime(9), end="?71 ")
+    # print(nthCircularPrime(10), end="?73 ")
+    # print(nthCircularPrime(11), end="?79 ")
+    # print(nthCircularPrime(12), end="?97 ")
+    # print(nthCircularPrime(13), end="?113 ") #bug
+    # print(nthCircularPrime(14), end=" ")
+    # print(nthCircularPrime(15), end="?197 ")
+    # print(nthCircularPrime(16), end=" ")
+    # print(nthCircularPrime(20), end="?719 ")
+    # print(nthCircularPrime(25), end="?1193 ")
+    # print(nthCircularPrime(30), end="? ")
     print('Passed!')
+
+
+def test_palindromic_prime():
+    # print(palindromic_digit(54321))
+    # print(palindromic_digit(9))
+    # print(palindromic_digit(121))
+    # print(palindromic_digit(3021))
+    # print(palindromic_digit(1011))
+    # print(palindromic_digit2(10201))
+    # print(palindromic_digit(102201))
+    pass
 
 
 def testNthPalindromicPrime():
     print('Testing nthPalindromicPrime()...', end='')
+    test_palindromic_prime()
+
     assert nthPalindromicPrime(0) == 2
     assert nthPalindromicPrime(4) == 11
     assert nthPalindromicPrime(10) == 313
     assert nthPalindromicPrime(15) == 757
     assert nthPalindromicPrime(20) == 10301
+
+    # print(nthPalindromicPrime(5))
+    # print(nthPalindromicPrime(20))  # 10301
     print('Passed.')
 
 
 def testPlay112():
     print("Testing play112()... ", end="")
+    '''assert(makeBoard(1) == 8)
+    assert(makeBoard(2) == 88)
+    assert(makeBoard(3) == 888)
+    assert(digit_count(0) == 1)
+    assert(digit_count(5) == digit_count(-5) == 1)
+    assert(digit_count(42) == digit_count(-42) == 2)
+    assert(digit_count(121) == digit_count(-121) == 3)
+    assert(getKthDigit(789, 0) == getKthDigit(-789, 0) == 9)
+    assert(getKthDigit(789, 1) == getKthDigit(-789, 1) == 8)
+    assert(getKthDigit(789, 2) == getKthDigit(-789, 2) == 7)
+    assert(getKthDigit(789, 3) == getKthDigit(-789, 3) == 0)
+    assert(getKthDigit(789, 4) == getKthDigit(-789, 4) == 0)
+    assert(setKthDigit(789, 0, 6) == 786)
+    assert(setKthDigit(789, 1, 6) == 769)
+    assert(setKthDigit(789, 2, 6) == 689)
+    assert(setKthDigit(789, 3, 6) == 6789)
+    assert(setKthDigit(789, 4, 6) == 60789)
+    assert(getLeftmostDigit(7089) == 7)
+    assert(getLeftmostDigit(89) == 8)
+    assert(getLeftmostDigit(9) == 9)
+    assert(getLeftmostDigit(0) == 0)
+    assert(clearLeftmostDigit(789) == 89)
+    assert(clearLeftmostDigit(89) == 9)
+    assert(clearLeftmostDigit(9) == 0)
+    assert(clearLeftmostDigit(0) == 0)
+    assert(clearLeftmostDigit(60789) == 789)
+    assert(makeMove(8, 1, 1) == 1)
+    assert(makeMove(888888, 1, 1) == 188888)
+    assert(makeMove(888888, 2, 1) == 818888)
+    assert(makeMove(888888, 5, 2) == 888828)
+    assert(makeMove(888888, 6, 2) == 888882)
+    assert(makeMove(888888, 6, 3) == "move must be 1 or 2!")
+    assert(makeMove(888888, 7, 1) == "offboard!")
+    assert(makeMove(888881, 6, 1) == "occupied!")
+    assert(isWin(888888) == False)
+    assert(isWin(112888) == True)
+    assert(isWin(811288) == True)
+    assert(isWin(888112) == True)
+    assert(isWin(211222) == True)
+    assert(isWin(212212) == False)
+    assert(isFull(888888) == False)
+    assert(isFull(121888) == False)
+    assert(isFull(812188) == False)
+    assert(isFull(888121) == False)
+    assert(isFull(212122) == True)
+    assert(isFull(212212) == True)
+    '''
+
+    # assert(play112( 52112315142 ) == "21121: Player 1 wins!")
+    # print(makeBoard(5))
+    # print(digit_count(543))
+    # print(getKthDigit(211231, 4))
+    # print(getLeftmostDigit(543))
+    # print(clearLeftmostDigit(543))
+    # print(makeMove(888888, 6, 1))
+    # print(makeMove(888888, 6, 3))
+    # print(makeMove(888888, 7, 1))
+    # print(makeMove(888881, 6, 1))
+    # print(isWin(888888))
+    # print(isWin(811288))
+    # print(isWin(112888))
+    # print(isFull(812188))
+    # print(isFull(212212))
+
+    # print(play112(5 ))
+    # print(play112(521))
+    # print(play112(5211231 ))
+    # print(play112(523))
+    # print(play112(51223))
+    # print(play112(51211))
+    # print(play112(5122221))
+    # print(play112(51261))
+    # print(play112(521123142))
+    # print(play112(51122324152))
+
     assert (play112(5) == "88888: Unfinished!")
     assert (play112(521) == "81888: Unfinished!")
     assert (play112(52112) == "21888: Unfinished!")
@@ -524,6 +644,9 @@ def testCarrylessAdd():
     assert (carrylessAdd(30, 376) == 306)
     assert (carrylessAdd(785, 30) == 715)
     assert (carrylessAdd(12345678900, 38984034003) == 40229602903)
+    # print(carrylessAdd(720085, 76))
+    # print(carrylessAdd(785, 376))
+    # print(carrylessAdd(30, 376))
     print('Passed.')
 
 
@@ -544,12 +667,17 @@ def f3(x):
 
 def testFindZeroWithBisection():
     print('Testing findZeroWithBisection()... ', end='')
+    # print(findZeroWithBisection(f1, 0, 2, 0.000000001))  # 1.41421356192
+    # print(findZeroWithBisection(f2, 0, 2, 0.000000001))  # 1.61803398887
+    # print(findZeroWithBisection(f3, 1, 2, 0.000000001))  # 17727855081
+
     x = findZeroWithBisection(f1, 0, 2, 0.000000001)
     assert (almostEqual(x, 1.41421356192))
     x = findZeroWithBisection(f2, 0, 2, 0.000000001)
     assert (almostEqual(x, 1.61803398887))
     x = findZeroWithBisection(f3, 1, 2, 0.000000001)
     assert (almostEqual(x, 1.17727855081))
+
     print('Passed.')
 
 
@@ -585,16 +713,18 @@ def testNthKaprekarNumber():
     assert (nthKaprekarNumber(8) == 2223)
     assert (nthKaprekarNumber(9) == 2728)
     # ic(nthKaprekarNumber(2))
-    ic(nthKaprekarNumber(10))
-    ic(nthKaprekarNumber(11))
-    ic(nthKaprekarNumber(12))
+    # ic(nthKaprekarNumber(10))
+    # ic(nthKaprekarNumber(11))
+    # ic(nthKaprekarNumber(12))
     print('Passed.')
 
 
 def testCarrylessMultiply():
     print("Testing carrylessMultiply()...", end="")
-    assert (carrylessMultiply(643, 59) == 417)
-    assert (carrylessMultiply(6412, 387) == 807234)
+    ic(carrylessMultiply(643, 59))  # == 417
+
+    # assert (carrylessMultiply(643, 59) == 417)
+    # assert (carrylessMultiply(6412, 387) == 807234)
     print("Passed!")
 
 
@@ -847,7 +977,7 @@ def testAll():
     testNthKaprekarNumber()
 
     # hw2-bonus
-    # testCarrylessMultiply()
+    testCarrylessMultiply()
     # testNearestKaprekarNumber()
 
     # hw2-spicy-bonus
@@ -857,148 +987,6 @@ def testAll():
 def main():
     cs112_s21_week2_linter.lint()
     testAll()
-
-    # print(circular_p_digit(3))
-    # print(circular_p_digit(4))
-    # print(circular_p_digit(5))
-    # print(circular_p_digit(9))
-    # print(circular_p_digit(67))
-    # print(circular_p_digit(509))
-
-    assert (isPrime(3)) == True
-    assert (isPrime(5)) == True
-    assert (isPrime(17)) == True
-    assert (isPrime(83)) == True
-    assert (isPrime(173)) == True
-    assert (isPrime(509)) == True
-    assert (isPrime(511)) == False
-    assert (isPrime(1373731)) == False
-    # print("prime:",isPrime(149345643266432421))
-    # testNumb = 13173
-    # print(testNumb, isPrime(testNumb) and circular_p_rotate(testNumb))
-
-    # print(circular_p_rotate(3))
-    # print(circular_p_rotate(5))
-    # print( circular_p_rotate(19))
-    # print( circular_p_rotate(23))
-    # print(circular_p_rotate(173))
-    # print(circular_p_rotate(709))  # 097 970
-    # print(circular_p_rotate(590))
-    # print( circular_p_rotate(7937))
-
-    # print(nthCircularPrime(0), end="?2 ")
-    # print(nthCircularPrime(1), end="?3 ")
-    # print(nthCircularPrime(2), end="?5 ")
-    # print(nthCircularPrime(3), end="?7 ")
-    # print(nthCircularPrime(4), end="?11 ")
-    # print(nthCircularPrime(5), end="?13 ")
-    # print(nthCircularPrime(6), end="?17 ")
-    # print(nthCircularPrime(7), end="?31 ") #91
-    # print(nthCircularPrime(9), end="?71 ")
-    # print(nthCircularPrime(10), end="?73 ")
-    # print(nthCircularPrime(11), end="?79 ")
-    # print(nthCircularPrime(12), end="?97 ")
-    # print(nthCircularPrime(13), end="?113 ") #bug
-    # print(nthCircularPrime(14), end=" ")
-    # print(nthCircularPrime(15), end="?197 ")
-    # print(nthCircularPrime(16), end=" ")
-    # print(nthCircularPrime(20), end="?719 ")
-    # print(nthCircularPrime(25), end="?1193 ")
-    # print(nthCircularPrime(30), end="? ")
-    # print(getKthDigit(54321, 5))
-    # print(palindromic_digit(54321))
-    # print(palindromic_digit(9))
-    # print(palindromic_digit(121))
-    # print(palindromic_digit(3021))
-    # print(palindromic_digit(1011))
-    # print(palindromic_digit2(10201))
-    # print(palindromic_digit(102201))
-
-    # print(nthPalindromicPrime(5))
-    # print(nthPalindromicPrime(20))  # 10301
-    # print(carrylessAdd(720085, 76))
-    # print(carrylessAdd(785, 376))
-    # print(carrylessAdd(30, 376))
-    # print(findZeroWithBisection(f1, 0, 2, 0.000000001))  # 1.41421356192
-    # print(findZeroWithBisection(f2, 0, 2, 0.000000001))  # 1.61803398887
-    # print(findZeroWithBisection(f3, 1, 2, 0.000000001))  # 17727855081
-    '''assert(makeBoard(1) == 8)
-    assert(makeBoard(2) == 88)
-    assert(makeBoard(3) == 888)
-    assert(digit_count(0) == 1)
-    assert(digit_count(5) == digit_count(-5) == 1)
-    assert(digit_count(42) == digit_count(-42) == 2)
-    assert(digit_count(121) == digit_count(-121) == 3)
-    assert(getKthDigit(789, 0) == getKthDigit(-789, 0) == 9)
-    assert(getKthDigit(789, 1) == getKthDigit(-789, 1) == 8)
-    assert(getKthDigit(789, 2) == getKthDigit(-789, 2) == 7)
-    assert(getKthDigit(789, 3) == getKthDigit(-789, 3) == 0)
-    assert(getKthDigit(789, 4) == getKthDigit(-789, 4) == 0)
-    assert(setKthDigit(789, 0, 6) == 786)
-    assert(setKthDigit(789, 1, 6) == 769)
-    assert(setKthDigit(789, 2, 6) == 689)
-    assert(setKthDigit(789, 3, 6) == 6789)
-    assert(setKthDigit(789, 4, 6) == 60789)
-    assert(getLeftmostDigit(7089) == 7)
-    assert(getLeftmostDigit(89) == 8)
-    assert(getLeftmostDigit(9) == 9)
-    assert(getLeftmostDigit(0) == 0)
-    assert(clearLeftmostDigit(789) == 89)
-    assert(clearLeftmostDigit(89) == 9)
-    assert(clearLeftmostDigit(9) == 0)
-    assert(clearLeftmostDigit(0) == 0)
-    assert(clearLeftmostDigit(60789) == 789)
-    assert(makeMove(8, 1, 1) == 1)
-    assert(makeMove(888888, 1, 1) == 188888)
-    assert(makeMove(888888, 2, 1) == 818888)
-    assert(makeMove(888888, 5, 2) == 888828)
-    assert(makeMove(888888, 6, 2) == 888882)
-    assert(makeMove(888888, 6, 3) == "move must be 1 or 2!")
-    assert(makeMove(888888, 7, 1) == "offboard!")
-    assert(makeMove(888881, 6, 1) == "occupied!")
-    assert(isWin(888888) == False)
-    assert(isWin(112888) == True)
-    assert(isWin(811288) == True)
-    assert(isWin(888112) == True)
-    assert(isWin(211222) == True)
-    assert(isWin(212212) == False)
-    assert(isFull(888888) == False)
-    assert(isFull(121888) == False)
-    assert(isFull(812188) == False)
-    assert(isFull(888121) == False)
-    assert(isFull(212122) == True)
-    assert(isFull(212212) == True)
-    '''
-
-    # assert(play112( 52112315142 ) == "21121: Player 1 wins!")
-    # print(makeBoard(5))
-    # print(digit_count(543))
-    # print(getKthDigit(211231, 4))
-    # print(getLeftmostDigit(543))
-    # print(clearLeftmostDigit(543))
-    # print(makeMove(888888, 6, 1))
-    # print(makeMove(888888, 6, 3))
-    # print(makeMove(888888, 7, 1))
-    # print(makeMove(888881, 6, 1))
-    # print(isWin(888888))
-    # print(isWin(811288))
-    # print(isWin(112888))
-    # print(isFull(812188))
-    # print(isFull(212212))
-
-    # print(play112(5 ))
-    # print(play112(521))
-    # print(play112(5211231 ))
-    # print(play112(523))
-    # print(play112(51223))
-    # print(play112(51211))
-    # print(play112(5122221))
-    # print(play112(51261))
-
-    # print(play112(521123142))
-    # print(play112(51122324152))
-
-    # print(digit_equal_first_last(12325))
 
 
 if __name__ == '__main__':

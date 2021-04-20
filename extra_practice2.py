@@ -196,7 +196,6 @@ def digit_count(n, digit):  # digit_count(123423526, 2) returns 3
         if digit == n % 10:
             count += 1
         n //= 10
-    # print(count)
     return count
 
 

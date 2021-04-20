@@ -52,7 +52,7 @@ def splitPower(x, n):
     if type(x) != int or type(n) != int: return "not int"
     sign = x
     x = abs(x)
-    
+
     step = 10**n
     left = x // step
     right = x % step
@@ -61,8 +61,6 @@ def splitPower(x, n):
 
 
 # F19
-
-
 def largestPerfectSquare(n):
     return (int(n**0.5))**2
 
@@ -101,11 +99,12 @@ def isFactorish(n):  # n as abc
     c = n % 10
     b = n // 10 % 10
     a = n // 100 % 10
-    if not (a != 0 and b != 0 and c != 0) or not (a != b and a != c
-                                                  and b != c):
-        return False
-    elif n % a == 0 and n % b == 0 and n % c == 0:
-        return True
+
+    no_dupli = (a != b != c)
+    all_factor = (a != 0 and n % a == 0) and\
+                 (b != 0 and n % b == 0) and\
+                 (c != 0 and n % c == 0)
+    return True if (no_dupli and all_factor) else False
 
 
 def isMultiple(m, n):

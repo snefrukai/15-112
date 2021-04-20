@@ -39,14 +39,26 @@ def fabricYards(inches):
     return math.ceil(inches / 36)
 
 
+# ============================================================================ #
+#
+
+
 def fabricExcess(inches):
     return fabricYards(inches) * 36 - inches
+
+
+# ============================================================================ #
+#
 
 
 def nearestBusStop(street):
     dist = street / 8 - street // 8
     step = 0 if dist <= 0.5 else 1
     return (street // 8 + step) * 8
+
+
+# ============================================================================ #
+#
 
 
 def numberOfPoolBalls(rows):
@@ -140,6 +152,10 @@ def rectanglesOverlap(x1, y1, w1, h1, x2, y2, w2, h2):
     return not (cond_hor_1 or cond_hor_2 or cond_ver_1 or cond_ver_2)
 
 
+# ============================================================================ #
+#
+
+
 def getIntersect(a1, c1, a2, c2):  # parameter用别的var就不容易乱了
     # a1*x + b1*y + c1 = 0
     # y = m1*x + b1
@@ -206,7 +222,11 @@ def colorBlender(rgb1, rgb2, midpoints, n):
     g = get_round(g1, step_g, n)
     b = get_round(b1, step_b, n)
 
-    return r * step1 + g * step2 + b
+    return r * step**2 + g * step + b
+
+
+# ============================================================================ #
+#
 
 
 def findIntRootsOfCubic(a, b, c, d):
