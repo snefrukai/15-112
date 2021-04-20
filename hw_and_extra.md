@@ -521,7 +521,7 @@ step
       - max of 9 digits
       - abs < 999,999,999
     - 3, number
-- Lists 
+- Lists
   - [9, 8888]
     - len of 2
     - 2,9,888
@@ -531,6 +531,10 @@ step
     - len of 0
     - 0
     - 110
+
+**not done**
+
+- Finite State Machines (FSM's)
 
 ## [ep2](https://www.cs.cmu.edu/~112/notes/ep2.html)
 

@@ -437,11 +437,11 @@ def intList_check_range(l, i):
     if not 0 <= i < len: return 'index out of range'
 
 
-def intListGet(l, i):
+def intListGet(l, i):  # start from 0 (1st is len)
     check_range = intList_check_range(l, i)
     if check_range != None: return check_range
 
-    for k in range(i + 1 + 1):  # one more loop to move target to p1
+    for k in range(i + 1 + 1):  # one more loop to move posn to p1
         p1, l = lengthDecodeLeftmost_split(l)  #
     # ic(p1, l)
     return lengthDecode(p1)
@@ -496,32 +496,74 @@ def intListPop(l):  # pop -1
     return intListPop_i(l, i)
 
 
+# ============================================================================ #
+#
+
+
 def newIntSet():
-    pass
+    return newIntList()
 
 
-def intSetAdd(intSet, value):
-    pass
+def intSetAdd(intSet, val):
+    len, p_rem = lengthDecodeLeftmostValue(intSet)
+    if intSetContains(intSet, val):
+        return intSet
+    else:
+        return intListAppend(intSet, val)
 
 
-def intSetContains(intSet, value):
-    pass
+def intSetContains(intSet, val):
+    len, p_rem = lengthDecodeLeftmostValue(intSet)
+
+    for i in range(len):
+        p1, p_rem = lengthDecodeLeftmostValue(p_rem)
+        # ic(p1, p_rem)
+        if p1 == val: return True
+    return False
+
+
+# ============================================================================ #
+#
 
 
 def newIntMap():
-    pass
+    return newIntList()
 
 
-def intMapGet(intMap, key):
-    pass
+def intMapGet(l, key):
+    if not intMapContains(l, key): return 'no such key'
+    i = intMap_get_key_i(l, key)
+    return intListGet(l, i + 1)
 
 
-def intMapContains(intMap, key):
-    pass
+def intMap_get_key_i(l, key):
+    len, p_rem = lengthDecodeLeftmostValue(l)
+    i = 0
+    while i < len:
+        key_test = intListGet(l, i)
+        #* 返回 index 即可，无需用 f() 多次操作
+        if key_test == key: return i
+        i += 2
+    return None
 
 
-def intMapSet(intMap, key, value):
-    pass
+def intMapContains(l, key):  # fixed range, len-key-val
+    i = intMap_get_key_i(l, key)
+    return True if i != None else False
+
+
+def intMapSet(l, key, val):
+    if not intMapContains(l, key):
+        l_new = intListAppend(l, key)
+        l_new = intListAppend(l_new, val)
+    else:
+        i = intMap_get_key_i(l, key)
+        l_new = intListSet(l, i + 1, val)
+    return l_new
+
+
+# ============================================================================ #
+#
 
 
 def newIntFSM():
@@ -552,12 +594,30 @@ def states(fsm, inputValue):
     pass
 
 
+# ============================================================================ #
+#
+def encode_char(c):
+    return intListAppend(newIntList(), ord(c))
+
+
 def encodeString(s):
-    pass
+    l = newIntList()
+    for c in s:
+        val = ord(c)
+        l = intListAppend(l, val)
+        # ic(c, val, l)
+    return l
 
 
-def decodeString(intList):
-    pass
+def decodeString(l):
+    len, p_rem = lengthDecodeLeftmostValue(l)
+
+    s = ''
+    for i in range(len):
+        p1, p_rem = lengthDecodeLeftmostValue(p_rem)
+        s += chr(p1)
+        # ic(i, p1, s, p_rem)
+    return s
 
 
 #################################################
@@ -999,6 +1059,11 @@ def testIntList():
 
 def testIntSet():
     print('Testing intSet functions...', end='')
+    assert (intSetContains(111211191148888, 42)) == False
+    assert (intSetContains(111211191148888, 8888)) == True
+    # ic(intSetAdd(111211191148888, 9))
+    # ic(intSetAdd(111211191148888, 2))
+
     s = newIntSet()
     assert (s == 1110)  # length = 0
     assert (intSetContains(s, 42) == False)
@@ -1013,17 +1078,33 @@ def testIntSet():
 
 def testIntMap():
     print('Testing intMap functions...', end='')
+    assert (intMapContains(11121124211273, 42)) == True
+    assert (intMapContains(11121127311242, 42)) == False
+    # ic(intMapContains(11141124211598765112991110, 99))
+    # ic(intMapContains(11121127311242, 42))
+    assert (intMapContains(11141124211598765112991110, 42)) == True  # 42,99
+    assert (intMapContains(11141124211598765112991110, 99)) == True
+
+    assert (intMapGet(11121127311242, 42)) == 'no such key'
+    # ic(intMapGet(11121124211273, 42))  # 73
+    # ic(intMapGet(11141124211598765112991110, 42))  # 98765
+
     m = newIntMap()
     assert (m == 1110)  # length = 0
     assert (intMapContains(m, 42) == False)
     assert (intMapGet(m, 42) == 'no such key')
+
+    # ic(intMapSet(1110, 42, 73))  # 11121124211273
+    # ic(intMapSet(11121124211273, 42, 12))
     m = intMapSet(m, 42, 73)
     assert (m == 11121124211273)  # length = 2, map = [42, 73]
     assert (intMapContains(m, 42) == True)
     assert (intMapGet(m, 42) == 73)
+
     m = intMapSet(m, 42, 98765)
     assert (m == 11121124211598765)  # length = 2, map = [42, 98765]
     assert (intMapGet(m, 42) == 98765)
+
     m = intMapSet(m, 99, 0)
     assert (m == 11141124211598765112991110)  # length = 4,
     # map = [42, 98765, 99, 0]
@@ -1034,36 +1115,37 @@ def testIntMap():
 
 def testIntFSM():
     print('Testing intFSM functions...', end='')
-    fsm = newIntFSM()
-    assert (fsm == 111211411101141110)  # length = 2,
-    # [empty stateMap, empty startStateSet]
-    assert (isAcceptingState(fsm, 1) == False)
 
-    fsm = addAcceptingState(fsm, 1)
-    assert (fsm == 1112114111011811111111)
-    assert (isAcceptingState(fsm, 1) == True)
+    # fsm = newIntFSM()
+    # assert (fsm == 111211411101141110)  # length = 2,
+    # # [empty stateMap, empty startStateSet]
+    # assert (isAcceptingState(fsm, 1) == False)
 
-    assert (getTransition(fsm, 0, 8) == 'no such transition')
-    fsm = setTransition(fsm, 4, 5, 6)
-    # map[5] = 6: 111211151116
-    # map[4] = (map[5] = 6):  111211141212111211151116
-    assert (fsm == 1112122411121114121211121115111611811111111)
-    assert (getTransition(fsm, 4, 5) == 6)
+    # fsm = addAcceptingState(fsm, 1)
+    # assert (fsm == 1112114111011811111111)
+    # assert (isAcceptingState(fsm, 1) == True)
 
-    fsm = setTransition(fsm, 4, 7, 8)
-    fsm = setTransition(fsm, 5, 7, 9)
-    assert (getTransition(fsm, 4, 5) == 6)
-    assert (getTransition(fsm, 4, 7) == 8)
-    assert (getTransition(fsm, 5, 7) == 9)
+    # assert (getTransition(fsm, 0, 8) == 'no such transition')
+    # fsm = setTransition(fsm, 4, 5, 6)
+    # # map[5] = 6: 111211151116
+    # # map[4] = (map[5] = 6):  111211141212111211151116
+    # assert (fsm == 1112122411121114121211121115111611811111111)
+    # assert (getTransition(fsm, 4, 5) == 6)
 
-    fsm = newIntFSM()
-    assert (fsm == 111211411101141110)  # length = 2,
-    # [empty stateMap, empty startStateSet]
-    fsm = setTransition(fsm, 0, 5, 6)
-    # map[5] = 6: 111211151116
-    # map[0] = (map[5] = 6):  111211101212111211151116
-    assert (fsm == 111212241112111012121112111511161141110)
-    assert (getTransition(fsm, 0, 5) == 6)
+    # fsm = setTransition(fsm, 4, 7, 8)
+    # fsm = setTransition(fsm, 5, 7, 9)
+    # assert (getTransition(fsm, 4, 5) == 6)
+    # assert (getTransition(fsm, 4, 7) == 8)
+    # assert (getTransition(fsm, 5, 7) == 9)
+
+    # fsm = newIntFSM()
+    # assert (fsm == 111211411101141110)  # length = 2,
+    # # [empty stateMap, empty startStateSet]
+    # fsm = setTransition(fsm, 0, 5, 6)
+    # # map[5] = 6: 111211151116
+    # # map[0] = (map[5] = 6):  111211101212111211151116
+    # assert (fsm == 111212241112111012121112111511161141110)
+    # assert (getTransition(fsm, 0, 5) == 6)
 
     print('Passed!')
 
@@ -1098,11 +1180,15 @@ def testAccepts():
 
 def testEncodeDecodeStrings():
     print('Testing encodeString and decodeString...', end='')
+    # ic(encodeString('Af3!'))
+
     assert (encodeString('A') == 111111265)  # length = 1, str = [65]
     assert (encodeString('f') == 1111113102)  # length = 1, str = [102]
     assert (encodeString('3') == 111111251)  # length = 1, str = [51]
     assert (encodeString('!') == 111111233)  # length = 1, str = [33]
     assert (encodeString('Af3!') == 1114112651131021125111233)  # length = 4,
+
+    # ic(decodeString(1114112651131021125111233))  # == 'Af3!')
     # str = [65,102,51,33]
     assert (decodeString(111111265) == 'A')
     assert (decodeString(1114112651131021125111233) == 'Af3!')
@@ -1115,11 +1201,11 @@ def testIntegerDataStructures():
     testLengthDecode()
     testLengthDecodeLeftmostValue()
     testIntList()
-    # testIntSet()
-    # testIntMap()
-    # testIntFSM()
+    testIntSet()
+    testIntMap()
+    testIntFSM()
     # testAccepts()
-    # testEncodeDecodeStrings()
+    testEncodeDecodeStrings()
 
 
 #################################################
