@@ -5,6 +5,7 @@
 #################################################
 
 import decimal, math
+from sys import prefix, setprofile
 from icecream import ic
 
 import cs112_s21_week2_linter
@@ -292,6 +293,7 @@ def checkKaprekar(n):
     n_origin = n
     n = n**2
     count = digit_count(n)
+
     for i in range(count):
         step = 10**(count - 1 - i)
         left = n // step
@@ -363,44 +365,135 @@ def nearestKaprekarNumber(n):
 ############################
 
 
-def intCat(n, m):
-    pass
+def intCat(n, m):  # to nm
+    return n * 10**digit_count(m) + m
 
 
-def lengthEncode(value):
-    pass
+def lengthEncode(n):
+    sign = 2 if n < 0 else 1
+    n_encode = abs(n)
+    count = digit_count(n)
+    count_of_count = digit_count(count)
+
+    n_encode = intCat(count, n_encode)
+    n_encode = intCat(count_of_count, n_encode)
+    n_encode = intCat(sign, n_encode)
+    return n_encode
 
 
 def lengthDecode(encoding):
-    pass
+    count_encoding = digit_count(encoding)
+
+    sign = getKthDigit(encoding, count_encoding - 1)
+    count_of_count = getKthDigit(encoding, count_encoding - 2)
+
+    len_prefix = 2 + count_of_count  # break parts
+    prefix = encoding // 10**(count_encoding - len_prefix)
+    count = prefix % 10**(len_prefix - 2)  #* use mod
+    decode = encoding % 10**count
+
+    # count = 0
+    # for i in range(count_of_count): #* use concatenation
+    #     digit = getKthDigit(encoding, count_encoding - 3 - i)
+    #     count = intCat(count, digit)
+    # ic(count_of_count, count)
+
+    # ic(prefix, sign, count_of_count, count, decode)
+    return -decode if sign == 2 else decode
+
+
+def lengthDecodeLeftmost_split(encoding):
+    count = digit_count(encoding)
+    p1_count_of_count = encoding // 10**(count - 1 - 2) % 10
+    p1_len = 3 + p1_count_of_count
+    # ic(count, p1_len)
+
+    step = 10**(count - 1 - (p1_len - 1))  # break parts
+    p1 = encoding // step
+    p_rem = encoding % step
+    return p1, p_rem
 
 
 def lengthDecodeLeftmostValue(encoding):
-    pass
+    p1, p_rem = lengthDecodeLeftmost_split(encoding)
+    return lengthDecode(p1), p_rem
+
+
+# ============================================================================ #
+#
 
 
 def newIntList():
-    pass
+    return lengthEncode(0)
 
 
-def intListLen(intList):
-    pass
+def intListLen(l):  # len-l[0]-l[1], so leftmost part
+    p1_decode, p_rem = lengthDecodeLeftmostValue(l)
+    return p1_decode
 
 
-def intListGet(intList, i):
-    pass
+def intList_check_range(l, i):
+    len, p_rem = lengthDecodeLeftmostValue(l)
+    if not 0 <= i < len: return 'index out of range'
 
 
-def intListSet(intList, i, value):
-    pass
+def intListGet(l, i):
+    check_range = intList_check_range(l, i)
+    if check_range != None: return check_range
+
+    for k in range(i + 1 + 1):  # one more loop to move target to p1
+        p1, l = lengthDecodeLeftmost_split(l)  #
+    # ic(p1, l)
+    return lengthDecode(p1)
 
 
-def intListAppend(intList, value):
-    pass
+def intListAppend(l, val):
+    len, p_rem = lengthDecodeLeftmostValue(l)
+    p_len = lengthEncode(len + 1)
+    p_rem = intCat(p_rem, lengthEncode(val))
+    return intCat(p_len, p_rem)
 
 
-def intListPop(intList):
-    pass
+def intList_split_i(l, i):
+    p_left = 0
+    nth = 0
+    while nth < i + 1:
+        p1, l = lengthDecodeLeftmost_split(l)
+        p_left = intCat(p_left, p1)
+        nth += 1
+    return p_left, l
+
+
+def intListSet(l, i, val):
+    check_range = intList_check_range(l, i)
+    if check_range != None: return check_range
+    p_left, p_rem = intList_split_i(l, i)
+    p_i, p_rem = lengthDecodeLeftmost_split(p_rem)  # pop and replace p_i
+
+    p_set = lengthEncode(val)
+    p_rem = intCat(p_set, p_rem) if p_rem != 0 else p_set
+    # ic(p_left, p_set, p_rem)
+    return intCat(p_left, p_rem)
+
+
+def intListPop_i(l, i):
+    check_range = intList_check_range(l, i)
+    if check_range != None: return check_range
+
+    p_left, p_rem = intList_split_i(l, i)
+    p_i, p_rem = lengthDecodeLeftmost_split(p_rem)  # pop and replace p_i
+    p_new = intCat(p_left, p_rem) if p_rem != 0 else p_left
+    # ic(p_left, p_rem)
+
+    p_len, p_rem = lengthDecodeLeftmostValue(p_new)  # minus len
+    p_len_encode = lengthEncode(p_len - 1)
+    p_new = intCat(p_len_encode, p_rem) if p_rem != 0 else p_len_encode
+    return p_new, lengthDecode(p_i)
+
+
+def intListPop(l):  # pop -1
+    i = intListLen(l) - 1
+    return intListPop_i(l, i)
 
 
 def newIntSet():
@@ -802,8 +895,20 @@ def testNearestKaprekarNumber():
 # Integer Data Structures
 
 
+def test_intCat():
+    assert (intCat(12, 34)) == 1234
+    assert (intCat(2, 34)) == 234
+    assert (intCat(0, 34)) == 34
+    assert (intCat(0, 0)) == 0
+    assert (intCat(1, 0)) == 10
+
+
 def testLengthEncode():
     print('Testing lengthEncode()...', end='')
+    test_intCat()
+
+    # ic(lengthEncode(-789))  # == 213789)
+
     assert (lengthEncode(789) == 113789)
     assert (lengthEncode(-789) == 213789)
     assert (lengthEncode(1234512345) == 12101234512345)
@@ -814,6 +919,10 @@ def testLengthEncode():
 
 def testLengthDecodeLeftmostValue():
     print('Testing lengthDecodeLeftmostValue()...', end='')
+    # ic(lengthDecodeLeftmostValue(11101110))  # == (0, 1110))
+    # ic(lengthDecodeLeftmostValue(212341115))  # 2-1-2-34
+
+    assert (lengthDecodeLeftmostValue(212341115)) == (-34, 1115)
     assert (lengthDecodeLeftmostValue(111211131114) == (2, 11131114))
     assert (lengthDecodeLeftmostValue(112341115) == (34, 1115))
     assert (lengthDecodeLeftmostValue(111211101110) == (2, 11101110))
@@ -823,6 +932,9 @@ def testLengthDecodeLeftmostValue():
 
 def testLengthDecode():
     print('Testing lengthDecode()...', end='')
+    # ic(lengthDecode(213789))  #
+    # ic(lengthDecode(12101234512345))  # 1234512345
+
     assert (lengthDecode(113789) == 789)
     assert (lengthDecode(213789) == -789)
     assert (lengthDecode(12101234512345) == 1234512345)
@@ -838,9 +950,15 @@ def testIntList():
     assert (intListLen(a1) == 0)
     assert (intListGet(a1, 0) == 'index out of range')
 
-    a1 = intListAppend(a1, 42)
+    # a1 = 111211191148888
+    # # ic(intListLen(a1))  # == 0
+    # assert (intListGet(a1, 0)) == 9
+    # assert (intListGet(a1, 1)) == 8888
+
+    a1 = intListAppend(a1, 42)  # 0,42
     assert (a1 == 111111242)  # length = 1, list = [42]
     assert (intListLen(a1) == 1)
+    # ic(intListGet(a1, 0))
     assert (intListGet(a1, 0) == 42)
     assert (intListGet(a1, 1) == 'index out of range')
     assert (intListSet(a1, 1, 99) == 'index out of range')
@@ -854,15 +972,22 @@ def testIntList():
     a1 = intListSet(a1, 0, 9)
     assert (a1 == 111211191148888)  # length = 2, list = [9, 8888]
     assert (intListLen(a1) == 2)
+    # ic(intListGet(a1, 0))
     assert (intListGet(a1, 0) == 9)
     assert (intListGet(a1, 1) == 8888)
 
+    # ic(intListPop_i(111211191148888, 2))
+    assert (intListPop_i(111211191148888, 0)) == (11111148888, 9)
+    assert (intListPop_i(11111119, 0)) == (1110, 9)
+
+    # ic(intListPop(a1))
     a1, poppedValue = intListPop(a1)
     assert (poppedValue == 8888)
     assert (a1 == 11111119)  # length = 1, list = [9]
     assert (intListLen(a1) == 1)
     assert (intListGet(a1, 0) == 9)
     assert (intListGet(a1, 1) == 'index out of range')
+    # ic(a1)
 
     a2 = newIntList()
     a2 = intListAppend(a2, 0)
@@ -990,11 +1115,11 @@ def testIntegerDataStructures():
     testLengthDecode()
     testLengthDecodeLeftmostValue()
     testIntList()
-    testIntSet()
-    testIntMap()
-    testIntFSM()
-    testAccepts()
-    testEncodeDecodeStrings()
+    # testIntSet()
+    # testIntMap()
+    # testIntFSM()
+    # testAccepts()
+    # testEncodeDecodeStrings()
 
 
 #################################################
@@ -1022,7 +1147,7 @@ def testAll():
     testNearestKaprekarNumber()
 
     # hw2-spicy-bonus
-    # testIntegerDataStructures()
+    testIntegerDataStructures()
 
 
 def main():

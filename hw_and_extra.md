@@ -404,6 +404,7 @@ for i in count_min
 def
 
 - Kaprekar number is a positive integer
+
   - the representation of whose square
     - two possibly-different-length parts
     - right part is not zero
@@ -483,6 +484,53 @@ def
   - returns the Kaprekar number closest to n
     - ties going to smaller value
 - check from n
+
+### Integer Data Structures
+
+def
+
+- include multiple integers in a single integer
+- [sign-digit] [count-count] [count] [number]
+- to encode -1234512345
+  - sign-digit is 2 (negative)
+  - count is 10
+  - so count-count is 2
+  - entire encoding is 22101234512345
+
+step
+
+- lengthEncode(n)
+  - takes a possibly-negative integer
+  - intCat(n, m)
+- lengthDecode(n)
+- lengthDecodeLeftmostValue(n) # _highly reccomend completing this function BEFORE lengthDecode_
+  - takes a number with one-or-possibly-more encoded values
+  - return
+    - leftmost decoded value, rest of the encoded values
+  - 1112113789
+    - 2 as 1112
+    - 789 as 113789
+    - return (2, 113789)
+  - for i # in 4 part
+    - 0, sigg
+      - max of 1 digit
+    - 1, count_count
+      - max of 1 digit
+      - in [1,9]
+    - 2, count
+      - max of 9 digits
+      - abs < 999,999,999
+    - 3, number
+- Lists 
+  - [9, 8888]
+    - len of 2
+    - 2,9,888
+    - 1112,1119,1148888
+    - 111211191148888
+  - []
+    - len of 0
+    - 0
+    - 110
 
 ## [ep2](https://www.cs.cmu.edu/~112/notes/ep2.html)
 
