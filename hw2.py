@@ -314,7 +314,18 @@ def nthKaprekarNumber(nth):  # 1, 9, 45, 55, 99, 297, 703, 999 , 2223, 2728,...
 
 
 def carrylessMultiply(x1, x2):
-    return 42
+    count1 = digit_count(x1)
+    count2 = digit_count(x2)
+    n = 0
+
+    for i in range(count2):
+        d2 = getKthDigit(x2, i)
+        n_temp = 0
+        for k in range(count1):
+            d1 = getKthDigit(x1, k)
+            n_temp += ((d1 * d2) % 10 * 10**k) * 10**i
+        n = carrylessAdd(n, n_temp)
+    return n
 
 
 def nearestKaprekarNumber(n):
@@ -721,10 +732,10 @@ def testNthKaprekarNumber():
 
 def testCarrylessMultiply():
     print("Testing carrylessMultiply()...", end="")
-    ic(carrylessMultiply(643, 59))  # == 417
+    # ic(carrylessMultiply(643, 59))  # == 417
 
-    # assert (carrylessMultiply(643, 59) == 417)
-    # assert (carrylessMultiply(6412, 387) == 807234)
+    assert (carrylessMultiply(643, 59) == 417)
+    assert (carrylessMultiply(6412, 387) == 807234)
     print("Passed!")
 
 
