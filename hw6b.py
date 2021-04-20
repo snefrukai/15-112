@@ -148,7 +148,8 @@ def mousePressed(app, event):
                     app.message = 'Select end to move block'
             elif i_at_end and app.selection_i != []:
                 if app.selection_legal:  # 先写正常，后写报错？
-                    moveSelection(app, True if i == 0 else False)
+                    # moveSelection(app, True if i == 0 else False)
+                    moveSelection(app, i == 0)
                 else:
                     app.message = 'Cannot move illegal selection'
 

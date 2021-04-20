@@ -104,7 +104,7 @@ def isFactorish(n):  # n as abc
     all_factor = (a != 0 and n % a == 0) and\
                  (b != 0 and n % b == 0) and\
                  (c != 0 and n % c == 0)
-    return True if (no_dupli and all_factor) else False
+    return no_dupli and all_factor
 
 
 def isMultiple(m, n):

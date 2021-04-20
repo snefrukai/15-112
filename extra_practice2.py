@@ -6,6 +6,7 @@
 #################################################
 
 import math, time, decimal
+from icecream import ic
 
 import cs112_s21_week2_linter
 from tkinter import *
@@ -13,6 +14,7 @@ from tkinter import *
 from hw2 import isPrime
 from hw2 import digit_count
 from hw2 import getLeftmostDigit
+from hw2 import counter_int_positive
 
 #################################################
 # Helper functions
@@ -37,74 +39,89 @@ def roundHalfUp(d):
 ################################################
 
 
-def gcd(m, n):
-    #gcd(x,y) == gcd(y, x%y)
-    rem = m % n  # 20
-    while rem != 0:  # test
-        m = n  # 250 20
-        n = rem  # 20 10
-        rem = m % n  # 10 0
-        # rem(new) = n%rem
-    # print(n)
-    return n
+def gcd(x, y):  # gcd(x,y) == gcd(y, x%y)
+    rem = x % y
+    while rem != 0:
+        x, y = y, rem
+        rem = x % y
+    return y
 
 
-def digitCompare(n):
-    n = abs(n)
-    digitCheck = True
-    count = 1
-    while n >= 10:
-        n = n // 10
-        foo = n % 10 == 0
-        if foo:
-            digitCheck = False
-        count += 1
-    return count, digitCheck
+# ============================================================================ #
+#
 
 
 def leftTruncatable(n):
-    while n > 10:
-        count = digit_count(n)
-        a = getLeftmostDigit(n)
-        n = n - a * 10**(count - 1)
-        prime = isPrime(n)
-        #print(n, prime)
-        if not prime:
-            return False
-    return leftTruncatable
+    def check_digit(n):
+        while n >= 10:
+            n //= 10  # skip rightmost digit
+            if n % 10 == 0: return False
+        return True
+
+    if not check_digit(n): return False
+
+    def check_rem(n):
+        while n > 10:
+            count = digit_count(n)
+            n %= 10**(count - 1)
+            if not isPrime(n): return False
+        return True
+
+    return (check_digit(n) and check_rem(n) and isPrime(n))
 
 
 def nthLeftTruncatablePrime(nth):
-    found = 0
-    guess = 0
-    while (found <= nth):
-        guess += 1
-        cond = digitCompare(guess) and isPrime(guess) and leftTruncatable(
-            guess)
-        if cond: found += 1
-        #print(guess, digitEqual(guess), isPrime(guess))
-    return guess
+    def f(n):
+        return leftTruncatable(n)
+
+    return counter_int_positive(nth, f)
+
+
+# ============================================================================ #
+#
+
+
+def count_power(n, factor):
+    count_pow = 0
+    while n % factor == 0:
+        count_pow += 1
+        n /= factor
+    return (int(n), count_pow)
 
 
 def digitPowerful(n):
-    for i in range(1, n + 1):
-        #print(i, end=", ")
-        if n % i == 0 and isPrime(i):
-            if n % i**2 != 0:
-                return False
-    return True
-    #
+    for i in range(2, 4):  # check 2, 3
+        (n, count_pow) = count_power(n, i)
+        if count_pow == 1: return False
+    # ic(n, count_pow)
+
+    # for i in range(5, n + 1, 2):  #* direct method
+    #     # ic(i)
+    #     if n % i == 0:
+    #         if isPrime(i) and n % i**2 != 0:
+    #             return False
+    # return True
+
+    for k in range(5, int(n**0.5) + 1, 6):  #* adv math method
+        for i in range(k, k + 3, 2):
+            (n, count_pow) = count_power(n, i)
+            if count_pow == 1: return False
+    # ic(n)
+    # will be 1 if it's not a prime numenr
+    #* if !=1: has a prime factor whose highest power is 1
+    # e.g. 44 -> 11, 45 -> 5
+    return n == 1
 
 
 def nthPowerfulNumber(nth):
-    found = 0
-    guess = 0
-    while (found <= nth):
-        guess += 1
-        cond = digitPowerful(guess)
-        if cond:
-            found += 1
-    return guess
+    def f(n):
+        return digitPowerful(n)
+
+    return counter_int_positive(nth, f)
+
+
+# ============================================================================ #
+#
 
 
 def nthWithProperty309(n):
@@ -187,37 +204,33 @@ def estimatedPiError(n):
 # 12F
 
 
-def digit_count(n, digit):  # digit_count(123423526, 2) returns 3
+def digit_count_12F(n, digit):  # digit_count(123423526, 2) returns 3
+    if n == 0 and digit == 0: return 1
+
     n = abs(n)
     count = 0
-    if n == 0 and digit == 0:
-        count == 1
     while n > 0:
-        if digit == n % 10:
-            count += 1
+        if n % 10 == digit: count += 1
         n //= 10
     return count
 
 
+# ============================================================================ #
+#
+
+
 def mostFrequentDigit(n):
-    run = 0
-    val = 0
     n = abs(n)
-    for digit in range(10):
-        foo = 0
-        bar = n
-        while bar > 0:
-            if digit == bar % 10:
-                foo += 1
-            bar //= 10
-        if foo >= run:  # most freq
-            run = foo
-            if foo == run:
-                val = max(val, digit)
-            else:
-                val = digit
-        digit += 1
-    return (run, val)
+    run, digit = 0, 0
+
+    for digit_new in range(10):  # 0 to 9
+        run_new, n_temp = 0, n
+        while n_temp > 0:
+            if n_temp % 10 == digit_new: run_new += 1
+            n_temp //= 10
+        if run_new >= run:  # new max
+            run, digit = run_new, digit_new  # 递增数列
+    return (run, digit)
 
 
 #################################################
@@ -253,6 +266,9 @@ def testGcd():
 
 def testNthLeftTruncatablePrime():
     print('Testing nthLeftTruncatablePrime()... ', end='')
+    # print(leftTruncatable(9137))
+    # print(nthLeftTruncatablePrime(10))
+
     assert (nthLeftTruncatablePrime(0) == 2)
     assert (nthLeftTruncatablePrime(10) == 53)
     assert (nthLeftTruncatablePrime(1) == 3)
@@ -260,8 +276,32 @@ def testNthLeftTruncatablePrime():
     print('Passed.')
 
 
+def test_digitPowerful():
+    # ic(count_power(48, 2))
+    # ic(count_power(27, 3))
+    # ic(isPrime(1))
+    # ic(digitPowerful(5))
+
+    assert (digitPowerful(2)) == False
+    assert (digitPowerful(3)) == False
+    assert (digitPowerful(5)) == False
+    assert (digitPowerful(6)) == False
+    assert (digitPowerful(7)) == False
+    assert (digitPowerful(25)) == True
+    assert (digitPowerful(26)) == False
+    assert (digitPowerful(44)) == False
+    assert (digitPowerful(45)) == False
+    assert (digitPowerful(176)) == False
+    assert (digitPowerful(243)) == True
+
+
 def testNthPowerfulNumber():
     print('Testing nthPowerfulNumber()... ', end='')
+    test_digitPowerful()
+    # ic(nthPowerfulNumber(0))
+    # ic(nthPowerfulNumber(1))  # == 4
+    # ic(nthPowerfulNumber(2))
+
     assert (nthPowerfulNumber(0) == 1)
     assert (nthPowerfulNumber(1) == 4)
     assert (nthPowerfulNumber(2) == 8)
@@ -532,6 +572,26 @@ def testPrimeCounting():
 # ============================================================================ #
 # 12F
 
+
+def test_digit_count_12F():
+    assert digit_count_12F(123423526, 2) == 3
+    # digit_count_12F(224, 2) #2
+    # digit_count_12F(224, 0)  # 0
+    # digit_count_12F(2, 2)  # 1
+    # digit_count_12F(-2, 2)  # 1
+    # digit_count_12F(100, 0)  # 2
+    # digit_count_12F(0, 0)  # 1
+
+
+def test_mostFrequentDigit():
+    assert mostFrequentDigit(11) == (2, 1)
+    assert mostFrequentDigit(111) == (3, 1)
+    assert mostFrequentDigit(101) == (2, 1)
+    assert mostFrequentDigit(100) == (2, 0)
+    assert mostFrequentDigit(9898) == (2, 9)
+    assert mostFrequentDigit(87778) == (3, 7)
+
+
 #################################################
 # testAll and main
 #################################################
@@ -541,8 +601,8 @@ def testAll():
     testdigit_count()
     testGcd()
     testNthLeftTruncatablePrime()
-    '''
     testNthPowerfulNumber()
+    '''
     testNthWithProperty309()
     testIntegral()
     testLongestIncreasingRun()
@@ -556,27 +616,9 @@ def testAll():
     testIsSemiPrime()
     testPrimeCounting()'''
 
-    # print(leftTruncatable(9137))
-    # print(nthLeftTruncatablePrime(10))
-    # print(digitPowerful(25))
-    # print(digitPowerful(44))
-    # print(digitPowerful(176))
-    # print(nthPowerfulNumber(1))
-
     # 12F
-    # assert digit_count(123423526, 2) == 3
-    # digit_count(224, 2) #2
-    # digit_count(224, 0)  # 0
-    # digit_count(2, 2)  # 1
-    # digit_count(-2, 2)  # 1
-    # digit_count(100, 0)  # 2
-    # digit_count(0, 0)  # 1
-
-    assert mostFrequentDigit(11) == (2, 1)
-    assert mostFrequentDigit(111) == (3, 1)
-    assert mostFrequentDigit(101) == (2, 1)
-    assert mostFrequentDigit(100) == (2, 0)
-    assert mostFrequentDigit(9898) == (2, 9)
+    test_digit_count_12F()
+    test_mostFrequentDigit()
 
 
 def main():

@@ -650,9 +650,10 @@ def runSimpleProgram_type_jump(l_arg, l_var, l):
     if l[0] == 'JMP': bool = True
     else:  # conditional jump, 尽可能穷尽还是充分即可？
         n = runSimpleProgram_int_from_list(l_arg, l_var, l[1])
-        op = l[0][-1]
-        if op == '+': bool = True if n > 0 else False
-        elif op == '0': bool = True if n == 0 else False
+        # op = l[0][-1] #? del
+        # if op == '+': bool = n > 0
+        # elif op == '0': bool = n == 0
+        bool = n > 0 if l[0][-1] == '+' else n == 0 # '0'
     return bool, l[-1]
 
 
@@ -1262,7 +1263,7 @@ def testAll():
 
     # bonus
     testRunSimpleProgram()
-    testBonusCombinatoricsProblems()
+    # testBonusCombinatoricsProblems()
     pass
 
 

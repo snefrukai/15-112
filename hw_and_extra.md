@@ -538,48 +538,62 @@ step
 
 ## [ep2](https://www.cs.cmu.edu/~112/notes/ep2.html)
 
-- digit_count
-  - loop
-    - //
-- gcd
-  - var
-- nthLeftTruncatablePrime
-  - n//10% != 0
-  - isPrime
-  - leftTruncatablePrime
-    - isPrime
+### digit_count
+
+def
+
+- loop
+  - //
+
+### gcd
+
+def
+
+- var
+
+### nthLeftTruncatablePrime
+
+def
+
+- in a given base, contains no 0
+- if the leading ("left") digit is successively removed
+  - all resulting numbers are prime
+- https://en.wikipedia.org/wiki/Truncatable_prime
+
+step
+
+- isTrunc
+  - check digit no 0
+    - n//10% != 0
+  - check rem number is prime
+- leftTruncatablePrime
+  - isTrunc
 
 ### nthPowerfulNumber
 
-- [无脑：i 遍历 n](https://cutt.ly/Lx2L9Tx)
-  - n%i == 0 and prime
-    - n%i\*\*2 == 0
-  - i 的次数 ≈n
-  - 随着 n 的增大会计算许多不必要的 i
-- [高手：一边 i 遍历一边 divide n](https://www.geeksforgeeks.org/powerful-number/)
-  - for every prime factor, find the highest power of it that divides n
-    - if pow1 or pow2 > 1
-    - m = a**pow1 \* b**pow2
-  - 这时需要计算的 i 也变小了
-  - 再用新的(3, nNew\*\*0.5+1, 2)算一遍
-  - 先把一个除干净了，剩下的就是另一个了
-  - check prime
-  - m = a**2 \* b**3
-    - if a = b, m = a\*\*5
+def
+
+- a positive integer m
+- for every prime number p dividing m
+  - `p**2` also divides m
+- Equivalently, product of a square and a cube
+  - m = `a**2 * b**3`
+    - if a = b
+      - m = `a**5`
     - if
       - m = p**2 \* p1**3
       - m = p1**2 \* p**3
     - if pow1 = even and > 2
-      - m = (a**pow1/2)**2 \* b\*\*3
+      - m = `(a**(pow1/2))**2 * b**3`
     - if pow1 = odd and > 2
-      - m = (a**(pow1-3)\*a**3) \* b\*\*3
-        - =(a**x)**2\* ab\*\*3
+      - m = `(a**(pow1-3) * a**3) * b**3`
+        - = `(a**x)**2 * (a*b)**3`
     - 同理可将 pow2 != 3 时归于 a\*2
     - 2 3 5 7
-    - a\*a
-    - b*b * b
-    - so p**2 means at least a**2
-- 差别 f(25), 88-22 steps
+    - `a*a`
+    - `b*b * b`
+    - so `p**2` means at least a\*\*2
+- **prime numbers are not powerful**
 - list
   - 1
   - 4
@@ -606,6 +620,27 @@ step
     - 2**2 \* 2**3
     - 2, 2
   - 36
+
+step
+
+- [无脑：i 遍历 n](https://cutt.ly/Lx2L9Tx)
+  - n%i == 0 and prime
+    - n%i\*\*2 == 0
+  - i 的次数 ≈n
+  - 随着 n 的增大会计算许多不必要的 i
+- [高手：一边 i 遍历一边 divide n](https://www.geeksforgeeks.org/powerful-number/)
+  - for every prime factor, find the highest power of it that divides n
+    - If highest dividing power of all prime factors are more than 1
+  - 这时需要计算的 factor 也变小了
+    - 再用新的 range `(3, nNew**0.5+1, 2)`算一遍
+  - 先把一个除干净了，剩下的就是另一个了
+  - check prime
+- step 差别
+  - f(25), 88-22 steps
+  - 自己更新后的做法
+    - f(243), 39-51 step
+      - 超过了geek上的
+      - 虽然大的逻辑是一样，只是在factor的处理上优化了
 
 ### [12F](https://www.kosbie.net/cmu/fall-12/15-112/handouts/notes-practice-thru-week3.html)
 

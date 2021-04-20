@@ -316,25 +316,26 @@ def loop_each_cell(app, l, f):
 
     for row in range(rows):
         for col in range(cols):
-            if isinstance(l_cells[row][col], str):
+            if isinstance(l_cells[row][col], str):  # draw/place, return None
                 f(l_cells, row, col)
-            elif l_cells[row][col] == True:
+            elif l_cells[row][col] == True:  # check piece legal
                 # row += l[1]  #? why out of range
                 # col += l[2]
                 # bool = f(l_cells, row, col)
                 x, y = row + l[1], col + l[2]
                 bool = f(l_cells, x, y)
-                if bool != None: return bool
+                if bool != None: return bool  # None means True here
 
 
 def pieceIsLegal(app, l):
     def g(list, row, col):
-        onBoard = row in range(app.rows) and col in range(app.cols)
-        if not onBoard: return False
-        elif app.board[row][col] != app.emptyColor: return False
+        if not (row in range(app.rows) and col in range(app.cols)):
+            return False  # cant be empty but not on board
+        elif app.board[row][col] != app.emptyColor:
+            return False  # could be on board but not empty
+        # return True # cant return true while not done
 
-    bool = loop_each_cell(app, l, g)
-    return False if bool == False else True
+    return False if loop_each_cell(app, l, g) == False else True
 
 
 def fallingPieceIsLegal(app, l, f):  # backtrack
@@ -343,9 +344,8 @@ def fallingPieceIsLegal(app, l, f):  # backtrack
 
     l_temp = copy.deepcopy(l)
     f()
-    bool = pieceIsLegal(app, l)
-    if bool == False:
-        # app.fallingPiece = l_temp  # using var l cant send back data too app
+    if not pieceIsLegal(app, l):
+        # app.fallingPiece = l_temp  #* using var l cant send back data too app
         if shadow and falling:
             app.shadowPiece = l_temp
             app.fallingPiece = l_temp
@@ -364,22 +364,25 @@ def fallingPieceIsLegal(app, l, f):  # backtrack
 
 def hardDrop(app):
     while True:
-        if moveFallingPiece(app, 'Down') == False: return
+        if moveFallingPiece(app, 'Down') == False:
+            return
 
 
-def moveShadowPiece(app):  #* bonus
+def moveShadowPiece(app):  #* bonus: shadow of falling, hard drop
     l = app.shadowPiece = copy.deepcopy(app.fallingPiece)
 
     def f():
         l[1] += 1
 
-    while True:
-        if fallingPieceIsLegal(app, l, f) == False: return
+    while True:  # repeat untill cond
+        if fallingPieceIsLegal(app, l, f) == False:
+            return
 
 
 def falling_piece_check_act(app, l, f):
     bool = fallingPieceIsLegal(app, l, f)
-    if bool: moveShadowPiece(app)
+    if bool:
+        moveShadowPiece(app)
     return bool
 
 
@@ -415,9 +418,9 @@ def rotateFallingPiece(app):
 
 def placeFallingPiece(app):
     def f(l, row, col):
-        app.board[row][col] = app.fallingPiece[-1]  # transfer color
+        app.board[row][col] = app.fallingPiece[-1]
 
-    loop_each_cell(app, app.fallingPiece, f)
+    loop_each_cell(app, app.fallingPiece, f)  # transfer color
     removeFullRows(app)
     app.shadowPiece = []
 

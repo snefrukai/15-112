@@ -205,8 +205,7 @@ def isWin(n):
 
 def isFull(n):
     while n > 0:
-        if n % 10 == 8:
-            return False
+        if n % 10 == 8: return False
         n //= 10
     return True
 
@@ -220,10 +219,8 @@ def play112(game):
     if moves < 10:
         return str(board) + ": Unfinished!"
     for i in range(1, int(count / 2) + 1):  # only run count/2 times
-        if i % 2 != 0:
-            player = 1
-        if i % 2 == 0:
-            player = 2
+        if i % 2 != 0: player = 1
+        elif i % 2 == 0: player = 2
         position = getKthDigit(moves, count + 1 - i * 2)
         # print(i, count)
         move = getKthDigit(moves, count - i * 2)
@@ -337,7 +334,7 @@ def nearestKaprekarNumber(n):
     def get_part(n, part, count_max):
         count = 0
         while n > 0:
-            n = n + 1 if part == 1 else n - 1
+            n += 1 if part == 1 else -1
             count += 1
             if count_max != 0 and count > count_max + 1:  # +1 incase of float
                 # count current > count previous
@@ -549,7 +546,7 @@ def intMap_get_key_i(l, key):
 
 def intMapContains(l, key):  # fixed range, len-key-val
     i = intMap_get_key_i(l, key)
-    return True if i != None else False
+    return i != None
 
 
 def intMapSet(l, key, val):

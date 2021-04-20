@@ -61,19 +61,17 @@ def locker_problem(n):
 
 
 def prime_wheel_basis(n):
-    # pre = n != 2 and n != 3 and n != 5
-    factor = n % 2 == 0 or n % 3 == 0 or n % 5 == 0 or n**0.5 == int(n**0.5)
-    return factor
-    # return (pre and factor)
+    has_factor = n % 2 == 0 or n % 3 == 0 or n**0.5 == int(n**0.5)
+    return has_factor
 
 
 def isPrime(n):
-    if n == 2 or n == 3 or n == 5: return True  # exclude 2,3,5
+    if n == 2 or n == 3: return True
     elif n < 2 or prime_wheel_basis(n): return False
 
-    for i in range(7, int(n**0.5), 6):  # start from 7, step 6
-        if n % i == 0 or n % (i + 5) == 0: return False
-        #* the range has skip multis of 2,3,5
+    for i in range(5, int(n**0.5), 6):
+        if n % i == 0 or n % (i + 2) == 0: return False
+        #* range has already skip multis of n in wheel
         # if not prime_wheel_basis(i) and (n % i == 0 or n % (i + 5) == 0):
     return True
 
