@@ -538,6 +538,8 @@ step
 
 ## [ep2](https://www.cs.cmu.edu/~112/notes/ep2.html)
 
+- not use string indexing, lists, list indexing, or recursion in this unit
+
 ### digit_count
 
 def
@@ -639,9 +641,21 @@ step
   - f(25), 88-22 steps
   - 自己更新后的做法
     - f(243), 39-51 step
-      - 超过了geek上的
-      - 虽然大的逻辑是一样，只是在factor的处理上优化了
+      - 超过了 geek 上的
+      - 虽然大的逻辑是一样，只是在 factor 的处理上优化了
 
+### nthWithProperty309(n)
+
+def
+
+- its 5th power contains every digit (from 0 to 9) at least once
+- `309**5 = 2817036000549`
+- too cheaty to use 'char in str'
+
+step
+- for i in range (10)
+  - count i in n 
+  - if count == 0: F
 ### [12F](https://www.kosbie.net/cmu/fall-12/15-112/handouts/notes-practice-thru-week3.html)
 
 - digit_count
@@ -653,6 +667,9 @@ step
 ### rev
 
 - count_match_exact 的 replace 比较有意思
+- min, 1234567890
+  - len of 10
+  - \*\*0.2 = 65.8
 
 ### 1. largestNumber(s)
 

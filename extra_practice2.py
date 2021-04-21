@@ -124,8 +124,24 @@ def nthPowerfulNumber(nth):
 #
 
 
-def nthWithProperty309(n):
-    return 42
+def property309(n):  
+    n = n**5
+    for i in range(10):
+        count = digit_count_12F(n, i)
+        # ic(i, count)
+        if count == 0: return False
+    return True
+
+
+def nthWithProperty309(nth):
+    def f(n):
+        return property309(n)
+
+    return counter_int_positive(nth, f)
+
+
+# ============================================================================ #
+#
 
 
 def integral(f, a, b, N):
@@ -316,6 +332,9 @@ def testNthPowerfulNumber():
 
 def testNthWithProperty309():
     print('Testing nthWithProperty309()... ', end='')
+    # ic (property309(1234567890))
+    # ic(property309(1234567891))
+
     assert (nthWithProperty309(0) == 309)
     assert (nthWithProperty309(1) == 418)
     assert (nthWithProperty309(2) == 462)
@@ -602,8 +621,8 @@ def testAll():
     testGcd()
     testNthLeftTruncatablePrime()
     testNthPowerfulNumber()
-    '''
     testNthWithProperty309()
+    '''
     testIntegral()
     testLongestIncreasingRun()
     testNthCarolPrime()
