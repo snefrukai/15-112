@@ -107,7 +107,7 @@ def digitPowerful(n):
     # return True
 
     for k in range(5, int(n**0.5) + 1, 6):  #* adv math method
-        for i in range(k, k + 3, 2):
+        for i in range(k, k + 2 + 1, 2):
             (n, count_pow) = count_power(n, i)
             if count_pow == 1: return False
     # ic(n)
@@ -231,14 +231,12 @@ def smithNumber(n):
     sum_1 = sum_digits(n)
     sum_a = 0
 
-    # def get_sum_of_power(n, power):
-    #     (n, count_pow) = count_power(n, i)
-    #     sum = i * count_pow
-    #     return (n, sum)
+    def f(n, i):
+        (n, count_pow) = count_power(n, i)
+        sum_a += i * count_pow
+        return (n, sum_a)
 
     for i in range(2, 4):  # check 2, 3
-        # (n, sum_temp) = get_sum_of_power(n, i)
-        # sum_a += sum_temp
         (n, count_pow) = count_power(n, i)
         sum_a += i * count_pow
 
@@ -246,7 +244,6 @@ def smithNumber(n):
         for i in range(k, k + 2 + 1, 2):
             (n, count_pow) = count_power(n, i)
             sum_a += i * count_pow
-        # ic(n, sum_temp)
 
     if n == n_origin: return False  # no divieds
     sum_b = sum_digits(n) if n != 1 else 0  # n at last is 1 or a prime
@@ -350,24 +347,67 @@ def nthHappyPrime(n):
     return 42
 
 
+# ============================================================================ #
+#
+def get_prime_factor(n, f):
+    for i in range(2, 4):  # check 2, 3
+        if f(n, i) != None: return f(n, i)
+
+    for k in range(5, int(n**0.5) + 1, 6):
+        for i in range(k, k + 2 + 1, 2):
+            # if n % i == 0:
+            # return f(n, i)
+            if f(n, i) != None: return f(n, i)
+
+
 def isSemiPrime(n):
-    return 42
+    if not isinstance(n, int) or n < 2: return False
+
+    def f(n, i):
+        if n % i == 0: return isPrime(i) and isPrime(n / i)
+
+    bool = get_prime_factor(n, f)
+    # ic(bool)
+    if bool != None: return bool
+    return False
+
+
+# ============================================================================ #
+#
 
 
 def pi(n):
-    return 42
+    count = 0
+    if n >= 2: count += 1
+
+    for i in range(3, n + 1, 2):
+        if isPrime(i): count += 1
+    # ic(count)
+    return count
 
 
 def h(n):
-    return 42
+    if not n > 0: return 0
+    sum = 0
+    for i in range(1, n + 1):
+        # ic(i)
+        sum += 1 / i
+    return sum
 
 
 def estimatedPi(n):
-    return 42
+    if n <= 2: return 0
+    count = (n / (h(n) - 1.5))
+    # ic(count)
+    return roundHalfUp(count)
 
 
 def estimatedPiError(n):
-    return 42
+    if not n > 0: return 0
+    c1 = pi(n)
+    c2 = estimatedPi(n)
+    # ic(c1, c2)
+    return abs(c1 - c2)
 
 
 # ============================================================================ #
@@ -728,10 +768,16 @@ def testHappyPrimes():
 
 def testIsSemiPrime():
     print('Testing isSemiPrime()...', end='')
+    # ic(isSemiPrime(14))  # T
+    # ic(isSemiPrime(65))  # T
+    # ic(isSemiPrime(18))  # False
+    # ic(isSemiPrime(15112))  # F
+    # ic(isSemiPrime(17)) # F
+
     assert (isSemiPrime(14) == True)
     assert (isSemiPrime(65) == True)
-    assert (isSemiPrime(18) == False)
     assert (isSemiPrime(1679) == True)
+    assert (isSemiPrime(18) == False)
     assert (isSemiPrime(17) == False)
     assert (isSemiPrime(15112) == False)
     assert (isSemiPrime(-26) == False)
@@ -741,6 +787,7 @@ def testIsSemiPrime():
 
 def testPi():
     print('Testing pi()... ', end='')
+    # ic(pi(3))
     assert (pi(1) == 0)
     assert (pi(2) == 1)
     assert (pi(3) == 2)
@@ -752,6 +799,7 @@ def testPi():
 
 def testH():
     print('Testing h()... ', end='')
+    # ic(h(10))
     assert (almostEqual(h(0), 0))
     assert (almostEqual(h(1), 1 / 1))  # h(1) = 1/1
     assert (almostEqual(h(2), 1 / 1 + 1 / 2))  # h(2) = 1/1 + 1/2
@@ -761,12 +809,14 @@ def testH():
 
 def testEstimatedPi():
     print('Testing estimatedPi()... ', end='')
+    # ic(estimatedPi(100) == 27)
     assert (estimatedPi(100) == 27)
     print('Passed.')
 
 
 def testEstimatedPiError():
     print('Testing estimatedPi()... ', end='')
+    # ic(estimatedPiError(100) == 2)
     assert (estimatedPiError(100) == 2)  # pi(100) = 25, estimatedPi(100) = 27
     assert (estimatedPiError(200) == 0)  # pi(200) = 46, estimatedPi(200) = 46
     assert (estimatedPiError(300) == 1)  # pi(300) = 62, estimatedPi(300) = 63
@@ -827,8 +877,8 @@ def testAll():
     testNthAdditivePrime()
     testNthPerfectNumber()
     # testHappyPrimes()
-    # testIsSemiPrime()
-    # testPrimeCounting()
+    testIsSemiPrime()
+    testPrimeCounting()
 
     # 12F
     test_digit_count_12F()

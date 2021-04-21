@@ -729,6 +729,15 @@ step
 - get digit sum
 - check
 
+### Counting Primes
+
+def
+
+- between the sum of the reciprocals of the integers (1/1 + 1/2 + ...) and the number of prime numbers.
+  - there is some kind of very deep relationship
+  - This has been explored in great detail by many mathematicians over the past few hundred years,
+  - with some of the most important results in modern mathematics relating to it
+
 ### [12F](https://www.kosbie.net/cmu/fall-12/15-112/handouts/notes-practice-thru-week3.html)
 
 - digit_count
@@ -1506,7 +1515,7 @@ step
     - 'a b '
     - 'c de'
     - ' f '
-  - ## loop line
+  - loop line
   - loop c
     - len = 5\*3 = 14
     - i
