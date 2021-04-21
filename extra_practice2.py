@@ -189,8 +189,23 @@ def longestIncreasingRun(n):  # mostFrequentDigit
     return val
 
 
-def nthCarolPrime(n):
-    return 42
+# ============================================================================ #
+#
+
+
+def nthCarolPrime(nth):
+    i = 0
+    count = -1
+    while count < nth:
+        n = (2**i - 1)**2 - 2
+        # ic(n)
+        if n > 0 and isPrime(n):
+            count += 1
+        i += 1
+
+    return n
+# ============================================================================ #
+# 
 
 
 def nthSmithNumber(n):
@@ -469,6 +484,8 @@ def testLongestIncreasingRun():
 
 def testNthCarolPrime():
     print('Testing nthCarolPrime()... ', end='')
+    # ic(nthCarolPrime(6))
+
     assert (nthCarolPrime(0) == 7)
     assert (nthCarolPrime(1) == 47)
     assert (nthCarolPrime(3) == 3967)
@@ -692,7 +709,7 @@ def testAll():
     testIntegral()
     testLongestIncreasingRun()
 
-    # testNthCarolPrime()
+    testNthCarolPrime()
     # testNthSmithNumber()
     # testHasConsecutiveDigits()
     testMostFrequentDigit()
