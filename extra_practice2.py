@@ -309,10 +309,25 @@ def nthAdditivePrime(nth):
 
 # ============================================================================ #
 #
+def perfectNumber(n):
+    if n == 1: return False
+    sum = 1
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            sum += i + n / i  # if i > 1 else 1
+            # ic(i, n / i, sum)
+    return n == sum
 
 
-def nthPerfectNumber(n):
-    return 42
+def nthPerfectNumber(nth):
+    def f(n):
+        return perfectNumber(n)
+
+    return counter_int_positive(nth, f)
+
+
+# ============================================================================ #
+#
 
 
 def sumOfSquaresOfDigits(n):
@@ -591,7 +606,7 @@ def testNthSmithNumber():
 
 def testHasConsecutiveDigits():
     print('Testing hasConsecutiveDigits()... ', end='')
-    ic(hasConsecutiveDigits(-1233))
+    # ic(hasConsecutiveDigits(-1233))
 
     assert (hasConsecutiveDigits(0) == False)
     assert (hasConsecutiveDigits(123456789) == False)
@@ -621,9 +636,9 @@ def testMostFrequentDigit():
 
 def testNthAdditivePrime():
     print('Testing nthAdditivePrime()... ', end='')
-    # assert (additivePrime(113)) == True
-    # assert (additivePrime(2)) == True
-    # assert (additivePrime(4)) == False
+    assert (additivePrime(113)) == True
+    assert (additivePrime(2)) == True
+    assert (additivePrime(4)) == False
 
     assert (nthAdditivePrime(0) == 2)
     assert (nthAdditivePrime(1) == 3)
@@ -635,6 +650,11 @@ def testNthAdditivePrime():
 
 def testNthPerfectNumber():
     print('Testing nthPerfectNumber()... ', end='')
+    # ic(perfectNumber(1))
+    # ic(perfectNumber(6))
+    # ic(perfectNumber(28))
+    # ic(nthPerfectNumber(0))  #== 6
+
     assert (nthPerfectNumber(0) == 6)
     assert (nthPerfectNumber(1) == 28)
     assert (nthPerfectNumber(2) == 496)
@@ -805,7 +825,7 @@ def testAll():
     testHasConsecutiveDigits()
     testMostFrequentDigit()
     testNthAdditivePrime()
-    # testNthPerfectNumber()
+    testNthPerfectNumber()
     # testHappyPrimes()
     # testIsSemiPrime()
     # testPrimeCounting()
