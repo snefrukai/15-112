@@ -419,42 +419,71 @@ def
       - 88+209
       - 882+09
 
-### **play112**
+### play112 (top-down design approach)
 
-- rev
-  - 542123121
-    - 2 1 1 2 -
-    - 1x5
-    - (4, 2)
-  - val(posi, numb)
-    - [1, 9], [1, 2]
-  - v1
-    - board
-    - r1
-      - chk offboard
-      - chk occupied
-      - chk numb
-      - chk winner
-        - 11288118
-        - check player
-    - r2
-      - ...
-      - chk finished
+def
 
-% \f is defined as #1f(#2) using the macro
-\f\relax{x} = \int\_{-\infty}^\infty
-\f\hat\xi\,e^{2 \pi i \xi x}
-\,d\xi
+- takes a specification of a game
+  - size of the board
+    - integer between 1 and 9 inclusive
+  - series of moves
+    - position
+      - integer from 1 to boardSize, where 1 is the leftmost position
+    - value
+      - to place there
+      - 1 or 2
+  - store the entire board as a single integer
+    - starting from player 1
+    - 542123121 # not using str this week
+      - [5, 4, 2, 1, 2, 3, 1, 2, 1]
+      - 5-42-12-31-21
+      - (posn, val)
+    - using 8 to rep empty instead of 0 for intuitive
+- returns the outcome of that game # single str
+  - stops immediately after a win or loss
+  - return final board + result
+    - "21128: Player 2 wins!"
+- **top-down design**
+  - break this problem down into smaller parts of smaller parts
+    - for easy solving and testing
 
-You want to make sure the Markdown render will not touch your special characters
+step_2103
 
-- e.g., $x_{i} + y_{i}$
-- $y_{i}$
-- should not be rendered as $x<em>{i} + y</em>{i}$ (i.e., a pair of underscores should not mean italics).
+- board
+- r1
+  - chk offboard
+  - chk occupied
+  - chk numb
+  - chk winner
+    - 11288118
+    - check player
+- r2
+  - ...
+  - chk finished
 
-```
+step_2104
 
-```
+- check move is legal
+  - on board
+    - n_posn in range
+  - not occupied
+    - no repeat n_posn
+  - valid input
+    - n_val is 1 or 2
+- get moves and 
+- check result # 112 and len of moves
+  - tie
+    - 112 not in moves
+    - len is full
+  - unfinished
+    - 112 not in moves
+    - len is not full
+  - win
+    - 112 in moves
+    - get player number
+      - from vaild moves length 
+      - odd is player 1
+      - even is player 2
 
 ### carrylessMultiply (x,y)
 

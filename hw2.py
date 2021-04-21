@@ -161,81 +161,69 @@ def makeBoard(n):
 
 
 def getLeftmostDigit(n):
-    while n >= 10:
-        n //= 10
-    return n
+    len = digit_count(n)
+    return getKthDigit(n, len - 1)
 
 
 def clearLeftmostDigit(n):
-    count = digit_count(n)
-    a = getLeftmostDigit(n)
-    # print(count, a)
-    n = n - a * 10**(count - 1)
-    return n
+    len = digit_count(n)
+    return setKthDigit(n, len - 1, 0)  # n % 10**(len - 1)
 
 
-def makeMove(board, position, move):
+def makeMove(board, posn, move):
+    len = digit_count(board)
     if move != 1 and move != 2:
-        return "move must be 1 or 2!"  # break and return
-    count = digit_count(board)
-    if position > count:
-        return "offboard!"  # break and return
-    chg = getKthDigit(board, count - position)
-    # print(foo)
-    if chg != 8:
-        return "occupied!"  # break and return
-    board = setKthDigit(board, count - position, move)
-    # print(count-1)
-    return board
+        return "move must be 1 or 2!"
+    elif posn > len:
+        return "offboard!"
+    elif getKthDigit(board, len - posn) != 8:
+        return "occupied!"
+    else:
+        return setKthDigit(board, len - posn, move)
 
 
-def isWin(n):
-    # count = digit_count(board)
-    # for i in range(1, count-1):
-    while n // 100 > 0:
-        rem3 = n % 10
-        rem2 = n // 10 % 10
-        rem1 = n // 100 % 10
-        if rem1 == 1 and rem2 == 1 and rem3 == 2:
-            return True
+def hasDigits(n, d):
+    len_d = digit_count(d)
+    while n >= 10**(len_d - 1):
+        if n % 10**(len_d) == d: return True
+        # ic(n, d)
         n //= 10
-        # print(rem1, rem2, rem3)
     return False
 
 
+def isWin(n):
+    return hasDigits(n, 112)
+
+
 def isFull(n):
-    while n > 0:
-        if n % 10 == 8: return False
-        n //= 10
-    return True
+    return not hasDigits(n, 8)
 
 
 def play112(game):
-    left = getLeftmostDigit(game)
-    board = makeBoard(left)
+    board = makeBoard(getLeftmostDigit(game))
     moves = clearLeftmostDigit(game)
-    count = digit_count(moves)
-    # print(board, moves, count)
-    if moves < 10:
-        return str(board) + ": Unfinished!"
-    for i in range(1, int(count / 2) + 1):  # only run count/2 times
-        if i % 2 != 0: player = 1
-        elif i % 2 == 0: player = 2
-        position = getKthDigit(moves, count + 1 - i * 2)
-        # print(i, count)
-        move = getKthDigit(moves, count - i * 2)
-        foo = board
-        board = makeMove(board, position, move)
-        msgPlayer = "Player " + str(player)
-        if type(board) != int:
-            return str(foo) + ": " + msgPlayer + ": " + board
-        # print(position, move, board)
-    if isWin(board):
-        return str(board) + ": " + msgPlayer + " wins!"
-    if not isFull(board):
-        return str(board) + ": Unfinished!"
-    return str(board) + ": Tie!"
-    # return 42
+    len = digit_count(moves)
+    player = 1 if (len / 2) % 2 != 0 else 2
+    # ic(moves)
+
+    for i in range(int(len / 2)):
+        posn = getKthDigit(moves, len - 1 - i * 2)
+        move = getKthDigit(moves, len - 2 - i * 2)
+        # ic(i, player, posn, move)
+        board_temp = board
+        board = makeMove(board, posn, move)
+
+    msgPlayer = "Player " + str(player)
+    if not isinstance(board, int):
+        return str(board_temp) + ": " + msgPlayer + ": " + board
+    else:
+        msgBoard = str(board) + ": "
+        if isWin(board):
+            return msgBoard + msgPlayer + " wins!"
+        if not isFull(board):
+            return msgBoard + "Unfinished!"
+        else:
+            return msgBoard + "Tie!"
 
 
 #################################################
@@ -732,80 +720,35 @@ def testNthPalindromicPrime():
 
 def testPlay112():
     print("Testing play112()... ", end="")
-    '''assert(makeBoard(1) == 8)
-    assert(makeBoard(2) == 88)
-    assert(makeBoard(3) == 888)
-    assert(digit_count(0) == 1)
-    assert(digit_count(5) == digit_count(-5) == 1)
-    assert(digit_count(42) == digit_count(-42) == 2)
-    assert(digit_count(121) == digit_count(-121) == 3)
-    assert(getKthDigit(789, 0) == getKthDigit(-789, 0) == 9)
-    assert(getKthDigit(789, 1) == getKthDigit(-789, 1) == 8)
-    assert(getKthDigit(789, 2) == getKthDigit(-789, 2) == 7)
-    assert(getKthDigit(789, 3) == getKthDigit(-789, 3) == 0)
-    assert(getKthDigit(789, 4) == getKthDigit(-789, 4) == 0)
-    assert(setKthDigit(789, 0, 6) == 786)
-    assert(setKthDigit(789, 1, 6) == 769)
-    assert(setKthDigit(789, 2, 6) == 689)
-    assert(setKthDigit(789, 3, 6) == 6789)
-    assert(setKthDigit(789, 4, 6) == 60789)
-    assert(getLeftmostDigit(7089) == 7)
-    assert(getLeftmostDigit(89) == 8)
-    assert(getLeftmostDigit(9) == 9)
-    assert(getLeftmostDigit(0) == 0)
-    assert(clearLeftmostDigit(789) == 89)
-    assert(clearLeftmostDigit(89) == 9)
-    assert(clearLeftmostDigit(9) == 0)
-    assert(clearLeftmostDigit(0) == 0)
-    assert(clearLeftmostDigit(60789) == 789)
-    assert(makeMove(8, 1, 1) == 1)
-    assert(makeMove(888888, 1, 1) == 188888)
-    assert(makeMove(888888, 2, 1) == 818888)
-    assert(makeMove(888888, 5, 2) == 888828)
-    assert(makeMove(888888, 6, 2) == 888882)
-    assert(makeMove(888888, 6, 3) == "move must be 1 or 2!")
-    assert(makeMove(888888, 7, 1) == "offboard!")
-    assert(makeMove(888881, 6, 1) == "occupied!")
-    assert(isWin(888888) == False)
-    assert(isWin(112888) == True)
-    assert(isWin(811288) == True)
-    assert(isWin(888112) == True)
-    assert(isWin(211222) == True)
-    assert(isWin(212212) == False)
-    assert(isFull(888888) == False)
-    assert(isFull(121888) == False)
-    assert(isFull(812188) == False)
-    assert(isFull(888121) == False)
-    assert(isFull(212122) == True)
-    assert(isFull(212212) == True)
-    '''
+    assert (makeMove(8, 1, 1) == 1)
+    assert (makeMove(888888, 1, 1) == 188888)
+    assert (makeMove(888888, 2, 1) == 818888)
+    assert (makeMove(888888, 5, 2) == 888828)
+    assert (makeMove(888888, 6, 2) == 888882)
+    assert (makeMove(888888, 6, 3) == "move must be 1 or 2!")
+    assert (makeMove(888888, 7, 1) == "offboard!")
+    assert (makeMove(888881, 6, 1) == "occupied!")
 
-    # assert(play112( 52112315142 ) == "21121: Player 1 wins!")
-    # print(makeBoard(5))
-    # print(digit_count(543))
-    # print(getKthDigit(211231, 4))
-    # print(getLeftmostDigit(543))
-    # print(clearLeftmostDigit(543))
-    # print(makeMove(888888, 6, 1))
-    # print(makeMove(888888, 6, 3))
-    # print(makeMove(888888, 7, 1))
-    # print(makeMove(888881, 6, 1))
-    # print(isWin(888888))
-    # print(isWin(811288))
-    # print(isWin(112888))
-    # print(isFull(812188))
-    # print(isFull(212212))
+    assert (isWin(888888) == False)
+    assert (isWin(112888) == True)
+    assert (isWin(811288) == True)
+    assert (isWin(888112) == True)
+    assert (isWin(211222) == True)
+    assert (isWin(212212) == False)
+    assert (isFull(888888) == False)
+    assert (isFull(121888) == False)
+    assert (isFull(812188) == False)
+    assert (isFull(888121) == False)
+    assert (isFull(212122) == True)
+    assert (isFull(212212) == True)
 
-    # print(play112(5 ))
-    # print(play112(521))
-    # print(play112(5211231 ))
-    # print(play112(523))
-    # print(play112(51223))
-    # print(play112(51211))
-    # print(play112(5122221))
-    # print(play112(51261))
-    # print(play112(521123142))
-    # print(play112(51122324152))
+    assert (hasDigits(112888, 112)) == True
+    assert (hasDigits(113888, 112)) == False
+    assert (hasDigits(112811, 8)) == True
+    assert (hasDigits(812111, 8)) == True
+    assert (hasDigits(112118, 8)) == True
+    assert (hasDigits(112111, 8)) == False
+    ic(getKthDigit(2112, 4))
 
     assert (play112(5) == "88888: Unfinished!")
     assert (play112(521) == "81888: Unfinished!")

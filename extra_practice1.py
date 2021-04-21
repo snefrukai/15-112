@@ -165,10 +165,11 @@ def getKthDigit(n, kth):
 
 
 def setKthDigit(n, k, d):
-    n_temp = abs(n)
-    rem = getKthDigit(n_temp, k) * 10**k
-    n_new = d * 10**k + (n_temp - rem)
-    return n_new if n >= 0 else -n_new
+    n_origin = n
+    n = abs(n)
+    d_pop = getKthDigit(n, k)
+    n += (d - d_pop) * 10**k
+    return n if n_origin >= 0 else -n
 
 
 #################################################

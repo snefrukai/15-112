@@ -342,7 +342,7 @@ def isHappyNumber(n):
     if not n >= 0: return False
     while n != 1 and n != 4:
         n = sumOfSquaresOfDigits(n)
-    return n == 1
+    return n == 1  # if 4: not happy
 
 
 def nthHappyNumber(nth):
