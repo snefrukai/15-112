@@ -294,10 +294,21 @@ def mostFrequentDigit(n):
 
 # ============================================================================ #
 #
+def additivePrime(n):
+    if not isPrime(n): return False
+    sum = sum_digits(n)
+    return isPrime(sum)
 
 
-def nthAdditivePrime(n):
-    return 42
+def nthAdditivePrime(nth):
+    def f(n):
+        return additivePrime(n)
+
+    return counter_int_positive(nth, f)
+
+
+# ============================================================================ #
+#
 
 
 def nthPerfectNumber(n):
@@ -610,6 +621,10 @@ def testMostFrequentDigit():
 
 def testNthAdditivePrime():
     print('Testing nthAdditivePrime()... ', end='')
+    # assert (additivePrime(113)) == True
+    # assert (additivePrime(2)) == True
+    # assert (additivePrime(4)) == False
+
     assert (nthAdditivePrime(0) == 2)
     assert (nthAdditivePrime(1) == 3)
     assert (nthAdditivePrime(5) == 23)
@@ -789,7 +804,7 @@ def testAll():
     testNthSmithNumber()
     testHasConsecutiveDigits()
     testMostFrequentDigit()
-    # testNthAdditivePrime()
+    testNthAdditivePrime()
     # testNthPerfectNumber()
     # testHappyPrimes()
     # testIsSemiPrime()
