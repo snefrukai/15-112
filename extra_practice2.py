@@ -267,7 +267,13 @@ def nthSmithNumber(nth):
 
 
 def hasConsecutiveDigits(n):
-    return 42
+    len = digit_count(n)
+    for i in range(len - 1):
+        d = getKthDigit(n, i)
+        d_next = getKthDigit(n, i + 1)
+        # ic(d, d_next)
+        if d == d_next: return True
+    return False
 
 
 # ============================================================================ #
@@ -574,6 +580,8 @@ def testNthSmithNumber():
 
 def testHasConsecutiveDigits():
     print('Testing hasConsecutiveDigits()... ', end='')
+    ic(hasConsecutiveDigits(-1233))
+
     assert (hasConsecutiveDigits(0) == False)
     assert (hasConsecutiveDigits(123456789) == False)
     assert (hasConsecutiveDigits(1212) == False)
@@ -779,7 +787,7 @@ def testAll():
 
     testNthCarolPrime()
     testNthSmithNumber()
-    # testHasConsecutiveDigits()
+    testHasConsecutiveDigits()
     testMostFrequentDigit()
     # testNthAdditivePrime()
     # testNthPerfectNumber()
