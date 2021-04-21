@@ -653,9 +653,43 @@ def
 - too cheaty to use 'char in str'
 
 step
+
 - for i in range (10)
-  - count i in n 
+  - count i in n
   - if count == 0: F
+
+### integral(f, a, b, N)
+
+def
+
+- takes
+  - a Python function f
+    - (that itself takes one value x, a float, and returns a float),
+  - two floats a and b
+    - where a<=b
+  - a positive int N
+- return the approximate area under the curve of f(x)
+  - uses the trapezoidal rule with N trapezoids to
+  - where a <= x <= b
+- 微积分的面积
+  - 多个小梯形 trapezoid 的面积和
+  - 梯形面积
+    - `(b-a) * (f(a)+f(b))/2`
+    - `width*(h1+h2)/2`
+      - width times the average height
+
+step
+
+- loop N
+  - from a to b
+    - cal step of N
+    - 复杂点：怎样将 f(a)和 f(b)纳入范围
+  - get area
+    - width = (b-a)/N
+    - h1 = f(i)
+    - h2 = f(i+1)
+  - sum area
+
 ### [12F](https://www.kosbie.net/cmu/fall-12/15-112/handouts/notes-practice-thru-week3.html)
 
 - digit_count

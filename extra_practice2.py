@@ -124,7 +124,7 @@ def nthPowerfulNumber(nth):
 #
 
 
-def property309(n):  
+def property309(n):
     n = n**5
     for i in range(10):
         count = digit_count_12F(n, i)
@@ -145,7 +145,20 @@ def nthWithProperty309(nth):
 
 
 def integral(f, a, b, N):
-    return 42
+    step = (b - a) / N  # is also width
+    area = 0
+    i = 0
+    while i < N:
+        x0 = a + step * i
+        x1 = a + step * (i + 1)
+        area += step * (f(x0) + f(x1)) / 2
+        i += 1
+        # ic(i, x0, x1, area)
+    return area
+
+
+# ============================================================================ #
+#
 
 
 def longestIncreasingRun(n):
@@ -377,6 +390,11 @@ def i4(x):
 def testIntegral():
     print('Testing integral()...', end='')
     epsilon = 10**-4
+    # ic(almostEqual(integral(f1, -5, +5, 1), (i1(+5) - i1(-5)),
+    #                epsilon=epsilon))
+    ic(almostEqual(integral(f2, 1, 2, 250), (i2(2) - i2(1)), epsilon=epsilon))
+    ic(almostEqual(integral(f2, 1, 2, 4), 4, epsilon=epsilon))
+
     assert (almostEqual(integral(f1, -5, +5, 1), (i1(+5) - i1(-5)),
                         epsilon=epsilon))
     assert (almostEqual(integral(f1, -5, +5, 10), (i1(+5) - i1(-5)),
@@ -622,8 +640,8 @@ def testAll():
     testNthLeftTruncatablePrime()
     testNthPowerfulNumber()
     testNthWithProperty309()
-    '''
     testIntegral()
+    '''
     testLongestIncreasingRun()
     testNthCarolPrime()
     testNthSmithNumber()
