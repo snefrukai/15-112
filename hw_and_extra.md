@@ -690,6 +690,18 @@ step
     - h2 = f(i+1)
   - sum area
 
+### longestIncreasingRun(n)
+
+def
+
+- takes in a positive int value n and
+- returns the _longest increasing run_ of digits
+  - tie in run length, return larger
+- 123345
+  - 345
+- 27648923679 # 27-6-489-23679
+  - 23679
+
 ### [12F](https://www.kosbie.net/cmu/fall-12/15-112/handouts/notes-practice-thru-week3.html)
 
 - digit_count

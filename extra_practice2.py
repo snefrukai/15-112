@@ -12,8 +12,7 @@ import cs112_s21_week2_linter
 from tkinter import *
 
 from hw2 import isPrime
-from hw2 import digit_count
-from hw2 import getLeftmostDigit
+from hw2 import digit_count, getKthDigit, getLeftmostDigit, intCat
 from hw2 import counter_int_positive
 
 #################################################
@@ -161,8 +160,33 @@ def integral(f, a, b, N):
 #
 
 
-def longestIncreasingRun(n):
-    return 42
+def get_max_tie(run, val, run_new, val_new, tie):
+    if run_new >= run:
+        if run_new == run:
+            val = min(val_new, val) if tie == 'min' else max(val_new, val)
+        else:
+            val = val_new
+        run = run_new
+    return run, val
+
+
+def longestIncreasingRun(n):  # mostFrequentDigit
+    len = digit_count(n)
+    run, val = 0, 0
+    run_new, val_new = 1, getKthDigit(n, len - 1)
+
+    for i in range(1, len):
+        d_last = getKthDigit(n, len - 1 - (i - 1))
+        d_current = getKthDigit(n, len - 1 - i)
+        if d_last < d_current:
+            run_new += 1
+            val_new = intCat(val_new, d_current)
+        else:
+            run, val = get_max_tie(run, val, run_new, val_new, '')
+            run_new, val_new = 1, d_current
+        # ic(d_last, d_current, run_new, val_new)
+    run, val = get_max_tie(run, val, run_new, val_new, '')
+    return val
 
 
 def nthCarolPrime(n):
@@ -177,8 +201,24 @@ def hasConsecutiveDigits(n):
     return 42
 
 
+# ============================================================================ #
+#
+
+
 def mostFrequentDigit(n):
-    return 42
+    n = abs(n)
+    run, val = 0, 0
+    len = 10
+    for i in range(len):  # loop len*10 times
+        run_new = digit_count_12F(n, i)
+        # ic(run, val, run_new, i)
+        run, val = get_max_tie(run, val, run_new, i, 'min')
+    # ic(run, val)
+    return val
+
+
+# ============================================================================ #
+#
 
 
 def nthAdditivePrime(n):
@@ -248,18 +288,22 @@ def digit_count_12F(n, digit):  # digit_count(123423526, 2) returns 3
 #
 
 
-def mostFrequentDigit(n):
+def mostFrequentDigit_12F(n):  # or could use intList as in hw2 bonus
     n = abs(n)
-    run, digit = 0, 0
+    run, val = 0, 0
+    len = 10
+    for i in range(len):  # loop len*10 times
+        run_new = digit_count_12F(n, i)
+        run, val = get_max_tie(run, val, run_new, i, '')
+    return (run, val)
 
-    for digit_new in range(10):  # 0 to 9
-        run_new, n_temp = 0, n
-        while n_temp > 0:
-            if n_temp % 10 == digit_new: run_new += 1
-            n_temp //= 10
-        if run_new >= run:  # new max
-            run, digit = run_new, digit_new  # 递增数列
-    return (run, digit)
+    #     run_new, val_new = 0, n
+    #     while val_new > 0:
+    #         if val_new % len == i: run_new += 1
+    #         val_new //= len
+    #     if run_new >= run:  # new max
+    #         run, val = run_new, i  # 递增数列
+    # return (run, val)
 
 
 #################################################
@@ -392,8 +436,8 @@ def testIntegral():
     epsilon = 10**-4
     # ic(almostEqual(integral(f1, -5, +5, 1), (i1(+5) - i1(-5)),
     #                epsilon=epsilon))
-    ic(almostEqual(integral(f2, 1, 2, 250), (i2(2) - i2(1)), epsilon=epsilon))
-    ic(almostEqual(integral(f2, 1, 2, 4), 4, epsilon=epsilon))
+    # ic(almostEqual(integral(f2, 1, 2, 250), (i2(2) - i2(1)), epsilon=epsilon))
+    # ic(almostEqual(integral(f2, 1, 2, 4), 4, epsilon=epsilon))
 
     assert (almostEqual(integral(f1, -5, +5, 1), (i1(+5) - i1(-5)),
                         epsilon=epsilon))
@@ -411,6 +455,8 @@ def testIntegral():
 
 def testLongestIncreasingRun():
     print('Testing longestIncreasingRun()... ', end='')
+    # ic(longestIncreasingRun(123345))  #
+
     assert (longestIncreasingRun(27648923679) == 23679)
     assert (longestIncreasingRun(123345) == 345)
     assert (longestIncreasingRun(1232) == 123)
@@ -456,6 +502,8 @@ def testHasConsecutiveDigits():
 
 def testMostFrequentDigit():
     print('Testing mostFrequentDigit()... ', end='')
+    # ic(mostFrequentDigit(12233))
+
     assert (mostFrequentDigit(0) == 0)
     assert (mostFrequentDigit(1223) == 2)
     assert (mostFrequentDigit(12233) == 2)
@@ -620,13 +668,14 @@ def test_digit_count_12F():
     # digit_count_12F(0, 0)  # 1
 
 
-def test_mostFrequentDigit():
-    assert mostFrequentDigit(11) == (2, 1)
-    assert mostFrequentDigit(111) == (3, 1)
-    assert mostFrequentDigit(101) == (2, 1)
-    assert mostFrequentDigit(100) == (2, 0)
-    assert mostFrequentDigit(9898) == (2, 9)
-    assert mostFrequentDigit(87778) == (3, 7)
+def test_mostFrequentDigit_12F():
+    # ic(mostFrequentDigit_12F(-101))
+    assert mostFrequentDigit_12F(11) == (2, 1)
+    assert mostFrequentDigit_12F(111) == (3, 1)
+    assert mostFrequentDigit_12F(101) == (2, 1)
+    assert mostFrequentDigit_12F(100) == (2, 0)
+    assert mostFrequentDigit_12F(9898) == (2, 9)
+    assert mostFrequentDigit_12F(-87778) == (3, 7)
 
 
 #################################################
@@ -641,21 +690,21 @@ def testAll():
     testNthPowerfulNumber()
     testNthWithProperty309()
     testIntegral()
-    '''
     testLongestIncreasingRun()
-    testNthCarolPrime()
-    testNthSmithNumber()
-    testHasConsecutiveDigits()
+
+    # testNthCarolPrime()
+    # testNthSmithNumber()
+    # testHasConsecutiveDigits()
     testMostFrequentDigit()
-    testNthAdditivePrime()
-    testNthPerfectNumber()
-    testHappyPrimes()
-    testIsSemiPrime()
-    testPrimeCounting()'''
+    # testNthAdditivePrime()
+    # testNthPerfectNumber()
+    # testHappyPrimes()
+    # testIsSemiPrime()
+    # testPrimeCounting()
 
     # 12F
     test_digit_count_12F()
-    test_mostFrequentDigit()
+    test_mostFrequentDigit_12F()
 
 
 def main():
