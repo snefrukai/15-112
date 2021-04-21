@@ -702,6 +702,33 @@ def
 - 27648923679 # 27-6-489-23679
   - 23679
 
+### nthSmithNumber
+
+def
+
+- a composite
+  - (non-prime)
+  - sum of whose digits
+    - == sum of the digits of its **prime factors** (excluding 1)
+  - if a prime number divides the Smith number multiple times
+    - its digit sum is counted that many times
+- 4
+  - the prime factor 2 is counted twice
+  - 4 = (2\*2)
+- 22
+  - 2, 11
+  - 2 + 2 = 2 + (1+1)
+- 58
+  - 2, 29
+  - 5 + 8 = 2 + (2+9)
+
+step
+
+- get prime factor
+  - get digit sum
+- get digit sum
+- check
+
 ### [12F](https://www.kosbie.net/cmu/fall-12/15-112/handouts/notes-practice-thru-week3.html)
 
 - digit_count

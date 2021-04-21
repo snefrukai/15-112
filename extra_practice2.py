@@ -89,6 +89,11 @@ def count_power(n, factor):
 
 
 def digitPowerful(n):
+    # def check_power_count(n, power):
+    #     (n, count_pow) = count_power(n, power)
+    #     if count_pow == 1: return (n, False)
+    #     return (n, None)
+
     for i in range(2, 4):  # check 2, 3
         (n, count_pow) = count_power(n, i)
         if count_pow == 1: return False
@@ -106,8 +111,8 @@ def digitPowerful(n):
             (n, count_pow) = count_power(n, i)
             if count_pow == 1: return False
     # ic(n)
-    # will be 1 if it's not a prime numenr
-    #* if !=1: has a prime factor whose highest power is 1
+    # will be 1 or a prime numenr
+    #* if n!=1: has a prime factor whose highest power is 1
     # e.g. 44 -> 11, 45 -> 5
     return n == 1
 
@@ -204,12 +209,61 @@ def nthCarolPrime(nth):
         i += 1
 
     return n
+
+
 # ============================================================================ #
-# 
+#
 
 
-def nthSmithNumber(n):
-    return 42
+def sum_digits(n):
+    len = digit_count(n)
+    sum = 0
+    for i in range(len):
+        digit = getKthDigit(n, len - 1 - i)
+        sum += digit
+        # ic(digit)
+    return sum
+
+
+def smithNumber(n):
+    if n < 4: return False
+    n_origin = n
+    sum_1 = sum_digits(n)
+    sum_a = 0
+
+    # def get_sum_of_power(n, power):
+    #     (n, count_pow) = count_power(n, i)
+    #     sum = i * count_pow
+    #     return (n, sum)
+
+    for i in range(2, 4):  # check 2, 3
+        # (n, sum_temp) = get_sum_of_power(n, i)
+        # sum_a += sum_temp
+        (n, count_pow) = count_power(n, i)
+        sum_a += i * count_pow
+
+    for k in range(5, int(n**0.5) + 1, 6):
+        for i in range(k, k + 2 + 1, 2):
+            (n, count_pow) = count_power(n, i)
+            sum_a += i * count_pow
+        # ic(n, sum_temp)
+
+    if n == n_origin: return False  # no divieds
+    sum_b = sum_digits(n) if n != 1 else 0  # n at last is 1 or a prime
+    # ic(sum_1, sum_a, sum_b)
+    sum_2 = sum_a + sum_b
+    return (sum_1 == sum_2)
+
+
+def nthSmithNumber(nth):
+    def f(n):
+        return smithNumber(n)
+
+    return counter_int_positive(nth, f)
+
+
+# ============================================================================ #
+#
 
 
 def hasConsecutiveDigits(n):
@@ -495,6 +549,20 @@ def testNthCarolPrime():
 
 def testNthSmithNumber():
     print('Testing nthSmithNumber()... ', end='')
+    assert (sum_digits(4)) == 4
+    assert (sum_digits(58)) == 13
+
+    # ic(smithNumber(2))  # F
+    # ic(smithNumber(3))  # F
+    # ic(smithNumber(4))  # T
+    # ic(smithNumber(5))  # F
+    # ic(smithNumber(7))  # F
+    # ic(smithNumber(58))  # T
+    # ic(smithNumber(85))  # T
+    # ic(smithNumber(94))  # T
+    # ic(smithNumber(522))  # F, 3*3*2*29
+
+    # ic(nthSmithNumber(0))
     assert (nthSmithNumber(0) == 4)
     assert (nthSmithNumber(1) == 22)
     assert (nthSmithNumber(2) == 27)
@@ -710,7 +778,7 @@ def testAll():
     testLongestIncreasingRun()
 
     testNthCarolPrime()
-    # testNthSmithNumber()
+    testNthSmithNumber()
     # testHasConsecutiveDigits()
     testMostFrequentDigit()
     # testNthAdditivePrime()
