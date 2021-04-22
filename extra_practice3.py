@@ -34,149 +34,180 @@ def roundHalfUp(d):  #helper-fn
 
 
 def vowelCount(s):
-    vowel = 'aeiouAEIOU'
+    vowels = 'aeiou'
+    vowels += vowels.upper()
     count = 0
-    for i in range(len(s)):
-        if s[i] in vowel:
-            count += 1
+    for c in s:
+        if c in vowels: count += 1
     return count
 
 
+# ============================================================================ #
+#
+
+
 def interleave(s1, s2):
-    s_new = ''
+    s = ''
     len_min = min(len(s1), len(s2))
 
     for i in range(len_min):
-        s_new += s1[i] + s2[i]
-
-    if len_min < len(s1):
-        s_new += s1[len_min:]
-    elif len_min < len(s2):
-        s_new += s2[len_min:]
-    return s_new
-
-
-def caesar_cipher_digit(s, shift):
-    foo = string.digits + string.ascii_letters
-    i = foo.find(s)
-    # abs postison = relative postion + distance
-    if s.isdigit(): i = (i + shift) % 10
-    elif s.islower(): i = (i - 10 + shift) % 26 + 10
-    elif s.isupper(): i = (i - 10 + shift) % 26 + 10 + 26
-    s = foo[i]
+        s += s1[i] + s2[i]
+    s += s1[len_min:] if len_min < len(s1) else s2[len_min:]
     return s
 
 
+# ============================================================================ #
+#
+
+
+def caesar_cipher_digit(s, shift):
+    # s_target = string.digits + string.ascii_letters
+    # i = s_target.find(s)  # abs postison = relative postion + distance
+    # if s.isdigit(): i = (i + shift) % 10
+    # elif s.islower(): i = (i - 10 + shift) % 26 + 10
+    # elif s.isupper(): i = (i - 10 + shift) % 26 + 10 + 26
+    # return s_target[i]
+
+    if s.isdigit():
+        chars = string.digits
+        step = 10
+    elif s.isalpha():
+        chars = string.ascii_lowercase if s.islower(
+        ) else string.ascii_uppercase
+        step = 26
+    i = chars.find(s)
+    return chars[(i + shift) % step]
+
+
 def applyCaesarCipher(message, shift):
-    message_new = ''
-    for i in range(len(message)):
-        s = message[i]
-        if s != ' ': s = caesar_cipher_digit(s, shift)
-        message_new += s
-
-        # ic(i, message[:i], message[i:], s)
-    return message_new
+    s = ''
+    for c in message:
+        s += caesar_cipher_digit(c, shift) if c != ' ' else c
+    return s
 
 
-def anagrams_count(s):
-    return 42
+# ============================================================================ #
+#
 
 
 def areAnagrams(s1, s2):
     if len(s1) != len(s2): return False
+
     while s1 != '':
-        l, u = s1[0].lower(), s1[0].upper()
-        count1 = s1.count(l) + s1.count(u)
-        count2 = s2.count(l) + s2.count(u)
-        # ic(l, u, s1, count1, s2, count2)
-        if count1 != count2: return False
-        s1 = s1.replace(l, '')
-        s1 = s1.replace(u, '')
+        count1, count2 = 0, 0
+        chars = s1[0].lower() + s1[0].upper()
+        for c in chars:
+            count1 += s1.count(c)
+            count2 += s2.count(c)
+            s1 = s1.replace(c, '')
+        if count1 != count2:
+            return False
     return True
+
+
+# ============================================================================ #
+#
 
 
 def sameChars(s1, s2):
-    if type(s1) != str or type(s2) != str: return False
-    if s1 == '' and s2 == '': return True
+    if not (type(s1) == str and type(s2) == str): return False
+    elif s1 == s2 == '': return True
 
-    while s1 != '':
-        foo = s1[0]
-        find = s2.find(foo)
-        s1 = s1.replace(foo, '')
-        s2 = s2.replace(foo, '')
-        # ic(s1, s2, foo, find)
-    if s2 != '': return False
-    return True
+    while s1 != '':  # old way
+        c = s1[0]
+        if s2.find(c) == -1: return False
+        s1 = s1.replace(c, '')
+        s2 = s2.replace(c, '')
+    return s2 == ''
+
+    # s_temp = '' # list of unique c in s1
+    # for c in s1:
+    #     if c not in s_temp:
+    #         s_temp += c
+    #         if s2.find(c) == -1: return False
+    #         s2 = s2.replace(c, '')
+    # return s2 == ''
+
+
+# ============================================================================ #
+#
 
 
 def hasBalancedParentheses(s):
-    if s.find(")") < s.find("("): return False
+    if s.find(")") < s.find("("): return False  # ')('
 
     while s.count("(") != 0:
-        if s.count(")") == 0: return False
-        s = s.replace("(", '', 1)
-        s = s.replace(")", '', 1)
-    if s.count(")") != 0: return False
-    return True
+        if s.count(")") == 0: return False  # '('
+        for c in '()':
+            s = s.replace(c, '', 1)
+    return s.count(")") == 0
+
+
+# ============================================================================ #
+#
 
 
 def order_bubble(s):
-    foo = string.ascii_letters + string.digits
+    chars = string.ascii_letters + string.digits
     for i in range(len(s) - 1):
-        s_old = s
+        s_origin = s
         for i in range(len(s) - 1):
-            if foo.find(s[i]) > foo.find(s[i + 1]):
+            if chars.find(s[i]) > chars.find(s[i + 1]):
                 s = s[:i] + (s[i + 1] + s[i]) + s[i + 2:]
-        if s == s_old: return s
+        if s == s_origin: return s  # no change
     return s
 
 
 def leastFrequentLetters(s):
     if s == '': return ''
+
     result = ''
-    count_min, k = 0, 0
+    count = 0
     while s != '':
-        if s[0].isalpha():
-            s_lower = s[0].lower()
-            s_upper = s[0].upper()
-            count_new = s.count(s_lower) + s.count(s_upper)
-            if k == 0 or count_new < count_min:
-                count_min = count_new
-                result = s_lower
-            elif count_new == count_min:
-                result += s_lower
-            k = 1
-            s = s.replace(s_lower, '')
-            s = s.replace(s_upper, '')
+        c = s[0]
+        if c.isalpha():
+            letters = c.lower() + c.upper()
+            count_new = 0
+            for c in letters:
+                count_new += s.count(c)
+            if count == 0 or count_new < count:  # fisrt and smaller
+                count = count_new
+                result = letters[0]  # replace with smaller
+            elif count_new == count:
+                result += letters[0]  # add if count is equal
+            for c in letters:
+                s = s.replace(c, '')
         else:
-            s = s.replace(s[0], '')
-    result = order_bubble(result)
-    return result
+            s = s.replace(c, '')
+    return order_bubble(result)
 
 
-def is_included(s, check):
-    if s.find(check) == -1: return False
-    elif s.find(check) >= 0: return True
+# ============================================================================ #
+#
+
+
+def is_included(s, s_test):
+    return s.find(s_test) >= 0
 
 
 def longestCommonSubstring(s1, s2):
     if s1 == '' or s2 == '': return ''
-    i = 0
-    result, s_temp, result_new = '', '', ''
+    s = ''
 
     for i in range(len(s1)):
-        if is_included(s2, s1[i]):
-            result_new = s1[i]
-        # last char, or no further match
-        while i < len(s1) - 1 and is_included(s2, result_new + s1[i + 1]):
-            result_new += s1[i + 1]
-            i += 1
-            # ic(i, len(s1), result_new)
-        if len(result_new) > len(result) or (len(result_new) == len(result)
-                                             and result_new < result):
-            result = result_new
-        # ic(i, result_new)
-    return result
+        s_temp = ''
+        for k in range(i, len(s1)):  # last char, or no further match
+            if is_included(s2, s_temp + s1[k]):
+                s_temp += s1[k]
+            else:
+                break
+        if len(s_temp) > len(s) or (len(s_temp) == len(s) and s_temp < s):
+            s = s_temp
+    return s
+
+
+# ============================================================================ #
+#
 
 
 def is_palindro(s):
@@ -185,82 +216,88 @@ def is_palindro(s):
     return True
 
 
-def longestSubpalindrome(s):
-    result, s_temp, result_new = '', '', ''
+def longestSubpalindrome(str):
+    s, s_temp = '', ''
 
-    for i in range(len(s)):
-        result_new = s[i:]
-        while result_new != '' and not is_palindro(result_new):
-            result_new = result_new[:-1]
-        if len(result_new) > len(result) or (len(result_new) == len(result)
-                                             and result_new > result):
-            result = result_new
-        # ic(i, result_new)
-    return result
-
-
-def replace(s, c_old, c_new):
-    if s.find(c_old) == -1: return s
-    s_new = ''
-    dist = len(c_old)
-    count = s.count(c_old)
-
-    for i in range(count):
-        posn = s.find(c_old)
-        s_new += s[:posn] + c_new
-        # ic(count, s, posn, s_new)
-        s = s[posn + dist:]
-    s = s_new + s
+    for i in range(len(str)):
+        s_temp = str[i:]
+        while s_temp != '' and not is_palindro(s_temp):
+            s_temp = s_temp[:-1]
+        if s == '':
+            s = s_temp
+        elif len(s_temp) > len(s) or (len(s_temp) == len(s) and s_temp > s):
+            s = s_temp
     return s
+
+
+# ============================================================================ #
+#
+
+
+def replace(s, target, val):
+    if s.find(target) == -1: return s
+
+    s_new = ''
+    for i in range(s.count(target)):
+        posn = s.find(target)
+        s_new += s[:posn] + val  # left part
+        # ic(count, s, posn, s_new)
+        s = s[posn + len(target):]  # right part
+    return s_new + s  # rem part (no hit)
+
+
+# ============================================================================ #
+#
 
 
 def collapseWhitespace(s):
-    char_prev_space = False
     s_new = ''
 
+    prev_space = False  #* check last char
     for c in s:
         if not c.isspace():
             s_new += c
-            char_prev_space = False
-        elif c.isspace() and not char_prev_space:  # prev is char
+            prev_space = False
+        elif c.isspace() and not prev_space:  # prev is char
             s_new += ' '
-            char_prev_space = True
-        # ic(c, char_prev_space, s_new)
+            prev_space = True
 
-    # s = replace(s, '\n', ' ')
-    # s = replace(s, '\t', ' ')
-    # while s.find('  ') != -1:
-    #     s = replace(s, '  ', ' ')
+    # i = 0 #* skip next few ' '
+    # while i < len(s):
+    #     if not s[i].isspace():
+    #         s_new += s[i]
+    #         i += 1
+    #     elif s[i].isspace():
+    #         s_new += ' '
+    #         i += 1
+    #         while i < len(s) and s[i].isspace():
+    #             i += 1
+
     return s_new
 
 
+# ============================================================================ #
+#
+
+
 def wordWrap(s, n):
-    s_new = ''
-
-    for i in range(1, math.ceil(len(s) / n) + 1):
-        s_new += s[:n] + '\n'
+    s_temp = ''
+    for i in range(math.ceil(len(s) / n)):  # 7/4 + 1 = 2
+        chars = s[:n]
+        chars = chars.strip()
+        chars = chars.replace(' ', '-')
+        s_temp += '\n' + chars if i != 0 else chars
         s = s[n:]
-        # ic(i, s, s_new)
+    return s_temp
 
-    # s = ''
-    # k = 0
-    # for line in s_new.splitlines():
-    #     line = line.strip()
-    #     line = line.replace(' ', '-')
-    #     if k == 0: s = line
-    #     else: s += '\n' + line
-    #     k = 1
-
-    ### course method
-    s = s_new
-    while s.count(' ') != 0:
-        posn = s.find(' ')
-        if s[posn - 1].isalpha() and s[posn + 1] != '\n':
-            s = s.replace(' ', '-', 1)
-        else:
-            s = s.replace(' ', '', 1)
-
-    return s
+    # s = s_new  #* course method
+    # while s.count(' ') != 0:
+    #     posn = s.find(' ')
+    #     if s[posn - 1].isalpha() and s[posn + 1] != '\n':
+    #         s = s.replace(' ', '-', 1)
+    #     else:
+    #         s = s.replace(' ', '', 1)
+    # return s_new
 
 
 #################################################
@@ -443,6 +480,7 @@ def testCollapseWhitespace():
     print("Testing collapseWhitespace()...", end="")
     # ic(collapseWhitespace(" A B "))
     # ic(collapseWhitespace(" A  \n\n  \t\t\t z  \t\t "))  # " A z "
+
     assert (collapseWhitespace("a\nb") == "a b")
     assert (collapseWhitespace("a\n   \t    b") == "a b")
     assert (collapseWhitespace("a\n   \t    b  \n\n  \t\t\t c   ") == "a b c ")
@@ -454,19 +492,21 @@ def testCollapseWhitespace():
 
 def testWordWrap():
     print('Testing wordWrap()...', end='')
-    # ic(wordWrap("a cxyz", 3))
+    # ic(wordWrap("abc", 3))
+    # ic(wordWrap(" a c yz", 3))
     # ic(wordWrap("abcdefghij", 4))
-    ic(wordWrap("a b c de f ", 4))
-    #     assert (wordWrap("abc", 3) == "abc")
-    #     assert (wordWrap("abc", 2) == "ab\nc")
-    #     assert (wordWrap("abcdefghij", 4) == """\
-    # abcd
-    # efgh
-    # ij""")
-    #     assert (wordWrap("a b c de fg", 4) == """\
-    # a-b
-    # c-de
-    # fg""")
+    # ic(wordWrap("a b c de f ", 4))
+
+    assert (wordWrap("abc", 3) == "abc")
+    assert (wordWrap("abc", 2) == "ab\nc")
+    assert (wordWrap("abcdefghij", 4) == """\
+abcd
+efgh
+ij""")
+    assert (wordWrap("a b c de fg", 4) == """\
+a-b
+c-de
+fg""")
     print('Passed!')
 
 

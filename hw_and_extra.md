@@ -770,6 +770,7 @@ def
 ### [12F](https://www.kosbie.net/cmu/fall-12/15-112/handouts/notes-practice-thru-week3.html)
 
 - digit_count
+- mostFrequentDigit
 
 ## [hw3](https://www.cs.cmu.edu/~112/notes/hw3.html)
 
