@@ -1341,14 +1341,59 @@ getEvalSteps("2+3*4-8**3%3")
 ```
 
 step
+
 - get all operators
 - re-order all operators
-- execute each operator 
+- execute each operator
 - calculate needed number of tabs
 
 rev
 
 - assert 了半天发现 format 不是用 space 做的
+
+### 12 Fun Decoders
+
+def
+
+- takes a string
+- returns an encoded version of the string
+- write the corresponding decoder
+- you are not given the function bonusEncode1(msg)
+  - but rather you are given the **result of calling that function on itself**
+
+funDecode1
+
+- efg = def
+- sfuvso = return
+
+funDecode2
+
+- no repeat chars
+  - some kind of counter +=
+- ddd 7jhnkvd1c00N(5aX):
+  - ddd = def
+    - ef>d, dd
+  - 5aX = msg
+- I = HHEuyq.izinm_nftscoo + kkh7b3.Y2Z0a8
+  - izinm = ascii
+  - nftscoo = letters
+  - c>a, i=i
+- PXZ O MQ SAMEB(GyG(DIv)):
+  - PXZ = for
+  - MQ = in
+  - SAMEB = range
+- 1X (R VZ Z): I = R[(O.CEIx(u) - v) % tlt(t)]
+  - others = and + didn't change
+    - so this is a < or >
+  - = -> ==
+- 3P33ZU WIVWMT
+  - 3P33ZU = return
+    - tu>r, 33
+    - e=P
+    - rn=ZU
+  - WIVWMT = result
+    - ru>r, WW
+    - e
 
 ## [ep3](https://www.cs.cmu.edu/~112/notes/ep3.html)
 

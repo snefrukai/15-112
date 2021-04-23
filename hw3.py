@@ -575,12 +575,32 @@ def getEvalSteps(expr):
 #
 
 
-def funEncoder1(msg):
-    return 42
+def funEncoder1(msg):  # bonusEncode1
+    result = ""
+    for c in msg:
+        if (c.islower()):
+            c = chr(ord('a') + (ord(c) - ord('a') + 1) % 26)
+        result += c
+    return result
 
 
 def funDecode1(msg):
-    return 42
+    result = ''
+    target = string.ascii_lowercase
+    for line in msg.splitlines():
+        part = ''
+        for c in line:
+            if c.islower():
+                i = target.find(c)
+                c = target[(i - 1) % 26]
+            # s += c
+            part += c
+        result += '\n' + part if result != '' else part
+    return result
+
+
+# ============================================================================ #
+#
 
 
 def funEncoder2(msg):
@@ -588,7 +608,29 @@ def funEncoder2(msg):
 
 
 def funDecode2(msg):
-    return 42
+    target = string.ascii_letters + string.digits
+    upper = string.ascii_uppercase
+    lower = string.ascii_lowercase
+    digit = string.digits
+
+    # for c in 'ern':
+    #     i = lower.find(c)
+    #     ic(c, i)
+
+    # for c in 'PZU':
+    #     i = upper.find(c)
+    #     ic(c, i)
+    for c in 'kkh7b3':
+        i = target.find(c)
+        ic(c, i)
+
+    for c in 'string':
+        i = target.find(c)
+        ic(c, i)
+
+
+# ============================================================================ #
+#
 
 
 def funEncoder3(msg):
@@ -1153,11 +1195,41 @@ def testFunDecoder(encodeFn, decodeFn):
     return True
 
 
+def test_funDecode1():
+    msg = '''\
+efg cpovtEodpef1(nth):
+    sftvmu = ""
+    gps d jo nth:
+        jg (d.jtmpxfs()):
+            d = dis(pse('b') + (pse(d) - pse('b') + 1)%26)
+        sftvmu += d
+    sfuvso sftvmu'''
+    # ic(funDecode1('cpovtEodpef1'))
+    # ic(funDecode1(msg))
+
+
+def test_funDecode2():
+    msg = '''\
+ddd 7jhnkvd1c00N(5aX):
+    0MZ0QX = ""
+    I = HHEuyq.izinm_nftscoo + kkh7b3.Y2Z0a8
+    PXZ O MQ SAMEB(GyG(DIv)):
+        e = kpc[c]
+        1X (R VZ Z): I = R[(O.CEIx(u) - v) % tlt(t)]
+        j5ij9g += U
+    3P33ZU WIVWMT'''
+    ic(funDecode2('ddd 7jhnkvd1c00N'))
+    # ic(funDecode2(msg))
+
+
 def testFunDecoders():
     print('Testing funDecoders()...', end='')
+    test_funDecode1()
+    test_funDecode2()
+
     testFunDecoder(funEncoder1, funDecode1)
-    testFunDecoder(funEncoder2, funDecode2)
-    testFunDecoder(funEncoder3, funDecode3)
+    # testFunDecoder(funEncoder2, funDecode2)
+    # testFunDecoder(funEncoder3, funDecode3)
     print('Passed!')
 
 
@@ -1193,7 +1265,7 @@ def testAll():
     testPatternedMessage()
     testGetEvalSteps()
 
-    # testFunDecoders()
+    testFunDecoders()
 
     def plus_five(num):
         return num + 5
