@@ -497,7 +497,78 @@ def patternedMessage(msg, pattern):
 
 
 def getEvalSteps(expr):
-    return 42
+    def do_op(s1, s2, op):
+        n1, n2 = int(s1), int(s2)
+        if op == '**': n = n1**n2
+        elif op == '*': n = n1 * n2
+        elif op == '/': n = n1 / n2
+        elif op == '//': n = n1 // n2
+        elif op == '%': n = n1 % n2
+        elif op == '+': n = n1 + n2
+        elif op == '-': n = n1 - n2
+        return str(n)
+
+    def do_step(s, op):
+        i = s.find(op)
+        left = s[:i]
+        right = s[i + len(op):]
+
+        s1, s2 = '', ''
+        while left != '' and left[-1].isdigit():
+            s1 = left[-1] + s1
+            left = left[:-1]
+        while right != '' and right[0].isdigit():
+            s2 += right[0]
+            right = right[1:]
+        return left + do_op(s1, s2, op) + right
+
+    def get_ops(expr):
+        s1 = s2 = s3 = ()  # get ops in priority and precedence
+        i = 0
+        while i < len(expr):
+            d = expr[i]
+            if not d.isdigit():
+                if d == expr[i + 1]:
+                    i += 1
+                    if d == '*':
+                        s1 += d * 2,
+                    else:
+                        s2 += d * 2,
+                elif d in ('+', '-'):
+                    s3 += d,
+                else:
+                    s2 += d,
+            i += 1
+        return s1 + s2 + s3
+
+    def get_tabs(s):
+        i = s.find('=') / 4
+        tab = int(i)
+        space = int((i - tab) * 4)
+        return tab, space
+
+    l_op = get_ops(expr)
+    if l_op == ():
+        return expr + ' = ' + expr
+    s = expr
+
+    space = ' ' * len(s)  #* calc space
+    for i in range(len(l_op)):
+        expr = do_step(expr, l_op[i])
+        result = ' = ' + expr
+        # s += '\n' + result if k != 0 else result
+        s += '\n' + space + result if i != 0 else result
+    return s
+
+    # s_temp = '' #* calc tab and space
+    # tab = space = None
+    # for line in s.splitlines():
+    #     if tab == space == None:
+    #         tab, space = get_tabs(line)
+    #     else:
+    #         line = ('\t' * tab + ' ' * space) + line.strip()
+    #     s_temp += '\n' + line if s_temp != '' else line
+    # return s_temp
 
 
 # ============================================================================ #
@@ -1019,7 +1090,10 @@ A-C D?A -CD
 
 
 def testGetEvalSteps():
-    # print("Testing getEvalSteps()...", end="")
+    # ic(getEvalSteps("2+3*4-8**3%3"))  # 76-64 = 12 tab
+    # ic(getEvalSteps("2+3**4%2**4+15//3-8"))
+    # ic(getEvalSteps("32//16"))
+
     assert (getEvalSteps("0") == "0 = 0")
     assert (getEvalSteps("2") == "2 = 2")
     assert (getEvalSteps("3+2") == "3+2 = 5")
@@ -1030,21 +1104,40 @@ def testGetEvalSteps():
     assert (getEvalSteps("32//16") == "32//16 = 2")
     assert (getEvalSteps("2+3*4") == "2+3*4 = 2+12\n      = 14")
     assert (getEvalSteps("2*3+4") == "2*3+4 = 6+4\n      = 10")
+
+    #? tab 和 space 怎么混用了……
+    # or 这里是 IDE 对于 tab 没处理好
+    # https://www.cs.cmu.edu/~112/notes/hw3.py
+    # 网站上是 space
     assert (getEvalSteps("2+3*4-8**3%3") == """\
 2+3*4-8**3%3 = 2+3*4-512%3
-			 = 2+12-512%3
-			 = 2+12-2
-			 = 14-2
-			 = 12""")
+             = 2+12-512%3
+             = 2+12-2
+             = 14-2
+             = 12""")
+
     assert (getEvalSteps("2+3**4%2**4+15//3-8") == """\
 2+3**4%2**4+15//3-8 = 2+81%2**4+15//3-8
-					= 2+81%16+15//3-8
-					= 2+1+15//3-8
-					= 2+1+5-8
-					= 3+5-8
-					= 8-8
-					= 0""")
-    # print("Passed!")
+                    = 2+81%16+15//3-8
+                    = 2+1+15//3-8
+                    = 2+1+5-8
+                    = 3+5-8
+                    = 8-8
+                    = 0""")
+    #     assert (getEvalSteps("2+3*4-8**3%3") == """\
+    # 2+3*4-8**3%3 = 2+3*4-512%3
+    # 			 = 2+12-512%3
+    # 			 = 2+12-2
+    # 			 = 14-2
+    # 			 = 12""")
+    #     assert (getEvalSteps("2+3**4%2**4+15//3-8") == """\
+    # 2+3**4%2**4+15//3-8 = 2+81%2**4+15//3-8
+    # 					= 2+81%16+15//3-8
+    # 					= 2+1+15//3-8
+    # 					= 2+1+5-8
+    # 					= 3+5-8
+    # 					= 8-8
+    # 					= 0""")
 
 
 def testFunDecoder(encodeFn, decodeFn):
@@ -1098,8 +1191,8 @@ def testAll():
 
     # hw3-bonus
     testPatternedMessage()
+    testGetEvalSteps()
 
-    # testGetEvalSteps()
     # testFunDecoders()
 
     def plus_five(num):

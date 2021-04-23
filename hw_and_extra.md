@@ -1316,6 +1316,40 @@ step
   - check next
 - remove trailing lines in pattern
 
+### 11 getEvalSteps(expr)
+
+def
+
+- takes a string containing a simple arithmetic expression
+  - non-negative integers
+  - Operators must be evaluated by precedence
+    - `**, then *,/,//,%, then +,-`
+  - Equal-precedence operators are evaluated left-to-right.
+  - All operators are binary, so they take two operands
+  - no intermediate value of expr can be negative
+- returns a multi-line string containing
+  - the step-by-step (one operator at a time) evaluation of that expression
+  - equal signs must all be **stacked directly over each other**
+
+```python
+getEvalSteps("2+3*4-8**3%3")
+2+3*4-8**3%3 = 2+3*4-512%3
+             = 2+12-512%3
+             = 2+12-2
+             = 14-2
+             = 12
+```
+
+step
+- get all operators
+- re-order all operators
+- execute each operator 
+- calculate needed number of tabs
+
+rev
+
+- assert 了半天发现 format 不是用 space 做的
+
 ## [ep3](https://www.cs.cmu.edu/~112/notes/ep3.html)
 
 ### 1. vowelCount(s)
