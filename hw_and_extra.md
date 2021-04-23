@@ -470,7 +470,7 @@ step_2104
     - no repeat n_posn
   - valid input
     - n_val is 1 or 2
-- get moves and 
+- get moves and
 - check result # 112 and len of moves
   - tie
     - 112 not in moves
@@ -481,7 +481,7 @@ step_2104
   - win
     - 112 in moves
     - get player number
-      - from vaild moves length 
+      - from vaild moves length
       - odd is player 1
       - even is player 2
 
@@ -938,17 +938,28 @@ return s[n:] + s[:n]
 
 ### 5. mastermindScore
 
-#### def
+def
 
-- 'abcd', 'aabd'
-  - 'a' 'd', 2 exact match
-  - 'b', 1 partial match
+- 2 str
+  - a target string of lowercase letters
+  - a guess string of the same length and also of lowercase letters
+- compute the number of characters in the guess that are
+  - 'abcd', 'aabd'
+  - exact match
+    - 'a' 'd'
+    - same char
+    - same posn
+  - partial match
+    - 'b'
+    - same char
+    - not same posn
+- return str
+  - describing the matches - exact count, partial count
 
-#### step
+step
 
 - str_del_kth
   - s = aaa-i-bbb
-  - s = s[:i-1] + s[i+1:]
 - `count_match_exact(s, s1)` # abab, afaf
   - if all match
     - s = s1
@@ -956,37 +967,44 @@ return s[n:] + s[:n]
     - s = ""
   - loop and replace when match
     - for i
-      - i = 4 ?
-      - replace 需精确到个位
       - i 会因为 replace 导致 out range
     - while i
       - i = 0
       - k = len-1 = 3
       - i[0] # afcd, abcd
+        - a,a
         - k -= 1 # 3
         - count += 1
       - i[0] # fcd, bcd
+        - f,b
         - i += 1
       - i[1] # fcd, bcd
+        - c,c
         - k -= 1 # 2
         - count += 1
       - i[1] # fd, bd
-      - i = 2 = k, stop
+        - d,d
+        - stop
     - _cant use replace at 1st_
-  - ~~loop andreplace after match~~
+      - bcaa
+      - aaaa
+      - pop i
+  - ~~loop and replace after match~~
     - for i in len
       - if s[i] == s1[i]
         - save i to match
         - [1, 9, 11]
         - "1911"
-        - 但里要存成 list
+        - 但要存成 list
     - for val in mactch
       - use helper to delete
         - 不能直接用用 replace
-  - result fromcount
+  - result
     - no match
     - multi match
 - `count_match_partial(s, s1)` # bc, ab
+  - use 2 str from last step
+    - no exact match
   - loop str
     - for i
       - i[0, len(s)]
@@ -997,20 +1015,47 @@ return s[n:] + s[:n]
     - should only count once
       - if match: break?
     - _could use replace at 1st_
-  - calculate result groups
-    - win
-    - no
-    - one or multi
-    - single or dual
+- calculate result groups
+  - win
+  - no
+  - one or multi
+  - single or dual
 
 #### rev
 
 ### 6. topLevelFunctionNames(code)
 
-#### def
+def
 
-- multi-line string of Python code
-- string with the names of the top-level functions
+- take multi-line string
+  - of Python code
+- return string
+  - with the names of the top-level functions
+    - with a "def" statement
+    - left-flush (so no spaces before)
+    - following by exactly one space (" ")
+    - followed by the function name
+    - followed by no spaces
+    - followed by the open parenthesis for the parameters
+    - **there can be multi-line strings in the code**
+      - a "def" inside a multi-line string is not a function definition
+    - **there can be comments (#) in the code**
+      - can appear inside strings, in which case they are not the start of comments
+  - in that code, separated by dots (".")
+  - in the order they appear in the code.
+- quote valid # higher priority to del
+- 把 passing bool 理清后就简单了
+
+step
+
+- check lin1e1
+  - if bool of triple is T
+    - skip until found end of triple
+  - else
+    - check comment valid
+      - if not
+        - look for triple quote
+- check line2
 
 ### 7. drawFlagOfQatar(canvas, x0, y0, x1, y1)
 
