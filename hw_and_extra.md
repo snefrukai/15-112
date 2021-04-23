@@ -1078,103 +1078,91 @@ step
 
 ### 8. playPoker(deck, players)
 
-#### def
+def
 
-- 'AS-2D-3S-4C-5H-6D-7S-8D', 4
-- players take turns to get cards
-  - start from player[1]
-- max 2 cards
-- order of score
+- simplified game of 2-card poker
+  - represent a single playing card using a 2-character string like '2D'
+    - ranks = 'A23456789TJQK' # ordered from lowest to highest
+    - suits = 'CDHS' # also ordered from lowest to highest
+  - deck of cards
+    - deck = '2S-AD-TC'
+- hand of 2 cards
   - straight flush
   - flush
   - straight
   - pair
   - high card
+- players take turns to get cards
+  - start from player[1]
+  - 'AS-2D-3S-4C-5H-6D-7S-8D', 4
 - tie
-  - flush
-    - highest card in hand
+  - highest card in hand # flush
     - 8D-5D, 6H-9H
     - 9H > 8D
-  - ties in individual cards
-    - by rank
-    - then by suit
+  - by rank, then by suit # individual cards
     - 7C-2D, 7H-5S
     - 7H > 7C
+  - no "actual tie" <- each card is unique
 - meta
   - sub
     - get h
-- no "actual tie" cuz card is unique of 1
 
-#### step
+step
 
 - check length
-  - min =
-    - player, group, len
-    - 1, 2, 5
-    - 2, 4, 11
+  - player, group, len
+  - 1, 2, 5
+  - 2, 4, 11
 - get score of hand1 # _'AS-2D-3S-4C-5H-6D-7S-8D'_
-  - get hand
-    - for
-      - 'AS-2D-3S-4C-5H-6D-7S-8D', 1
-        - 01-34
-      - 'AS-2D-3S-4C-5H-6D-7S-8D', 2
-        - 01-67 # 1 grp
-        - 34-910
-      - 'AS-2D-3S-4C-5H-6D-7S-8D', 3
-        - 01-910 # 2 grp
-        - 34-1213
-        - 67-1516
-      - i = i\*3
-      - step = 3\*player
-        - len(grp) of 'ab-' = 3
-    - **hand**
-      - ('AS-5H')
-        - ('AS-2D-3S-4C-5H-6D-7S-8D', 1, 4)
-  - change to index # - _'A23456789TJQK', 'CDHS'_
-    - **index in number**
-      - (0, 3)
-      - (4, 2)
-        - 'AS-5H'
-  - get category and result
-    - category
-      - 5 straight and flush
-      - 4 flush
-      - 3 straight
-      - 2 pair
-      - 1 high card
-      - split then compare each card
-        - 'AH', '5H'
-      - compare each card in a string that rep hand
-        - 'AS-5H'
-      - **category, highest**
-        - (1, '5H')
-          - 'AS-5H'
-          - '2C-3C' # s flush
-          - '2D-6D' # flush
-          - 'QD-KC' # straight
-          - '2D-2H' # pair
-          - '2C-2S'
-          - '2D-5H' # high card
+  - get hand, loop for player id
+    - 'AS-2D-3S-4C-5H-6D-7S-8D', 1
+      - 01-34
+    - 'AS-2D-3S-4C-5H-6D-7S-8D', 2
+      - 01-67 # 1 grp
+      - 34-910
+    - 'AS-2D-3S-4C-5H-6D-7S-8D', 3
+      - 01-910 # 2 grp
+      - 34-1213
+      - 67-1516
+    - i = i\*3
+    - step = 3\*player
+    - ('AS-5H')
+      - ('AS-2D-3S-4C-5H-6D-7S-8D', 1, 4)
+  - find index in str # - _'A23456789TJQK', 'CDHS'_
+    - (0, 3)
+    - (4, 2)
+      - 'AS-5H'
+  - get category
+    - 5 straight and flush
+    - 4 flush
+    - 3 straight
+    - 2 pair
+    - 1 high card
+    - ~~split then compare each card~~
+      - 'AH', '5H'
+    - compare rep card
+      - 'AS-5H'
+    - (1, '5H')
+      - 'AS-5H'
+      - '2C-3C' # s flush
+      - '2D-6D' # flush
+      - 'QD-KC' # straight
+      - '2D-2H' # pair
+      - '2C-2S'
+      - '2D-5H' # high card
+  - get result
     - score
       - category \* 1000 + rank \* 10 + suit
-      - max = 5123 # flush KS
+        - max = 5123 # flush KS
         - min = 1000 # high card AC
-      - **score, highest**
-        - (1042, '5H')
+      - (1042, '5H')
         - 'AS-5H'
           - 1000*1 + 10*4 + 2
-  - evaluate hand[n]'s score and result str
-    - **score, highest**
-      - (1042, 'a high card of 5H')
-      - 'AS-5H'
+    - txt
 - get score of next hand and compare
-  - if max
-    - save player ID
-      - 'player 1'
-    - save result str
-      - 'a high card of 5H'
+  - check and save max
 
-#### rev
+rev
 
 - 用赋值 score 判断结果的确比 if 嵌套更清晰
   - if meta1
@@ -1184,36 +1172,45 @@ step
   - 如果 card 的数量不确定
     - 如何比较和求出 card 的种类
     - 如何求出 card_highest
-    - v1
-      - split，根据 rank 排序
-        - 'AS-2D-2S-4C-5D'
-          - '5D-2D-AS-2S-4C'
-      - if flush
+  - v1
+    - split，根据 rank 排序
+      - 'AS-2D-2S-4C-5D'
+        - '5D-2D-AS-2S-4C'
+    - if flush
+      - 'AS-2S'
+      - '2D-5D'
+      - if straight
         - 'AS-2S'
-        - '2D-5D'
-        - if straight
-          - 'AS-2S'
-        - if not straight
-          - get highest
-            - '5D'
-            - 'AS-4S'
-            - '2D-5D'
-      - elif straight
+      - if not straight
         - get highest
-          - '3C'
-            - 'AS-2H'
-            - '2D-3C'
+          - '5D'
+          - 'AS-4S'
+          - '2D-5D'
+    - elif straight
+      - get highest
+        - '3C'
+          - 'AS-2H'
+          - '2D-3C'
 
 ### 9. encodeRightLeftRouteCipher(s, n)
 
 def
 
-- 3WEATTACKATDAWN, 3 # 3-WTCTW-NDKTE-AAAAz
+- takes two values, some plaintext and a number of rows
+  - constructs a grid with that number of rows and the minimum number of columns required
+  - writing the message in successive columns
+  - only contains uppercase letters
+  - fill in the missing grid entries with lowercase letters starting from z and going in reverse
+  - encrypt the text by reading alternating rows
+    - first to the right ("WTAW"), then to the left ("NTAE")
+    - then back to the right ("ACDz"), and back to the left ("yAKT")
+    - until we finish all rows
+- WEATTACKATDAWN, 3 # 3-WTCTW-NDKTE-AAAAz
   - W T C T W
   - E T K D N
   - A A A A z
 
-#### step
+step
 
 - get col
   - col = round up len(s)/rows # 5
@@ -1226,9 +1223,8 @@ def
     - 17%3, 2
       - fill = 3-2
     - 18%3, 0
-  - fill from ascii_lowercase
 - get code parts by rows
-  - row1 = _WTCTW_ # WEA-TTA-CKA-TDA-WNz
+  - row1 = _WTCTW_ # _WEA-TTA-CKA-TDA-WNz_
     - col1[0] + col2[0] +...+ col[nth][0]
     - s[0] + s[3] + s[6] + s[9] + s[12]
     - s[0*3] + s[1*3] +...+ s[4*3]

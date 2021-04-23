@@ -262,7 +262,7 @@ def topLevelFunctionNames(code):
 #################################################
 
 # ============================================================================ #
-#
+# cousre case
 
 
 def get_rad(n, digit):
@@ -271,43 +271,43 @@ def get_rad(n, digit):
     return rad
 
 
-def draw_clock(canvas, x0, y0, r):
-    r_numb = r * 0.8
-    canvas.create_oval(x0, y0, x0 + r * 2, y0 + r * 2)
-
-    for i in range(12):  # draw numb
-        angle = get_rad(i, 12)
-        y_numb = (y0 + r) + r_numb * math.sin(angle)
-        x_numb = (x0 + r) + r_numb * math.cos(angle)
-        canvas.create_text(x_numb, y_numb, text=i)
-
-
 def draw(canvas, width, height):
     width, margin = 100, 10
     r = width / 2
     r_hr = r * 0.5
-    r_min = r * 0.5
-    hr = 0
+
+    def draw_clock(canvas, x0, y0):
+        canvas.create_oval(x0, y0, x0 + r * 2, y0 + r * 2)
+
+        r_numb = r * 0.8
+        for i in range(12):  # draw numb
+            angle = get_rad(i, 12)
+            x = (x0 + r) + r_numb * math.cos(angle)
+            y = (y0 + r) + r_numb * math.sin(angle)
+            canvas.create_text(x, y, text=i)
+
+    def draw_hand_hr(canvas, x0, y0, angle_hr):
+        x1 = x0 + r_hr * math.cos(angle_hr)
+        y1 = y0 + r_hr * math.sin(angle_hr)
+        canvas.create_line(x0, y0, x1, y1)  # hand hr
 
     for k in range(3):
         for i in range(4):
-            x0 = 100 + i * r * 2 + i * margin
-            y0 = 100 + k * r * 2 + k * margin
-            cx = x0 + r
-            cy = y0 + r
-            hr += 1
-            draw_clock(canvas, x0, y0, r)
+            x = 100 + i * r * 2 + i * margin
+            y = 100 + k * r * 2 + k * margin
+            draw_clock(canvas, x, y)
 
-            angle_hr = get_rad(hr, 12)
-            x_hr = cx + r_hr * math.cos(angle_hr)
-            y_hr = cy + r_hr * math.sin(angle_hr)
-            canvas.create_line(cx, cy, x_hr, y_hr)  # hand hr
+            angle_hr = get_rad(4 * k + i, 12)
+            x0, y0 = x + r, y + r
+            draw_hand_hr(canvas, x0, y0, angle_hr)
 
             # angle_min = get_rad(min, 60)
             # x_min = cx + r_min * math.cos(angle_min)
             # y_min = cy + r_min * math.sin(angle_min)
-            canvas.create_line(cx, cy, x0 + r, y0)  # hand minute
+            canvas.create_line(x0, y0, x + r, y + 16)  # hand minute
 
+
+# basic_graphics.run(width=600, height=600)
 
 # ============================================================================ #
 # 7.
@@ -317,29 +317,29 @@ def draw_triangle(canvas, x0, y0, step):
     canvas.create_polygon(
         x0,
         y0,
-        x0 + step * 1.6,  # length
-        y0 + step / 2,  # vertical midpoint
+        x0 + step * 1.6,  # hori length
+        y0 + step / 2,  # vert midpoint
         x0,
-        y0 + step,  # height
+        y0 + step,  # height of 1 tri
         fill="white")
 
 
 def drawFlagOfQatar(canvas, x0, y0, x1, y1):
-    # Replace all of this with your drawing of the flag of Qatar
-    # Also: remember to add the title "Qatar" centered above the flag!
-    canvas.create_rectangle(x0, y0, x1, y1, fill='orange')
+    canvas.create_rectangle(x0, y0, x1, y1, fill='orange')  # bg
 
     cx = x0 + (x1 - x0) / 3
     cy = y0 + (y1 - y0) / 3
+    canvas.create_rectangle(x0, y0, cx, y1, fill='white')  # left
+    canvas.create_rectangle(cx, y0, x1, y1, fill='#B31722')  # right
 
-    canvas.create_rectangle(x0, y0, cx, y1, fill='white')
-    canvas.create_rectangle(cx, y0, x1, y1, fill='#B31722')
     step = (y1 - y0) / 9
-    for i in range(9):
+    for i in range(9):  # mid triangles
         draw_triangle(canvas, cx, y0 + i * step, step)
 
-    font = 'Arial 14 bold'
-    canvas.create_text((x0 + x1) / 2, y0 - 20, text='Qatar', font=font)
+    canvas.create_text((x0 + x1) / 2,
+                       y0 - 20,
+                       text='Qatar',
+                       font='Arial 14 bold')
 
 
 # ============================================================================ #
@@ -347,25 +347,22 @@ def drawFlagOfQatar(canvas, x0, y0, x1, y1):
 
 
 def poker_hand_get(deck, player_id, player_count):
-    card1 = (player_id - 1) * 3
-    card2 = (player_id - 1) * 3 + 3 * player_count
-    hand = deck[card1:card1 + 2] + '-' + deck[card2:card2 + 2]
-    return hand
+    i1 = (player_id - 1) * 3
+    i2 = (player_id - 1) * 3 + 3 * player_count
+    step = 2
+    return deck[i1:i1 + step] + '-' + deck[i2:i2 + step]
 
 
-def poker_card_index(card):
+def poker_card_indexes(card):
     rank = 'A23456789TJQK'.find(card[0])
     suit = 'CDHS'.find(card[1])
     return rank, suit
 
 
 def poker_hand_eval(hand):  # 'A23456789TJQK', 'CDHS'
-    result = 'i need result!~'
     card1, card2 = hand[:2], hand[3:]
-    rank1, suit1 = poker_card_index(card1)
-    rank2, suit2 = poker_card_index(card2)
-    # category = 0
-    # rank, suit = 0, 0
+    rank1, suit1 = poker_card_indexes(card1)
+    rank2, suit2 = poker_card_indexes(card2)
 
     if rank1 > rank2 or (rank1 == rank2 and suit1 > suit2):
         card_highest = card1
@@ -377,36 +374,31 @@ def poker_hand_eval(hand):  # 'A23456789TJQK', 'CDHS'
     flush = suit1 == suit2
     straight = abs(rank1 - rank2) == 1
     if flush and straight:
-        category = 5
-        result = 'a straight flush to ' + card_highest
+        category, txt = 5, 'a straight flush to'
     elif flush:
-        category = 4
-        result = 'a flush to ' + card_highest
+        category, txt = 4, 'a flush to'
     elif straight:
-        result = 'a straight to ' + card_highest
-        category = 3
+        category, txt = 3, 'a straight to'
     elif rank1 == rank2:
-        category = 2
-        result = 'a pair to ' + card_highest
+        category, txt = 2, 'a pair to'
     else:
-        category = 1
-        result = 'a high card of ' + card_highest
+        category, txt = 1, 'a high card of'
 
-    score = category * 1000 + rank * 10 + suit
+    score = category * 1000 + rank * 10 + suit  # rank could get to 130
+    result = txt + ' ' + card_highest
     return score, result
 
 
 def playPoker(deck, players):
     if len(deck.replace('-', '')) / 4 < players: return 'Not enough cards'
-    score = 0
-    result = 'i need result!~'
 
-    for i in range(players):
-        hand = poker_hand_get(deck, i + 1, players)
+    score = 0
+    for i in range(1, players + 1):
+        hand = poker_hand_get(deck, i, players)
         score_new, result_new = poker_hand_eval(hand)
         if score_new > score:
             score = score_new
-            result = 'Player ' + str(i + 1) + ' wins with ' + result_new
+            result = 'Player ' + str(i) + ' wins with ' + result_new
     return result
 
 
@@ -421,54 +413,52 @@ def playPoker(deck, players):
 #################################################
 
 
+def cipher_loop_part(text, groups, f):
+    s = ""
+    step = int(len(text) / groups)
+    for i in range(groups):
+        s += f(i, step)  # edit and add each part
+    return s
+
+
 def cipher_reindex(text, groups):
     if len(text) % groups != 0: return "need to fiil length"
 
-    text_new = ""
-    step = int(len(text) / groups)
-
-    for k in range(groups):
+    def f(i, step):
         part = ""
-        for i in range(step):
-            index = i * groups + k
-            part += text[index]
-        text_new += part
-    return text_new
+        for k in range(step):
+            part += text[k * groups + i]
+        return part
+
+    return cipher_loop_part(text, groups, f)
 
 
 def cipher_rotate(text, groups):
-    text_new = ""
-    step = int(len(text) / groups)
+    def f(i, step):
+        part = text[i * step:(i + 1) * step]
+        return part[::-1] if i % 2 != 0 else part
 
-    for i in range(groups):
-        part = ""
-        part += text[i * step:(i + 1) * step]
-        if i % 2 != 0: part = part[::-1]
-        text_new += part
-    return text_new
+    return cipher_loop_part(text, groups, f)
 
 
 def encodeRightLeftRouteCipher(text, rows):
     fill = len(text) % rows
-    if fill != 0: text += string.ascii_lowercase[-(rows - fill):][::-1]
+    if fill != 0:
+        text += string.ascii_lowercase[-(rows - fill):][::-1]
 
     text = cipher_reindex(text, rows)
     text = cipher_rotate(text, rows)
-
-    text = str(rows) + text
-    return text
+    return str(rows) + text
 
 
 def decodeRightLeftRouteCipher(text):
     rows = int(text[0])
+    text = text[1:]
     col = int(len(text) / rows)
-    decode = text.replace(text[0], "")
 
-    decode = cipher_rotate(decode, rows)
-    decode = cipher_reindex(decode, col)
-
-    decode = str_del_trailing(decode, string.ascii_lowercase)
-    return decode
+    text = cipher_rotate(text, rows)
+    text = cipher_reindex(text, col)
+    return str_del_trailing(text, string.ascii_lowercase)
 
 
 #################################################
@@ -489,28 +479,29 @@ def patternedMessage(msg, pattern):
     if pattern == "": return ""
     msg = msg.replace(" ", "")
 
-    k = 0
-    pattern_new = ""
+    s = ""
+    i_msg = 0
     for line in pattern.splitlines():
-        line_new = ""
-        for i in range(len(line)):
-            if line[i] != " ":
-                k = k % len(msg)
-                foo = msg[k]
-                k += 1
-                # print(foo, ",", end="")
-            else:
-                foo = " "
-            line_new += foo
-        # print(line_new)
-        pattern_new += "\n" + line_new
-    pattern_new = str_del_trailing(pattern_new, "\n")
+        line_temp = ""
+        for c in line:
+            if c != " ":
+                c = msg[i_msg]
+                i_msg = (i_msg + 1) % len(msg)
+            line_temp += c
+        s += "\n" + line_temp if s != '' else line_temp
+    return s
 
-    return pattern_new
+
+# ============================================================================ #
+#
 
 
 def getEvalSteps(expr):
     return 42
+
+
+# ============================================================================ #
+#
 
 
 def funEncoder1(msg):
@@ -882,14 +873,15 @@ def test_str_del_kth():
 def testEncodeRightLeftRouteCipher():
     # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 3))  # 3WTCTWNDKTEAAAAz
     # print(encodeRightLeftRouteCipher("WEATTACKATDAWN", 5))  # 5WADACEAKWNATTTz
-    # print('Testing encodeRightLeftRouteCipher()...', end='')
+    text = 'WEATTACKATDAWNz'
+    # ic(cipher_reindex(text, 3))  #WTCTWETKDNAAAAz
+
     assert (encodeRightLeftRouteCipher("WEATTACKATDAWN",
                                        4) == "4WTAWNTAEACDzyAKT")
     assert (encodeRightLeftRouteCipher("WEATTACKATDAWN",
                                        3) == "3WTCTWNDKTEAAAAz")
     assert (encodeRightLeftRouteCipher("WEATTACKATDAWN",
                                        5) == "5WADACEAKWNATTTz")
-    # print('Passed!')
 
 
 def testDecodeRightLeftRouteCipher():
@@ -904,7 +896,6 @@ def testDecodeRightLeftRouteCipher():
     cipher = encodeRightLeftRouteCipher(text, 6)
     plaintext = decodeRightLeftRouteCipher(cipher)
     assert (plaintext == text)
-    # print('Passed!')
 
 
 def testEncodeAndDecodeRightLeftRouteCipher():

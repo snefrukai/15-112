@@ -253,25 +253,25 @@ def replace(s, target, val):
 def collapseWhitespace(s):
     s_new = ''
 
-    prev_space = False  #* check last char
-    for c in s:
-        if not c.isspace():
-            s_new += c
-            prev_space = False
-        elif c.isspace() and not prev_space:  # prev is char
-            s_new += ' '
-            prev_space = True
-
-    # i = 0 #* skip next few ' '
-    # while i < len(s):
-    #     if not s[i].isspace():
-    #         s_new += s[i]
-    #         i += 1
-    #     elif s[i].isspace():
+    # prev_space = False  #* check last char
+    # for c in s:
+    #     if not c.isspace():
+    #         s_new += c
+    #         prev_space = False
+    #     elif c.isspace() and not prev_space:  # prev is char
     #         s_new += ' '
-    #         i += 1
-    #         while i < len(s) and s[i].isspace():
-    #             i += 1
+    #         prev_space = True
+
+    i = 0  #* skip next few ' '
+    while i < len(s):
+        if s[i].isspace():
+            s_new += ' '
+            i += 1
+            while i < len(s) and s[i].isspace():
+                i += 1
+        elif not s[i].isspace():
+            s_new += s[i]
+            i += 1
 
     return s_new
 
