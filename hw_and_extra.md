@@ -2251,8 +2251,6 @@ def
 step
 
 v2
-<<<<<<< HEAD
-=======
 
 - change format
   - ['70-79', '60-69']
@@ -2271,87 +2269,7 @@ v1
   - if count == 0: skip
   - if item >= 90 or <= 10: format
 
-### 25 nearestWords(wordList, word)
-
-def
-
-- only contain lowercase letters
-- If the word is in the wordlist, return that word.
-- Otherwise, returns a list of all the words (in order) in the wordlist
-  - that can be obtained by making _a single small edit_ on the given word
-    - either by adding a letter
-      - ['cat', 'hat'], 'at'
-        - ['cat', 'hat']
-        - m2
-      - ['cat', 'hat'], 'ct'
-        - ['cat']
-        - m2
-    - deleting a letter
-      - ['cat', 'hat'], 'htat'
-        - ['hat']
-        - match 3
-      - ['cat', 'hat'], 'hcat'
-        - ['cat','hat']
-        - match 3
-    - or changing a letter
-      - ['cat', 'hat'], 'bat'
-        - m2
-        - ['cat', 'hat']
-      - ['cat', 'hat'], 'cab'
-        - m2
-        - ['cat']
-    - -> only 1 mismactch
-- If no such words exist, returns None.
-
-#### rev
-
-- [97, 5] 的范围时会出现奇怪的 string symbol
-
-```
-s = '10-- : *
-            '
-             '10-19:
-            '
-             '20-29:
-            '
-             '30-39:
-            '
-             '40-49:
-            '
-             '50-59:
-            '
-             '60-69:
-            '
-             '70-79:
-            '
-             '80-89: *
-            '
-             '90++ : *'
-```
-
-- 干，以为的 symbol bug 只是自己忘了改 test case
-
-## [extra-practice5-ct-and-roc](https://www.cs.cmu.edu/~112/notes/extra-practice5-ct-and-roc.html)
->>>>>>> bb8092a14af19bcaa3e3db80e68c782083673b84
-
-- change format
-  - ['70-79', '60-69']
-- count
-  - sort
-  - use helper func lookAndSay
-- draw
-
-v1
-
-- set list of range
-  - [(0,'60-69')]
-- loop with counter
-  - if in range: count += 1
-- draw
-  - if count == 0: skip
-  - if item >= 90 or <= 10: format
-
-#### rev
+rev
 
 - [97, 5] 的范围时会出现奇怪的 string symbol
 
@@ -2384,9 +2302,11 @@ s = '10-- : *
 def
 
 - only contain lowercase letters
-- If the word is in the wordlist, return that word.
-- Otherwise, returns a list of all the words (in order) in the wordlist
-  - that can be obtained by making _a single small edit_ on the given word
+- return
+  - If the word is in the wordlist
+    - return that word
+  - Otherwise, returns a list of all the words (in order) in the wordlist
+    - that can be obtained by making _a single small edit_ on the given word
     - either by adding a letter
       - ['cat', 'hat'], 'at'
         - ['cat', 'hat']
@@ -2408,8 +2328,8 @@ def
       - ['cat', 'hat'], 'hcat'
         - ['cat','hat']
         - match 3
-    - -> only 1 mismactch
-- If no such words exist, returns None.
+    - -> **only 1 mismactch**
+  - If no such words exist, returns None.
 
 step
 
@@ -2713,16 +2633,20 @@ step
 
 def
 
-- takes two strings, a puzzle (such as "SEND + MORE = MONEY") and a proposed solution (such as "OMY--ENDRS")
-  - assign 0 to "O", 1 to "M", 2 to "Y", 5 to "E", 6 to "N", 7 to "D", 8 to "R", and 9 to "S"
-  - _9 5 6 7 + 1 0 8 5 = 1 0 6 5 2_
+- takes two strings
+  - a puzzle (such as "SEND + MORE = MONEY")
+  - a proposed solution (such as "OMY--ENDRS")
+    - assign 0 to "O", 1 to "M", 2 to "Y", 5 to "E", 6 to "N", 7 to "D", 8 to "R", and 9 to "S"
 - return True if substituting the digits from the solution back into the puzzle results in a mathematically correct addition problem
+  - _9 5 6 7 + 1 0 8 5 = 1 0 6 5 2_
 - do not have to check whether a letter occurs more than once in the proposed solution
 - do have to verify that all the letters in the puzzle occur somewhere in the solution
 
 step
 
-- get each part - change to number - according to index in solution
+- get each part
+- change to number
+  - according to index in solution
 
 ### 7 bestScrabbleScore(dictionary, letterScores, hand)
 
@@ -2817,28 +2741,25 @@ def
     - 2 + 2\*1
   - [], [6], [6, 7], [6, 7, 8], [6, 8], [7], [7, 8], [8]
     - 2 + 3*1 + 3*1
-- allSublists(L) # [3,5]
-  - []
-    - k = 0 (0)
-  - [5]
-    - _[0,5]_
-      - how to return len of 2
-    - k = 1 (1)
-  - [3]
-    - [3,0]
-    - k = 10 (2)
+- allSublists(L) # [3,5] and k in binary
+  - [], [0] (0)
+  - [5] # [0,5] # how to return len of 2
+    - [0,1] (1)
+  - [3] # [3,0]
+    - [1,0] (2)
   - [3,5]
-    - k = 11 (3)
+    - [1,1] (3)
 
 step
 
 - for d in k(as binary):
-  - if d == 1 - add to l_result
+  - if d == 1
+    - - add to l_result
 
 rev
 
 - debug 了半天
-  - 大逻辑没错，format 错了
+  - 逻辑没错，format 错了
   - l_temp.insert(0, L[-1 - kth])
     - l_temp += L[kth]
 
@@ -3436,10 +3357,12 @@ def
   - all the numbers from 1 to N2 will be included
   - each move from k to (k+1) will be a legal knight's move
 - ref
-  - https://en.wikipedia.org/wiki/Knight's_tour
   - https://www.geeksforgeeks.org/the-knights-tour-problem-backtracking-1/
-  -
-  - https://en.wikipedia.org/wiki/Knight_(chess) - forming the shape of an L) - may move two squares vertically and one square horizontally, - or two squares horizontally and one square vertically
+  - https://en.wikipedia.org/wiki/Knight's_tour
+  - https://en.wikipedia.org/wiki/Knight_(chess) 
+    - forming the shape of an L) 
+    - may move two squares vertically and one square horizontally, 
+    - or two squares horizontally and one square vertically
 
 step
 
@@ -3457,6 +3380,32 @@ step
     - [-1,2], [1,2]
     - if any(): T
     - abs in [[2,1], [1,2]]
+
+### 6 nQueensChecker(board)
+
+def
+
+- "N Queens" problem
+- takes a 2d list of booleans
+  - True indicates a queen is present 
+  - False indicates a blank cell
+  - or Q and .
+  - or 1 and 0
+- returns if contain **N queens** all of which **do not attack any others**
+  - board size
+    - `1 <= n <= 9`
+  - attack
+    - “任何两个皇后都不能处于同一条横行、纵行或斜线上”
+    - each row and col only has 1 Q
+- ref
+  - https://www.geeksforgeeks.org/n-queen-problem-backtracking-3/
+  - https://mathworld.wolfram.com/QueensProblem.html
+  - https://leetcode-cn.com/problems/n-queens
+
+step 
+- check row
+- get list of cols
+- check col
 
 ### ct-and-roc
 

@@ -463,27 +463,17 @@ from cmu_112_graphics import *
 
 
 def destructiveRemoveEvens(L):
-    # l_even = [] #* new list of evens
-    # for d in L:
-    #     if d % 2 == 0: l_even += [d]
-    # for d in l_even:
-    #     L.remove(d)
-    # ic(L, l_even)
-
     i = 0
     while i < len(L):
         if L[i] % 2 == 0:
             L.remove(L[i])
         else:
             i += 1
-    # ic(L)
 
 
 def nondestructiveRemoveEvens(L):
-    l_not_even = []
-    for d in L:
-        if d % 2 != 0: l_not_even += [d]
-    return l_not_even
+    l_new = [d for d in L if d % 2 != 0]
+    return l_new
 
 
 # ============================================================================ #
@@ -491,19 +481,15 @@ def nondestructiveRemoveEvens(L):
 
 
 def areaOfPolygon(L):
-    # n_area = 0 #* no new list
-    # for i in range(len(L)):
-    #     i_next = (i + 1) % len(L)
-    #     n_area += L[i][0] * L[i_next][1] - L[i][1] * L[i_next][0]
-    # n_area = abs(n_area / 2)
-    # return n_area
-
-    l_area = []  #* new list
+    # l_dif = []  # new list
+    area = 0  # no new list
     for i in range(len(L)):
         i_next = (i + 1) % len(L)
-        l_area += L[i][0] * L[i_next][1] - L[i][1] * L[i_next][0],
-    n_area = abs(sum(l_area) / 2)
-    return n_area
+        area += L[i][0] * L[i_next][1] - L[i][1] * L[i_next][0]
+        # l_dif += L[i][0] * L[i_next][1] - L[i][1] * L[i_next][0],
+    area = abs(area / 2)
+    # area = abs(sum(l_dif) / 2)
+    return area
 
 
 # ============================================================================ #
@@ -511,11 +497,14 @@ def areaOfPolygon(L):
 
 
 def evalPolynomial(l, x):
-    n = 0
-    for i in range(len(l)):
-        if l[i] == 0: continue
-        n += l[i] * x**(len(l) - 1 - i)
-    return n
+    # n = 0 #* number
+    # for i in range(len(l)):
+    #     if l[i] != 0:
+    #         n += l[i] * x**(len(l) - 1 - i)
+    # return n
+
+    l_new = [l[i] * x**(len(l) - 1 - i) for i in range(len(l)) if l[i] != 0]
+    return sum(l_new)
 
 
 # ============================================================================ #
@@ -526,99 +515,86 @@ def multiplyPolynomials(p1, p2):
     l = [0] * (len(p1) + len(p2) - 1)
     for k in range(len(p2)):
         for i in range(len(p1)):
-            l[i + k] += p2[k] * p1[i]
+            l[k + i] += p2[k] * p1[i]
     return l
 
 
 # ============================================================================ #
 #
-
-
-def solvesCryptarithm_part(s, nth):
-    # s_new = '' #* old school str
-    # k = 0
-    # while k < nth:
-    #     if '+' not in s and '=' not in 's':
-    #         s_new = s
-    #     for i in range(len(s)):
-    #         if s[i] == '+' or s[i] == '=':
-    #             s_new = s[:i]
-    #             s = s[i + 1:]
-    #             break
-    #     k += 1
-    # s_new = s_new.strip()
-
-    s = s.replace('+', '')  #* list
-    s = s.replace('=', '')
-    n = s.split("  ")[nth - 1]
-    return n
-
-
-def solvesCryptarithm_val(s, solution):
-    s_temp = ''
-    for c in s:
-        if c not in solution: return False
-        s_temp += str(solution.find(c))
-    n = int(s_temp)
-    return n
 
 
 def solvesCryptarithm(puzzle, solution):
-    p1 = solvesCryptarithm_part(puzzle, 1)
-    p2 = solvesCryptarithm_part(puzzle, 2)
-    p3 = solvesCryptarithm_part(puzzle, 3)
+    # def get_part(s):
+    #     # s_new = '' #* old school str
+    #     # k = 0
+    #     # while k < nth:
+    #     #     if '+' not in s and '=' not in 's':
+    #     #         s_new = s
+    #     #     for i in range(len(s)):
+    #     #         if s[i] == '+' or s[i] == '=':
+    #     #             s_new = s[:i]
+    #     #             s = s[i + 1:]
+    #     #             break
+    #     #     k += 1
+    #     # s_new = s_new.strip()
 
-    n1 = solvesCryptarithm_val(p1, solution)
-    n2 = solvesCryptarithm_val(p2, solution)
-    n3 = solvesCryptarithm_val(p3, solution)
+    #     l = s.split(" ")
+    #     for c in ['+', '=']:
+    #         l.remove(c)
+    #     return l
 
-    if False in [n1, n2, n3]: return False
-    # ic(p1, p2, p3)
-    # ic(n1, n2, n3)
-    bool = n1 + n2 == n3
-    return bool
+    def get_n(val, solution):
+        s = ''
+        for c in val:
+            if c not in solution: return False
+            s += str(solution.find(c))
+        return int(s)
+
+    l_s = puzzle.split(" ")
+    for c in ['+', '=']:
+        l_s.remove(c)
+
+    l_n = []
+    for val in l_s:
+        n = get_n(val, solution)
+        if n == False: return False
+        l_n += [n]
+    return l_n[0] + l_n[1] == l_n[2]
 
 
 # ============================================================================ #
 #
 
 
-def bestScrabbleScore_hit(dictionary, hand):
-    l = []
-    for word in dictionary:
-        s_temp = ''.join(sorted(word))
-        hit = True
-        # ic(s_temp)
-        for i in range(len(s_temp)):
-            if i > 0 and s_temp[i] == s_temp[i - 1]: continue
-            elif s_temp.count(s_temp[i]) > hand.count(s_temp[i]):
-                hit = False
-                break
-        if hit: l += [word]
-    return l
-
-
-def bestScrabbleScore_score(letterScores, word):
-    n = 0
-    for c in word:
-        n += letterScores[string.ascii_lowercase.find(c)]
-    return n
-
-
 def bestScrabbleScore(dictionary, letterScores, hand):
-    l_score, l = [], []
+    def check_hit(word, hand):
+        s = ''.join(sorted(word))
+        for i in range(len(s)):
+            if i > 0 and s[i] == s[i - 1]:  # aaab
+                continue
+            elif s.count(s[i]) > hand.count(s[i]):
+                return False
+        return True
 
-    l_hit = bestScrabbleScore_hit(dictionary, hand)
+    def get_score(word):
+        # n = 0
+        # for c in word:
+        #     n += letterScores[string.ascii_lowercase.find(c)]
+        # return n
+
+        l = [letterScores[string.ascii_lowercase.find(c)] for c in word]
+        return sum(l)
+
+    l_hit = [word for word in dictionary if check_hit(word, hand)]
     if l_hit == []: return None
-    for d in l_hit:
-        l_score += [bestScrabbleScore_score(letterScores, d)]
-    for i in range(len(l_score)):
-        if l_score[i] == max(l_score):
-            l += [l_hit[i]]
-    # ic(l_score, l_result)
-    if len(l) == 1: l = "".join(l)  # list to str
-    l = (l, max(l_score))
-    return l
+    l_score = [get_score(v) for v in l_hit]
+    l_max = [l_hit[i] for i in range(len(l_hit)) if l_score[i] == max(l_score)]
+    # for i in range(len(l_score)):
+    #     if l_score[i] == max(l_score):
+    #         l_max += [l_hit[i]]
+
+    if len(l_max) == 1: l_max = "".join(l_max)  # list to str
+    return (l_max, max(l_score))
 
 
 #################################################
@@ -626,74 +602,67 @@ def bestScrabbleScore(dictionary, letterScores, hand):
 #################################################
 
 
-def runSimpleProgram_int_from_list(l_arg, l_var, val):
-    if val[0].isdigit(): return int(val)
+def runSimpleProgram_str_translate(l_arg, l_var, val):
+    if val[0].isdigit():
+        return int(val)
     else:
         i = int(val[1:])
-        if val[0] == 'A': return l_arg[i]
-        elif val[0] == 'L': return l_var[i]
+        return l_arg[i] if val[0] == 'A' else l_var[i]
 
 
-def runSimpleProgram_type_var(l_arg, l_var, l):
+def runSimpleProgram_var_expr(l_arg, l_var, l):
     i = int(l[0][1:])
-    if len(l) == 2: l_var[i] = int(l[-1])  # easy to forgot format
-    else:  # l[1] in ['+', '-']
-        n1 = runSimpleProgram_int_from_list(l_arg, l_var, l[-2])
-        n2 = runSimpleProgram_int_from_list(l_arg, l_var, l[-1])
-        n2 = n2 if l[1] == '+' else -n2
-        # ic(n1, n2)
+    if len(l) == 2:
+        l_var[i] = int(l[-1])  # easy to forgot format
+    elif l[1] in ['+', '-']:
+        n1 = runSimpleProgram_str_translate(l_arg, l_var, l[-2])
+        n2 = runSimpleProgram_str_translate(l_arg, l_var, l[-1])
+        if l[1] == '-': n2 = -n2
         l_var[i] = n1 + n2
     return l_var
 
 
-def runSimpleProgram_type_jump(l_arg, l_var, l):
-    if l[0] == 'JMP': bool = True
+def runSimpleProgram_jump(l_arg, l_var, l):
+    if l[0] == 'JMP':
+        bool = True
     else:  # conditional jump, 尽可能穷尽还是充分即可？
-        n = runSimpleProgram_int_from_list(l_arg, l_var, l[1])
+        n = runSimpleProgram_str_translate(l_arg, l_var, l[1])
         # op = l[0][-1] #? del
         # if op == '+': bool = n > 0
         # elif op == '0': bool = n == 0
-        bool = n > 0 if l[0][-1] == '+' else n == 0 # '0'
-    return bool, l[-1]
+        bool = (n > 0) if l[0][-1] == '+' else (n == 0)  # '0'
+    return bool, l[-1]  # cond, target
 
 
 def runSimpleProgram(program, args):
-    l_var_len = 0
-    l_program = program.split("\n")
-    for i in range(len(l_program)):
-        l_program[i] = l_program[i].strip()
-        if l_program[i][0] != '!':  # split sub list
-            l_program[i] = l_program[i].strip().split(" ")
-            for d in l_program[i]:  # get max i of l_var
-                if d[0] == 'L': l_var_len = max(int(d[1:]), l_var_len)
-    l_var = [0] * (l_var_len + 1)
-    # ic(l_program)
-
-    l_arg = [0] * len(args)
-    for i in range(len(args)):
-        l_arg[i] = args[i]
-    # ic(l_arg)
+    len_var_name = 0
+    l = program.split("\n")
+    for i in range(len(l)):
+        if l[i][0] != '!':  # split sub list of expr
+            l[i] = l[i].strip().split(" ")
+            for v in l[i]:
+                if v[0] == 'L':
+                    len_var_name = max(int(v[1:]), len_var_name)
+    l_var = [0] * (len_var_name + 1)
+    l_arg = [v for v in args]
+    # ic(l)
 
     k = 0
-    jump_bool = False
-    jump_to = ''
-    while k != len(l_program):
-        d = l_program[k]
-        k += 1
-        # ic(d, jump_bool, jump_to)
-        if d[0] == '!':
-            continue
+    jump_bool, jump_to = False, ''
+    while k != len(l):
+        expr = l[k]
+        k += 1  # beware of the continue
+        if expr[0] == '!': continue
         elif jump_bool:
-            if jump_to not in d[0]: continue
+            if jump_to not in expr[0]: continue  # skip to jump target
             else: jump_bool = False
-        elif d[0][0] == 'L':
-            l_var = runSimpleProgram_type_var(l_arg, l_var, d)
-        elif d[0][:3] == 'JMP':
-            jump_bool, jump_to = runSimpleProgram_type_jump(l_arg, l_var, d)
-            if jump_bool: k = 0  # reset to find target
-        elif d[0][:3] == 'RTN':
-            return runSimpleProgram_int_from_list(l_arg, l_var, d[-1])
-    # ic(d)
+        elif expr[0][0] == 'L':
+            l_var = runSimpleProgram_var_expr(l_arg, l_var, expr)
+        elif expr[0][:3] == 'JMP':
+            jump_bool, jump_to = runSimpleProgram_jump(l_arg, l_var, expr)
+            if jump_bool: k = 0  #* reset to find target
+        elif expr[0][:3] == 'RTN':
+            return runSimpleProgram_str_translate(l_arg, l_var, expr[-1])
     # ic(l_var)
 
 
@@ -701,69 +670,50 @@ def runSimpleProgram(program, args):
 #
 
 
-def getKthBinaryDigit_2(N, n, kth):
-    l_bin = [0] * N
-    for i in range(len(l_bin)):  # format n into binary
-        expo_of_2 = 2**(len(l_bin) - 1 - i)
-        if n >= expo_of_2:
-            l_bin[i] = 1
-            n -= expo_of_2
-    if kth < len(l_bin): return l_bin[kth]
-
-
 def getKthBinaryDigit(n, kth):
-    N = 1
-    while 2**N <= n:
-        N += 1
-    l_bin = [0] * N
+    len_bin = int(math.log2(n)) + 1 if n != 0 else 1
+    if not kth <= len_bin - 1: return None
+    l_bin = [0] * len_bin
 
-    for i in range(len(l_bin)):  # format n into binary
-        expo_of_2 = 2**(len(l_bin) - 1 - i)
-        # ic(n, expo_of_2)
-        if n >= expo_of_2:
+    for i in range(len(l_bin)):  # n to binary
+        n_power = 2**(len(l_bin) - 1 - i)
+        # ic(n_power)
+        if n >= n_power:
             l_bin[i] = 1
-            n -= expo_of_2
-    # ic(l_bin)
-    if kth < len(l_bin): return l_bin[len(l_bin) - 1 - kth]
+            n -= n_power
+    # ic(l_bin, len_bin)
+    return l_bin[len(l_bin) - 1 - kth]
 
 
 def allSublists(L):
-    # l_temp = [0] * N
     N = len(L)
-    k = 0
-    while k <= 2**N - 1:
+    for k in range(2**N):
         l_temp = []
         for kth in range(N):
-            if getKthBinaryDigit(k, kth) == 1:
+            if getKthBinaryDigit(k, kth) == 1:  # kth result in binary
                 l_temp.insert(0, L[-1 - kth])  # from right to left
-                # l_temp += [L[kth]]
-                # l_temp[kth] = 1
         # ic(k, l_temp)
-        k += 1
         yield l_temp
 
 
 def solveSubsetSum(L):
-    for v in allSublists(L):
-        if v != [] and sum(v) == 0: return v
+    for l in allSublists(L):
+        if l != [] and sum(l) == 0:
+            return l
     return None
-
-
-# ============================================================================ #
-#
 
 
 def heapsAlgorithmForPermutations(L):
     n = len(L)
     c = [0] * n
-    A = L
-    yield copy.copy(A)
+    yield copy.copy(L)
+
     i = 0
     while i < n:
         if c[i] < i:
             k = 0 if i % 2 == 0 else c[i]
-            A[k], A[i] = A[i], A[k]
-            yield copy.copy(A)
+            L[k], L[i] = L[i], L[k]
+            yield copy.copy(L)
             # ic(A)
             c[i] += 1
             i = 0
@@ -773,33 +723,36 @@ def heapsAlgorithmForPermutations(L):
         # ic(c)
 
 
-def solveCryptarithm_get_test_obj(puzzle, maxDigit):
-    l = puzzle.split(' ')
+# ============================================================================ #
+#
+def solveCryptarithm_get_test(puzzle, maxDigit):
     s = ''
-    for v in l:
-        for i in range(len(v)):
-            c = v[i]
-            if c.isalpha() and c not in s:
-                s += c
-    foo = (maxDigit + 1) - len(s)
-    if foo > 0: s += '-' * foo
-    else: s = s[:maxDigit + 1]
+    for c in puzzle:
+        if c.isalpha() and c not in s:
+            s += c
+
+    n_dif = (maxDigit + 1) - len(s)
+    if n_dif > 0:
+        s += '-' * n_dif
+    else:
+        s = s[:maxDigit + 1]
+    # s = s[:maxDigit + 1] + '-' * (10 - (maxDigit + 1))
     return s
 
 
 def formatCryptarithmSolution(puzzle, solution):
     s = puzzle + '\n'
-    for c in puzzle:
-        s += str(solution.find(c)) if c in solution else c  # format 2nd line
+    for c in puzzle:  # format 2nd line
+        s += str(solution.find(c)) if c in solution else c  # skip '=' etc
     return s
 
 
 def solveCryptarithmWithMaxDigit(puzzle, maxDigit):
-    l_obj = list(solveCryptarithm_get_test_obj(puzzle, maxDigit))
-    l_permutation = heapsAlgorithmForPermutations(l_obj)
+    l_target = list(solveCryptarithm_get_test(puzzle, maxDigit))
+    l_permutation = heapsAlgorithmForPermutations(l_target)
 
     for l in l_permutation:
-        s_test = "".join(l)
+        s_test = "".join(l)  # list to s
         # ic(s_test)
         if solvesCryptarithm(puzzle, s_test):
             return formatCryptarithmSolution(puzzle, s_test)
@@ -807,19 +760,26 @@ def solveCryptarithmWithMaxDigit(puzzle, maxDigit):
 
 
 def countCryptarithmsWithMaxDigit(puzzle, maxDigit):
-    l_obj = list(solveCryptarithm_get_test_obj(puzzle, maxDigit))
-    l_permutation = heapsAlgorithmForPermutations(l_obj)
-
     count = 0
-    s_hit = ''
+    hit = ''
+
+    #? only return 1 result
+    # if solveCryptarithmWithMaxDigit(puzzle, maxDigit) != None:
+    #     s_hit += solveCryptarithmWithMaxDigit(puzzle, maxDigit)
+    #     count += 1
+
+    l_target = list(solveCryptarithm_get_test(puzzle, maxDigit))
+    l_permutation = heapsAlgorithmForPermutations(l_target)
     for l in l_permutation:
         s_test = "".join(l)
         if solvesCryptarithm(puzzle, s_test):
             count += 1
-            s_hit += formatCryptarithmSolution(puzzle, s_test)
-    return count, s_hit
+            hit += formatCryptarithmSolution(puzzle, s_test)
+    return count, hit
 
 
+# ============================================================================ #
+#
 def get_puzzle(l_left, s_right):
     l_left.sort()
     s = l_left[0] + ' + ' + l_left[1] + ' = ' + s_right
@@ -828,19 +788,17 @@ def get_puzzle(l_left, s_right):
 
 def getAllSingletonCryptarithmsWithMaxDigit(words, maxDigit):
     l = []
-
-    for i in range(len(words)):
+    for i in range(len(words)):  # each comb baesd on each word
         l_temp = words[:]
         l_temp.pop(i)
         l_sub_all = allSublists(l_temp)  # generator
         for l_sub in l_sub_all:
-            if len(l_sub) == 2:
-                s_puzzle = get_puzzle(l_sub, words[i])
-                count, s_hit = countCryptarithmsWithMaxDigit(
-                    s_puzzle, maxDigit)
-                if count == 1: l += [s_hit]
-    l.sort()
-    s = "\n".join(l)
+            if len(l_sub) == 2:  # a + b
+                puzzle = get_puzzle(l_sub, words[i])
+                count, hit = countCryptarithmsWithMaxDigit(puzzle, maxDigit)
+                if count == 1:
+                    l += [hit]
+    s = "\n".join(sorted(l))
     return s
 
 
@@ -961,6 +919,7 @@ def testSolvesCryptarithm():
     # ic(solvesCryptarithm_val("SEND", "OMY--ENDRS"))
     # ic(solvesCryptarithm_val("SEND", "OMY--"))
     # ic(solvesCryptarithm("SEND + MORE = MONEY", "OMY--ENDRS"))
+    # ic(solvesCryptarithm("NUMBER + NUMBER = PUZZLE", "UMNZP-BLER"))  #== True
 
     assert (solvesCryptarithm("SEND + MORE = MONEY", "OMY--ENDRS") == True)
     assert (solvesCryptarithm("RAM + RAT = ANT", "MRATN-----") == True)
@@ -1022,50 +981,50 @@ def testBestScrabbleScore():
                               list("b")) == ("b", 1))
     assert (bestScrabbleScore(dictionary1(), letterScores1(),
                               list("z")) == None)
-    # x = 4, y = 5, z = 1
-    # ["xyz", "zxy", "zzy", "yy", "yx", "wow"]
-    #    10     10     7     10    9      -
-    assert (bestScrabbleScore(dictionary2(), letterScores2(),
-                              list("xyz")) == (["xyz", "zxy"], 10))
-    assert (bestScrabbleScore(dictionary2(), letterScores2(),
-                              list("xyzy")) == (["xyz", "zxy", "yy"], 10))
-    assert (bestScrabbleScore(dictionary2(), letterScores2(),
-                              list("xyq")) == ("yx", 9))
-    assert (bestScrabbleScore(dictionary2(), letterScores2(),
-                              list("yzz")) == ("zzy", 7))
-    assert (bestScrabbleScore(dictionary2(), letterScores2(),
-                              list("wxz")) == None)
+    # # x = 4, y = 5, z = 1
+    # # ["xyz", "zxy", "zzy", "yy", "yx", "wow"]
+    # #    10     10     7     10    9      -
+    # assert (bestScrabbleScore(dictionary2(), letterScores2(),
+    #                           list("xyz")) == (["xyz", "zxy"], 10))
+    # assert (bestScrabbleScore(dictionary2(), letterScores2(),
+    #                           list("xyzy")) == (["xyz", "zxy", "yy"], 10))
+    # assert (bestScrabbleScore(dictionary2(), letterScores2(),
+    #                           list("xyq")) == ("yx", 9))
+    # assert (bestScrabbleScore(dictionary2(), letterScores2(),
+    #                           list("yzz")) == ("zzy", 7))
+    # assert (bestScrabbleScore(dictionary2(), letterScores2(),
+    #                           list("wxz")) == None)
     print("Passed!")
 
 
 def test_runSimpleProgram_int_from_list(l_arg, l_var):
-    assert (runSimpleProgram_int_from_list(l_arg, l_var, 'A0') == 5)
-    assert (runSimpleProgram_int_from_list(l_arg, [0, 2, 0, 0], 'L1') == 2)
-    assert (runSimpleProgram_int_from_list(l_arg, [0, 2, 0, 0], '6') == 6)
+    assert (runSimpleProgram_str_translate(l_arg, l_var, 'A0') == 5)
+    assert (runSimpleProgram_str_translate(l_arg, [0, 2, 0, 0], 'L1') == 2)
+    assert (runSimpleProgram_str_translate(l_arg, [0, 2, 0, 0], '6') == 6)
 
 
 def test_runSimpleProgram_type_var(l_arg, l_var):
     # L10 - A0 A1
-    assert (runSimpleProgram_type_var(
+    assert (runSimpleProgram_var_expr(
         l_arg, [0] * 11, ['L10', '+', 'A0', 'A1']) == [0] * 10 + [11])
-    assert (runSimpleProgram_type_var(
+    assert (runSimpleProgram_var_expr(
         l_arg, [0] * 5, ['L0', '-', 'A0', 'A1']) == [-1] + [0] * 4)
-    assert (runSimpleProgram_type_var(
+    assert (runSimpleProgram_var_expr(
         l_arg, [0] * 5, ['L2', '-', 'A0', 'A1']) == [0] * 2 + [-1] + [0] * 2)
     # L1 0
-    assert (runSimpleProgram_type_var(l_arg, [0] * 3, ['L1', 3]) == [0, 3, 0])
+    assert (runSimpleProgram_var_expr(l_arg, [0] * 3, ['L1', 3]) == [0, 3, 0])
     # L0 + L0 1
-    assert (runSimpleProgram_type_var(l_arg, [0] * 3,
+    assert (runSimpleProgram_var_expr(l_arg, [0] * 3,
                                       ['L0', '+', 'L0', '2']) == [2, 0, 0])
 
 
 def test_runSimpleProgram_type_jump(l_arg, l_var):
-    assert (runSimpleProgram_type_jump(l_arg, [1, 1, 0],
-                                       ['JMP', 'loop']) == (True, 'loop'))
-    assert (runSimpleProgram_type_jump(l_arg, [1, 2, 3],
-                                       ['JMP+', 'L0', 'a0']) == (True, 'a0'))
-    assert (runSimpleProgram_type_jump(l_arg, [0, 2, 3],
-                                       ['JMP+', 'L0', 'a0']) == (False, 'a0'))
+    assert (runSimpleProgram_jump(l_arg, [1, 1, 0],
+                                  ['JMP', 'loop']) == (True, 'loop'))
+    assert (runSimpleProgram_jump(l_arg, [1, 2, 3],
+                                  ['JMP+', 'L0', 'a0']) == (True, 'a0'))
+    assert (runSimpleProgram_jump(l_arg, [0, 2, 3],
+                                  ['JMP+', 'L0', 'a0']) == (False, 'a0'))
 
 
 def testRunSimpleProgram():
@@ -1109,15 +1068,9 @@ def testRunSimpleProgram():
 #
 
 
-def test_getKthBinaryDigit_2():
-    assert (getKthBinaryDigit_2(4, 13, 1)) == 1  # 1101, [5,6,7,8]
-    assert (getKthBinaryDigit_2(4, 13, 2)) == 0
-    assert (getKthBinaryDigit_2(5, 16, 0)) == 1  # 10000
-    assert (getKthBinaryDigit_2(5, 16, 1)) == 0
-
-
 def test_getKthBinaryDigit():
     assert (getKthBinaryDigit(0, 0)) == 0  # 0
+    # ic(getKthBinaryDigit(0, 0))  # 0
     assert (getKthBinaryDigit(1, 0)) == 1  # 1
     assert (getKthBinaryDigit(2, 0)) == 0  # 10
     assert (getKthBinaryDigit(2, 1)) == 1  # 10
@@ -1125,9 +1078,6 @@ def test_getKthBinaryDigit():
 
 
 def testAllSublists():
-    print('  Testing allSublists()...', end='')
-
-    test_getKthBinaryDigit_2()
     test_getKthBinaryDigit()
 
     # ic(allSublists([3, 5]))
@@ -1140,7 +1090,6 @@ def testAllSublists():
     assert (sorted(allSublists([3, 5])) == [[], [3], [3, 5], [5]])
     assert (sorted(allSublists([6, 7, 8])) == [[], [6], [6, 7], [6, 7, 8],
                                                [6, 8], [7], [7, 8], [8]])
-    print('Passed!')
 
 
 def testSolveSubsetSum():
@@ -1153,16 +1102,12 @@ def testSolveSubsetSum():
             assert (solution.count(v) <= L.count(v))
         assert (sum(solution) == 0)
 
-    print('  Testing solveSubsetSum()...', end='')
     assert (solveSubsetSum([5, 2, 3, -4]) == None)
     checkSubsetSum([-1, 5, 2, 3, -4])
     checkSubsetSum([8, 19, 31, 27, 52, -70, 4])
-    print('Passed!')
 
 
 def testHeapsAlgorithmForPermutations():
-    print('  Testing heapsAlgorithmForPermutations()...', end='')
-
     # ic((heapsAlgorithmForPermutations([3, 1, 2])))
     # ic((heapsAlgorithmForPermutations([1, 2])))
     # ic((heapsAlgorithmForPermutations(['A', 'B', '-'])))
@@ -1179,11 +1124,9 @@ def testHeapsAlgorithmForPermutations():
                                                                  [2, 3, 1],
                                                                  [3, 1, 2],
                                                                  [3, 2, 1]])
-    print('Passed!')
 
 
 def testSolveCryptarithmWithMaxDigit():
-    print('  Testing solveCryptarithmWithMaxDigit()...', end='')
     # ic(solveCryptarithmWithMaxDigit('RAM + RAT = ANT', 4))
 
     assert (solveCryptarithmWithMaxDigit('RAM + RAT = ANT', 4) == '''\
@@ -1193,16 +1136,14 @@ RAM + RAT = ANT
     assert (solveCryptarithmWithMaxDigit('ANT + CAT = EEL', 5) == '''\
 ANT + CAT = EEL
 125 + 315 = 440''')
-    print('Passed!')
 
 
 def testGetAllSingletonCryptarithmsWithMaxDigit():
-    print('  Testing getAllSingletonCryptarithmsWithMaxDigit()...', end='')
     words = ['EEL', 'RAM', 'CAT', 'BEE', 'FLY', 'HEN', 'RAT', 'DOG', 'ANT']
 
-    # assert (countCryptarithmsWithMaxDigit('ANT + CAT = EEL', 4) == 0)  # 0
-    # ic(countCryptarithmsWithMaxDigit('ANT + CAT = EEL', 5))  # 1
+    # ic(countCryptarithmsWithMaxDigit('ANT + CAT = EEL', 6))  # 1
     assert (get_puzzle(['RAT', 'ANT'], 'EEL') == 'ANT + RAT = EEL')
+
     # ic(getAllSingletonCryptarithmsWithMaxDigit(words, 4))
     # ic(getAllSingletonCryptarithmsWithMaxDigit(words, 5))
 
@@ -1226,13 +1167,13 @@ BEE + EEL = FLY
         'DEER', 'BEAR', 'GOAT', 'MULE', 'PUMA', 'COLT', 'ORCA', 'IBEX', 'LION',
         'WOLF'
     ]
+
     assert (getAllSingletonCryptarithmsWithMaxDigit(words, 5) == '')
     assert (getAllSingletonCryptarithmsWithMaxDigit(words, 6) == '''\
 BEAR + DEER = IBEX
 4203 + 1223 = 5426
 COLT + GOAT = ORCA
 4635 + 1605 = 6240''')
-    print('Passed!')
 
 
 def testBonusCombinatoricsProblems():
@@ -1263,8 +1204,7 @@ def testAll():
 
     # bonus
     testRunSimpleProgram()
-    # testBonusCombinatoricsProblems()
-    pass
+    testBonusCombinatoricsProblems()
 
 
 def main():

@@ -16,11 +16,12 @@ from extra_practice5 import dotProduct
 # ============================================================================ #
 
 
-def make_2d_list_cols(board):
+def get_2d_list_cols(list):
     l = []
-    for i in range(len(board[0])):  # numb of cols
-        l += [rows[i] for rows in board],
-    # ic(l)
+    cols = len(list[0])
+    for i in range(cols):
+        l += [rows[i] for rows in list],
+    # l = [[rows[i] for rows in board] for i in range(len(board[0]))]
     return l
 
 
@@ -29,25 +30,50 @@ def make_2d_list_cols(board):
 # ============================================================================ #
 
 
-def isLatinSquare_count_is_1(l):
-    for val in l[0]:
-        for row in l:  # in each row
-            if row.count(val) != 1: return False
-    return True
-
-
-def isLatinSquare(l):
-    l_row = l
-    l_col = make_2d_list_cols(l)
-    for val in [l_row, l_col]:
-        if not isLatinSquare_count_is_1(val): return False
+def hasDuplicates(l):
+    l_check = []
+    for row in l:
+        for col in row:
+            if col in l_check:
+                return False
+            l_check += [col]
     return True
 
 
 # ============================================================================ #
 #
+def isLatinSquare_count_is_1(l):
+    row_1 = l[0]
+    for row in l:  # in each row
+        for v in row_1:
+            if row.count(v) != 1:
+                return False
+    return True
 
 
+def list_2d_check_row_col(l, f):
+    l_rows = l
+    l_cols = get_2d_list_cols(l)
+    for list in [l_rows, l_cols]:
+        for row in list:
+            if f(row) == False:
+                return False
+    return True
+
+
+def isLatinSquare(l):
+    row_1 = l[0]
+
+    def f(row):
+        for val in row_1:
+            if row.count(val) != 1:
+                return False
+
+    return list_2d_check_row_col(l, f)
+
+
+# ============================================================================ #
+#
 def matrixMultiply(l1, l2):
     # m*n * n*p = m*p
     n1 = len(l1[0])  # if isinstance(m1[0], list) else len(m1)  # col of m1
@@ -55,61 +81,92 @@ def matrixMultiply(l1, l2):
     if n1 != n2: return None
 
     l = []
-    l_p = make_2d_list_cols(l2)
+    l_p = get_2d_list_cols(l2)
     for m in l1:  #? can the nested loop be extracted, w op func
-        l_row = [dotProduct(m, p) for p in l_p]
-        l += [l_row]  # as 2d
+        row = [dotProduct(m, p) for p in l_p]
+        l += [row]  # as 2d
     return l
 
 
 # ============================================================================ #
 #
+
+
 def isKnightsTour_get_board(s):
-    for val in [' ', '\n']:
-        s = s.strip(val)
+    for v in [' ', '\n']:
+        s = s.strip(v)
     l = s.split("\n")
-    # l_sub = []
     for i in range(len(l)):
-        l[i] = l[i].split()
+        l[i] = l[i].split()  # 2d list
         for k in range(len(l[i])):
             l[i][k] = int(l[i][k])
     return l
 
 
-def isKnightsTour_get_posn(l, n):
-    # rows, cols = len(l), len(l[0])
-    for i in range(len(l)):
-        if n in l[i]: return [i, l[i].index(n)]
+def isKnightsTour_get_posn(board, i):
+    for row in range(len(board)):
+        if i in board[row]:
+            return [row, board[row].index(i)]
 
 
-def isKnightsTour_check_legal(l1, l2):
-    l = [abs(l1[i] - l2[i]) for i in range(len(l1))]
-    # ic(l)
-    if l in [[2, 1], [1, 2]]: return True  # 'L' shape direction
-    else: return False
+def isKnightsTour_check_legal(l1, l2):  # 'L' shape direction
+    l = [abs(l1[i] - l2[i]) for i in range(2)]
+    return l in [[2, 1], [1, 2]]
 
 
 def isKnightsTour(board):
     if isinstance(board, str): board = isKnightsTour_get_board(board)
-    # ic(board)
     n_max = len(board)**2
 
-    l_temp = []
-    for row in board:
-        l_temp += [v for v in row]
-    if sorted(l_temp) != [i for i in range(n_max)]: return False
+    l_temp = [v for row in board for v in row]
+    if sorted(l_temp) != [i for i in range(n_max)]:  # check number sequence
+        return False
 
     for i in range(n_max - 1):
         posn_now = isKnightsTour_get_posn(board, i)
         posn_next = isKnightsTour_get_posn(board, i + 1)
         # ic(posn_i, posn_next)
-        if not isKnightsTour_check_legal(posn_now, posn_next): return False
+        if not isKnightsTour_check_legal(posn_now, posn_next):
+            return False
     return True
+
+
+# ============================================================================ #
+#
+def nQueensChecker(board):
+    def f(v):
+        # ic(v)
+        if v.count(1) != 1:
+            return False
+
+    return list_2d_check_row_col(board, f)
 
 
 # ============================================================================ #
 # * test func
 # ============================================================================ #
+
+
+def test_hasDuplicates():
+    parm = [
+        [
+            [1, 2, 3, 4],
+            [2, 3, 4, 1],
+        ],
+        [
+            [1, 2, 3, 4],
+            [5, 6, 7, 8],
+        ],
+    ]
+    soln = [
+        False,
+        True,
+    ]
+    for i, (l) in enumerate(parm):
+        expect, output = soln[i], hasDuplicates(l)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
 
 
 def test_isLatinSquare():
@@ -232,6 +289,32 @@ def test_isKnightsTour():
     assert (isKnightsTour_check_legal([4, 2], [6, 4])) == False
 
 
+def test_nQueensChecker():
+    parm = [
+        [
+            [0, 1, 0, 0],
+            [0, 0, 0, 1],
+            [1, 0, 0, 0],
+            [0, 0, 1, 0],
+        ],
+        [
+            [0, 1, 0, 0],
+            [1, 0, 0, 0],
+            [1, 0, 0, 0],
+            [0, 0, 1, 0],
+        ],
+    ]
+    soln = [
+        True,
+        False,
+    ]
+    for i, (l) in enumerate(parm):
+        expect, output = soln[i], nQueensChecker(l)
+        # ic(output)
+        test_unexpected(output, expect)
+        assert output == expect
+
+
 # ============================================================================ #
 #
 
@@ -239,9 +322,11 @@ def test_isKnightsTour():
 def testAll():
     print('Tesing all...')
 
+    test_hasDuplicates()
     test_isLatinSquare()
     test_matrixMultiply()
     test_isKnightsTour()
+    test_nQueensChecker()
 
     print('All passed')
 
